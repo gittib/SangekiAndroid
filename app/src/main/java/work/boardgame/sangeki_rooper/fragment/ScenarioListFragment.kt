@@ -1,0 +1,126 @@
+package work.boardgame.sangeki_rooper.fragment
+
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.adapter_item_scenario.view.*
+import kotlinx.android.synthetic.main.scenario_list_fragment.view.*
+import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioListViewModel
+import work.boardgame.sangeki_rooper.model.TragedyScenario
+import work.boardgame.sangeki_rooper.util.Define
+
+class ScenarioListFragment : BaseFragment() {
+
+    companion object {
+        fun newInstance() = ScenarioListFragment()
+    }
+
+    private lateinit var viewModel: ScenarioListViewModel
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        viewModel.rootView = inflater.inflate(R.layout.scenario_list_fragment, container, false).let { rv ->
+            rv.scenario_list.let {
+                it.layoutManager = LinearLayoutManager(context)
+                it.adapter = ScenarioListAdapter()
+            }
+            rv
+        }
+
+        return viewModel.rootView
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        viewModel = ViewModelProvider(this).get(ScenarioListViewModel::class.java)
+        prefs?.getString(Define.SharedPreferencesKey.SCENARIOS, null)?.let {
+            val type = object: TypeToken<List<TragedyScenario>>(){}.type
+            viewModel.scenarioList = Gson().fromJson(it, type)
+        }
+        viewModel.scenarioList = viewModel.scenarioList.filter { it.secret != true }
+                .sortedWith(Comparator { o1, o2 ->
+                    var d = o1.setIndex() - o2.setIndex()
+                    if (d == 0) d = o1.difficulty - o2.difficulty
+                    if (d == 0) {
+                        d = if (o1.id < o2.id) -1 else 1
+                    }
+                    d
+                })
+                .sortedBy { it.setIndex() * 100 + it.difficulty }
+    }
+
+    private object ViewType {
+        const val HEADER = 0
+        const val SCENARIO = 1
+        const val FOOTER = 99
+    }
+    private inner class ScenarioListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        inner class ScenarioViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+            fun onBind(position: Int) {
+                val item = viewModel.scenarioList[position-1]
+                itemView.let { rv ->
+                    rv.scenario_id.text = String.format("[%s]", item.id)
+                    rv.tragedy_set.text = item.set
+                    rv.scenario_title.text = item.title
+                    rv.difficulty_name.text = item.difficultyName()
+                    rv.difficulty.text = item.difficultyStar()
+                    rv.loop.text = item.loop()
+                    rv.day.text = item.day.toString()
+                    rv.scenario_title.text = item.title
+                    rv.writer.text = String.format(getString(R.string.writer_introduction), item.writer)
+
+                    rv.setOnClickListener {
+                        fragmentManager?.beginTransaction()?.let { ft ->
+                            ft.addToBackStack(null)
+                            ft.add(R.id.container, ScenarioDetailFragment.newInstance(item.id))
+                            ft.commit()
+                        }
+                    }
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            val inflater = LayoutInflater.from(context)
+            return when (viewType) {
+                ViewType.HEADER -> {
+                    val v = inflater.inflate(R.layout.adapter_item_scenario_header, parent, false)
+                    object: RecyclerView.ViewHolder(v){}
+                }
+                ViewType.SCENARIO -> {
+                    val v = inflater.inflate(R.layout.adapter_item_scenario, parent, false)
+                    ScenarioViewHolder(v)
+                }
+                ViewType.FOOTER -> {
+                    val v = inflater.inflate(R.layout.adapter_item_footer, parent, false)
+                    object: RecyclerView.ViewHolder(v){}
+                }
+                else -> throw IllegalArgumentException("invalid view type: $viewType")
+            }
+        }
+
+        override fun getItemCount(): Int = viewModel.scenarioList.size + 2
+
+        override fun getItemViewType(position: Int): Int = when {
+            position == 0 -> ViewType.HEADER
+            position > viewModel.scenarioList.size -> ViewType.FOOTER
+            else -> ViewType.SCENARIO
+        }
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            when (getItemViewType(position)) {
+                ViewType.SCENARIO -> (holder as ScenarioViewHolder).onBind(position)
+            }
+        }
+    }
+}

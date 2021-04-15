@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:padding="8dp"
+    tools:context=".fragment.ScenarioDetailFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/public_sheet_title"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                style="@style/Css.ScenarioDetail.Title"
+                android:textSize="24sp"
+                android:text="@string/public_sheet" />
+
+            <GridLayout
+                android:id="@+id/scenario_summary"
+                app:layout_constraintTop_toBottomOf="@id/public_sheet_title"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                style="@style/Css.ScenarioDetail"
+                android:columnCount="4">
+                <ImageView
+                    style="@style/Css.ScenarioDetail.Label"
+                    android:src="@drawable/chip_10"/>
+                <TextView
+                    android:id="@+id/public_sheet_value_set"
+                    style="@style/Css.ScenarioDetail.LabelValue"
+                    android:layout_columnSpan="3"
+                    tools:text="Basic Tragedy X" />
+
+                <ImageView
+                    style="@style/Css.ScenarioDetail.Label"
+                    android:src="@drawable/chip_09"/>
+                <TextView
+                    android:id="@+id/public_sheet_value_loop"
+                    style="@style/Css.ScenarioDetail.LabelValue"
+                    tools:text="4ループ" />
+
+                <ImageView
+                    style="@style/Css.ScenarioDetail.Label"
+                    android:layout_marginLeft="12dp"
+                    android:src="@drawable/chip_07"/>
+                <TextView
+                    android:id="@+id/public_sheet_value_day"
+                    style="@style/Css.ScenarioDetail.LabelValue"
+                    tools:text="5日" />
+            </GridLayout>
+
+            <TextView
+                android:id="@+id/public_sheet_special_label"
+                app:layout_constraintTop_toBottomOf="@id/scenario_summary"
+                app:layout_constraintLeft_toLeftOf="parent"
+                style="@style/Css.ScenarioDetail.Title"
+                android:text="@string/special_rule" />
+            <TextView
+                android:id="@+id/public_sheet_special_value"
+                app:layout_constraintTop_toBottomOf="@id/public_sheet_special_label"
+                style="@style/Css.ScenarioDetail.Text"
+                android:layout_width="match_parent"
+                tools:text="脚本家は「友好禁止」を使用できない。" />
+
+            <TextView
+                android:id="@+id/public_sheet_incident_label"
+                app:layout_constraintTop_toBottomOf="@id/public_sheet_special_value"
+                app:layout_constraintLeft_toLeftOf="parent"
+                style="@style/Css.ScenarioDetail.Title"
+                android:text="@string/incident_list" />
+
+            <GridLayout
+                android:id="@+id/incident_list"
+                app:layout_constraintTop_toBottomOf="@id/public_sheet_incident_label"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                style="@style/Css.ScenarioDetail.IncidentList" />
+
+            <Button
+                android:id="@+id/show_private"
+                app:layout_constraintTop_toBottomOf="@id/incident_list"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                style="@style/Css.ScenarioDetail"
+                android:textColor="@color/white"
+                android:layout_marginTop="24dp"
+                android:text="@string/show_private_sheet" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/private_wrapper"
+                app:layout_constraintTop_toBottomOf="@id/incident_list"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                style="@style/Css.ScenarioDetail"
+                android:visibility="gone"
+                tools:visibility="visible">
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <View
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:background="@color/dark_gray"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/scenario_id"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="[1001]"/>
+
+        <TextView
+            android:id="@+id/tragedy_set"
+            app:layout_constraintTop_toBottomOf="@id/scenario_id"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_solid_gray_r8"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textColor="@color/white"
+            tools:text="BTX"/>
+
+        <TextView
+            android:id="@+id/difficulty"
+            app:layout_constraintBaseline_toBaselineOf="@id/tragedy_set"
+            app:layout_constraintLeft_toLeftOf="@id/tragedy_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="44dp"
+            android:textColor="@color/black"
+            tools:text="★★★★☆☆☆☆"/>
+
+        <TextView
+            android:id="@+id/difficulty_name"
+            app:layout_constraintBaseline_toBaselineOf="@id/tragedy_set"
+            app:layout_constraintLeft_toRightOf="@id/difficulty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_solid_black_r8"
+            android:layout_marginLeft="4dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textColor="@color/white"
+            tools:text="簡単"/>
+
+        <TextView
+            android:id="@+id/loop"
+            app:layout_constraintTop_toBottomOf="@id/tragedy_set"
+            app:layout_constraintLeft_toLeftOf="@id/tragedy_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            tools:text="４" />
+        <TextView
+            android:id="@+id/loop_suffix"
+            app:layout_constraintBaseline_toBaselineOf="@id/loop"
+            app:layout_constraintLeft_toRightOf="@id/loop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loop" />
+
+        <TextView
+            android:id="@+id/day"
+            app:layout_constraintBaseline_toBaselineOf="@id/loop_suffix"
+            app:layout_constraintLeft_toRightOf="@id/loop_suffix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            tools:text="５" />
+
+        <TextView
+            android:id="@+id/day_suffix"
+            app:layout_constraintBaseline_toBaselineOf="@id/day"
+            app:layout_constraintLeft_toRightOf="@id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/day" />
+
+        <TextView
+            android:id="@+id/writer"
+            app:layout_constraintBaseline_toBaselineOf="@id/scenario_id"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            tools:text="作者：ペンスキー"/>
+
+        <TextView
+            android:id="@+id/scenario_title"
+            app:layout_constraintTop_toBottomOf="@id/loop"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:text="逃げ惑うタイムトラベラー"
+            tools:visibility="visible"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

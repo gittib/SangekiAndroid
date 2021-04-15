@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/incident_row_size"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/day_count"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/day_suffix"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/incident_row_size"
+        android:textSize="@dimen/incident_font_size"
+        android:textColor="@color/black"
+        tools:text="１" />
+    <TextView
+        android:id="@+id/day_suffix"
+        app:layout_constraintBaseline_toBaselineOf="@id/day_count"
+        app:layout_constraintLeft_toRightOf="@id/day_count"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        android:text="@string/day_count_suffix" />
+</androidx.constraintlayout.widget.ConstraintLayout>

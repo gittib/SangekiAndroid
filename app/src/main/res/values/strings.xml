@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">惨劇RoopeR</string>
+    <string name="api_url">http://www.boardgame.work/sangeki/</string>
+    <string name="scenario_list">脚本リスト</string>
+
+    <!-- アラートメッセージ -->
+    <string name="ok">@android:string/ok</string>
+    <string name="cancel">@android:string/cancel</string>
+    <string name="failed_to_download_scenario">脚本データの初期化に失敗しました。\n通信環境の良い場所で再度お試し下さい。</string>
+
+    <string name="retry">リトライ</string>
+    <string name="loop">ループ</string>
+    <string name="day">日</string>
+    <string name="day_count_suffix">日目</string>
+    <string name="public_sheet">公開シート</string>
+    <string name="writer_introduction">作者：%s</string>
+    <string name="special_rule">特殊ルール</string>
+    <string name="incident_list">事件リスト</string>
+    <string name="show_private_sheet">非公開シートを表示</string>
+    <string name="day_count">日数</string>
+    <string name="incident_plan">事件予定</string>
+    <string name="caution">！！！警告！！！</string>
+    <string name="caution_spoiler">申し訳ありませんが、このリストや脚本詳細画面を見てしまうと、主人公として惨劇RoopeRを遊ぶ事ができなくなる可能性があります。\n主人公として遊ぶ予定がある方は、この画面を閉じることをおすすめします。</string>
+</resources>
