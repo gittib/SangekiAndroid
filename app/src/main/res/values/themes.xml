@@ -14,6 +14,24 @@
         <!-- Customize your theme here. -->
         <item name="android:textColor">@color/basic_text_color</item>
     </style>
+
+    <style name="Theme.SangekiAndroid.DialogBase" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:textColorPrimary">@color/dialog_text_color</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/Theme.SangekiAndroid.DialogBase.Button.Neutral</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/Theme.SangekiAndroid.DialogBase.Button.Negative</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/Theme.SangekiAndroid.DialogBase.Button.Positive</item>
+    </style>
+    <style name="Theme.SangekiAndroid.DialogBase.Button">
+        <item name="android:textColor">@color/dialog_button_text_color</item>
+    </style>
+    <style name="Theme.SangekiAndroid.DialogBase.Button.Neutral">
+    </style>
+    <style name="Theme.SangekiAndroid.DialogBase.Button.Negative">
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+    <style name="Theme.SangekiAndroid.DialogBase.Button.Positive">
+    </style>
+
     <style name="Theme.SangekiAndroid.Splash">
         <item name="android:windowBackground">@drawable/bg_splash</item>
     </style>

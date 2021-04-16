@@ -6,6 +6,7 @@
     <string name="ok">@android:string/ok</string>
     <string name="cancel">@android:string/cancel</string>
     <string name="failed_to_download_scenario">脚本データの初期化に失敗しました。\n通信環境の良い場所で再度お試し下さい。</string>
+    <string name="confirm_to_show_private">非公開シート情報を表示します。\nよろしいですか？</string>
 
     <string name="scenario_list">脚本リスト</string>
     <string name="scenario_note">主にペンスキーが考えた脚本のリストです。一部寄稿いただいた脚本もあります。\n主人公として惨劇RoopeRを遊ぶ場合はネタバレになるため、見ないほうが良いです。</string>
@@ -15,10 +16,12 @@
     <string name="day">日</string>
     <string name="day_count_suffix">日目</string>
     <string name="public_sheet">公開シート</string>
+    <string name="private_sheet">非公開シート</string>
     <string name="writer_introduction">作者：%s</string>
     <string name="special_rule">特殊ルール</string>
     <string name="incident_list">事件リスト</string>
     <string name="show_private_sheet">非公開シートを表示</string>
+    <string name="hide_private_sheet">非公開シートを隠す</string>
     <string name="day_count">日数</string>
     <string name="incident_plan">事件予定</string>
     <string name="caution">！！！警告！！！</string>

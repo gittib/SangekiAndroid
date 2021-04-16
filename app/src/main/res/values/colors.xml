@@ -18,7 +18,10 @@
 
     <!-- 使用するカラー定義。カラーコード指定禁止 -->
     <color name="border">@color/dark_gray</color>
+    <color name="underline">@color/black</color>
     <color name="background_inverse">@color/black</color>
     <color name="text_color_strong">@color/black</color>
     <color name="text_color_inverse">@color/white</color>
+    <color name="dialog_text_color">@color/black</color>
+    <color name="dialog_button_text_color">@color/black</color>
 </resources>

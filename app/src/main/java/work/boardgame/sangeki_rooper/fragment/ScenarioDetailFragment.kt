@@ -78,19 +78,21 @@ class ScenarioDetailFragment : BaseFragment() {
                 rv.rule_x2.visibility = View.VISIBLE
                 rv.rule_x2.text = it
             } ?: run {
-                rv.rule_x2_label.visibility = View.VISIBLE
-                rv.rule_x2.visibility = View.VISIBLE
+                rv.rule_x2_label.visibility = View.GONE
+                rv.rule_x2.visibility = View.GONE
             }
 
             rv.show_private.setOnClickListener {
                 rv.private_wrapper.let { w ->
                     if (w.visibility == View.VISIBLE) {
                         w.visibility = View.GONE
+                        rv.show_private.text = getString(R.string.show_private_sheet)
                     } else {
-                        AlertDialog.Builder(context)
-                            .setMessage("非公開シート情報を表示します。\nよろしいですか？")
+                        AlertDialog.Builder(context, R.style.Theme_SangekiAndroid_DialogBase)
+                            .setMessage(R.string.confirm_to_show_private)
                             .setPositiveButton(R.string.ok) { _, _ ->
                                 w.visibility = View.VISIBLE
+                                rv.show_private.text = getString(R.string.hide_private_sheet)
                             }
                             .setNegativeButton(R.string.cancel, null)
                             .show()

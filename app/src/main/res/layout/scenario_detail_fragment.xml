@@ -102,8 +102,16 @@
                 tools:visibility="visible">
 
                 <TextView
-                    android:id="@+id/scenario_title"
+                    android:id="@+id/private_sheet_title"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    style="@style/Css.ScenarioDetail.Title"
+                    android:textSize="24sp"
+                    android:text="@string/private_sheet" />
+
+                <TextView
+                    android:id="@+id/scenario_title"
+                    app:layout_constraintTop_toBottomOf="@id/private_sheet_title"
                     style="@style/Css.ScenarioDetail.Title"
                     android:layout_width="match_parent"
                     android:layout_marginLeft="12dp"
@@ -116,7 +124,7 @@
                     app:layout_constraintRight_toRightOf="@id/scenario_title"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:background="@color/black"/>
+                    android:background="@color/underline"/>
 
                 <GridLayout
                     android:id="@+id/rule_wrapper"
