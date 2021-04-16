@@ -6,4 +6,5 @@
     <dimen name="incident_margin_left">8dp</dimen>
     <dimen name="incident_row_size">48dp</dimen>
     <dimen name="incident_name_width">260dp</dimen>
+    <dimen name="horizontal_margin">16dp</dimen>
 </resources>

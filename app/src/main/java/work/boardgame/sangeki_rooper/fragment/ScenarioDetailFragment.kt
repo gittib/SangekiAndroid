@@ -1,5 +1,6 @@
 package work.boardgame.sangeki_rooper.fragment
 
+import android.app.AlertDialog
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -69,6 +70,34 @@ class ScenarioDetailFragment : BaseFragment() {
                         lp
                     }
                     rv.incident_list.addView(v)
+                }
+            }
+
+            rv.scenario_title.text = item.title
+            rv.rule_y.text = item.ruleY()
+            rv.rule_x1.text = item.ruleX1()
+            item.ruleX2()?.let {
+                rv.rule_x2_label.visibility = View.VISIBLE
+                rv.rule_x2.visibility = View.VISIBLE
+                rv.rule_x2.text = it
+            } ?: run {
+                rv.rule_x2_label.visibility = View.VISIBLE
+                rv.rule_x2.visibility = View.VISIBLE
+            }
+
+            rv.show_private.setOnClickListener {
+                rv.private_wrapper.let { w ->
+                    if (w.visibility == View.VISIBLE) {
+                        w.visibility = View.GONE
+                    } else {
+                        AlertDialog.Builder(context)
+                            .setMessage("非公開シート情報を表示します。\nよろしいですか？")
+                            .setPositiveButton(R.string.ok) { _, _ ->
+                                w.visibility = View.VISIBLE
+                            }
+                            .setNegativeButton(R.string.cancel, null)
+                            .show()
+                    }
                 }
             }
 

@@ -96,12 +96,65 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/private_wrapper"
-                app:layout_constraintTop_toBottomOf="@id/incident_list"
+                app:layout_constraintTop_toBottomOf="@id/show_private"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 style="@style/Css.ScenarioDetail"
                 android:visibility="gone"
                 tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/scenario_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/Css.ScenarioDetail.Title"
+                    android:layout_width="match_parent"
+                    android:textAlignment="center"
+                    tools:text="逃げ惑うタイムトラベラー" />
+                <View
+                    app:layout_constraintTop_toBottomOf="@id/scenario_title"
+                    app:layout_constraintLeft_toLeftOf="@id/scenario_title"
+                    app:layout_constraintRight_toRightOf="@id/scenario_title"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/black"/>
+
+                <GridLayout
+                    android:id="@+id/rule_wrapper"
+                    app:layout_constraintTop_toBottomOf="@id/scenario_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="@dimen/horizontal_margin"
+                    android:layout_marginRight="@dimen/horizontal_margin"
+                    android:columnCount="2">
+
+                    <TextView
+                        android:textSize="22sp"
+                        android:text="@string/rule_y"/>
+                    <TextView
+                        android:id="@+id/rule_y"
+                        style="@style/Css.ScenarioDetail.RuleList"
+                        tools:text="殺人計画"/>
+                    <TextView
+                        android:textSize="22sp"
+                        android:text="@string/rule_x1"/>
+                    <TextView
+                        android:id="@+id/rule_x1"
+                        style="@style/Css.ScenarioDetail.RuleList"
+                        android:textSize="22sp"
+                        android:layout_marginLeft="8dp"
+                        tools:text="不穏な噂"/>
+                    <TextView
+                        android:id="@+id/rule_x2_label"
+                        android:textSize="22sp"
+                        android:text="@string/rule_x2"/>
+                    <TextView
+                        android:id="@+id/rule_x2"
+                        style="@style/Css.ScenarioDetail.RuleList"
+                        android:textSize="22sp"
+                        android:layout_marginLeft="8dp"
+                        tools:text="友情サークル"/>
+                </GridLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
