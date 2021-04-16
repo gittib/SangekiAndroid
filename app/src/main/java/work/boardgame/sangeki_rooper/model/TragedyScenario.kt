@@ -1,5 +1,7 @@
 package work.boardgame.sangeki_rooper.model
 
+import android.graphics.Color
+
 @Suppress("unused")
 class TragedyScenario (
     val id: String,
@@ -39,6 +41,16 @@ class TragedyScenario (
         "WM" -> "Weird Mythology"
         "UM" -> "Unvoiced Malicious"
         else -> "謎の惨劇セット"
+    }
+    fun setColor() = when (set) {
+        "FS" -> Color.parseColor("#00DDDD")
+        "BTX" -> Color.parseColor("#0000FF")
+        "MZ" -> Color.parseColor("#8800FF")
+        "MC", "MCX" -> Color.parseColor("#FF0000")
+        "HSA" -> Color.parseColor("#000088")
+        "WM" -> Color.parseColor("#008800")
+        //"UM" -> Color.parseColor("#")
+        else -> Color.parseColor("#AAAAAA")
     }
     fun ruleY() = rule.getOrNull(0)
     fun ruleX1() = rule.getOrNull(1)

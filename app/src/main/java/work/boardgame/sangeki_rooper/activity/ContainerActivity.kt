@@ -3,7 +3,9 @@ package work.boardgame.sangeki_rooper.activity
 import android.os.Bundle
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.BaseFragment
+import work.boardgame.sangeki_rooper.fragment.ScenarioDetailFragment
 import work.boardgame.sangeki_rooper.fragment.ScenarioListFragment
+import work.boardgame.sangeki_rooper.fragment.TopFragment
 import work.boardgame.sangeki_rooper.util.Logger
 import java.lang.IllegalArgumentException
 
@@ -28,10 +30,27 @@ class ContainerActivity : BaseActivity() {
         }
     }
 
-    private fun getFragment(fragmentName: String?): BaseFragment {
-        return when (fragmentName) {
-            ScenarioListFragment::class.qualifiedName -> ScenarioListFragment.newInstance()
-            else -> throw IllegalArgumentException("invalid fragment name: $fragmentName")
+    fun startFragment(fragmentName: String?, data:Any? = null) {
+        Logger.methodStart(TAG)
+        supportFragmentManager.beginTransaction().let { ft ->
+            ft.addToBackStack(null)
+            val f = getFragment(fragmentName, data)
+            ft.add(R.id.container, f)
+            ft.commit()
+        }
+    }
+
+    private fun getFragment(fragmentName: String?, data: Any? = null): BaseFragment {
+        Logger.methodStart(TAG)
+        try {
+            return when (fragmentName) {
+                TopFragment::class.qualifiedName -> TopFragment.newInstance()
+                ScenarioListFragment::class.qualifiedName -> ScenarioListFragment.newInstance()
+                ScenarioDetailFragment::class.qualifiedName -> ScenarioDetailFragment.newInstance(data as String)
+                else -> throw IllegalArgumentException("invalid fragment name: $fragmentName")
+            }
+        } catch (e: ClassCastException) {
+            throw IllegalArgumentException("invalid data type", e)
         }
     }
 }

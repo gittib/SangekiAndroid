@@ -10,7 +10,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import work.boardgame.sangeki_rooper.R
-import work.boardgame.sangeki_rooper.fragment.ScenarioListFragment
+import work.boardgame.sangeki_rooper.fragment.TopFragment
 import work.boardgame.sangeki_rooper.model.TragedyScenario
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
@@ -40,7 +40,7 @@ class SplashActivity : BaseActivity() {
                         .apply()
                     Handler(mainLooper).postDelayed({
                         startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).apply {
-                            putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, ScenarioListFragment::class.qualifiedName)
+                            putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
                         })
                         finish()
                     }, 1000L)
@@ -52,7 +52,7 @@ class SplashActivity : BaseActivity() {
                     prefs.getString(Define.SharedPreferencesKey.SCENARIOS, null)?.let {
                         Handler(mainLooper).postDelayed({
                             startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).apply {
-                                putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, ScenarioListFragment::class.qualifiedName)
+                                putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
                             })
                             finish()
                         }, 1000L)

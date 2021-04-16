@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 使用するカラー定義。カラーコード指定禁止 -->
+    <color name="border">@color/white</color>
+    <color name="background_inverse">@color/white</color>
+    <color name="text_color_strong">@color/white</color>
+    <color name="text_color_inverse">@color/black</color>
+</resources>

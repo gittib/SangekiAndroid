@@ -12,7 +12,7 @@
         android:layout_height="1dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:background="@color/dark_gray"/>
+        android:background="@color/border"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="44dp"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color_strong"
             tools:text="★★★★☆☆☆☆"/>
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_marginLeft="4dp"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color_inverse"
             tools:text="簡単"/>
 
         <TextView

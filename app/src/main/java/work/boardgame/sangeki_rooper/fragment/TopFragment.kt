@@ -1,17 +1,17 @@
 package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.top_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.TopViewModel
 import work.boardgame.sangeki_rooper.util.Logger
 
-class TopFragment : Fragment() {
+class TopFragment : BaseFragment() {
     private val TAG = TopFragment::class.simpleName
 
     companion object {
@@ -26,6 +26,12 @@ class TopFragment : Fragment() {
     ): View? {
         Logger.methodStart(TAG)
         viewModel.rootView = inflater.inflate(R.layout.top_fragment, container, false).let { rv ->
+            rv.scenario_list_title.setOnClickListener {
+                activity?.startFragment(ScenarioListFragment::class.qualifiedName)
+            }
+            rv.scenario_list_image.setOnClickListener { rv.scenario_list_title.performClick() }
+            rv.scenario_list_note.setOnClickListener { rv.scenario_list_title.performClick() }
+
             rv
         }
         return viewModel.rootView

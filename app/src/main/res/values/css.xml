@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Css">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Css.TopFragment" />
+    <style name="Css.TopFragment.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Css.TopFragment.Image">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="riv_corner_radius">8dp</item>
+    </style>
+    <style name="Css.TopFragment.Note">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Css.ScenarioDetail"/>
+    <style name="Css.ScenarioDetail.Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">20dp</item>
+    </style>
+    <style name="Css.ScenarioDetail.Label">
+        <item name="android:layout_width">@dimen/label_font_size</item>
+        <item name="android:layout_height">@dimen/label_font_size</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+    <style name="Css.ScenarioDetail.LabelValue">
+        <item name="android:textSize">@dimen/label_font_size</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+    <style name="Css.ScenarioDetail.Text">
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+    <style name="Css.ScenarioDetail.IncidentList">
+        <item name="android:columnCount">2</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+    <style name="Css.ScenarioDetail.ShowPrivate">
+        <item name="android:layout_marginTop">44dp</item>
+        <item name="android:text">@string/show_private_sheet</item>
+    </style>
+    <style name="Css.ScenarioDetail.RuleList">
+        <item name="android:textSize">22sp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+    </style>
+</resources>

@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">惨劇RoopeR</string>
     <string name="api_url">http://www.boardgame.work/sangeki/</string>
-    <string name="scenario_list">脚本リスト</string>
 
     <!-- アラートメッセージ -->
     <string name="ok">@android:string/ok</string>
     <string name="cancel">@android:string/cancel</string>
     <string name="failed_to_download_scenario">脚本データの初期化に失敗しました。\n通信環境の良い場所で再度お試し下さい。</string>
+
+    <string name="scenario_list">脚本リスト</string>
+    <string name="scenario_note">主にペンスキーが考えた脚本のリストです。一部寄稿いただいた脚本もあります。\n主人公として惨劇RoopeRを遊ぶ場合はネタバレになるため、見ないほうが良いです。</string>
 
     <string name="retry">リトライ</string>
     <string name="loop">ループ</string>

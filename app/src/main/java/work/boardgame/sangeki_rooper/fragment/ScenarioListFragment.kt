@@ -1,6 +1,10 @@
 package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -70,7 +74,16 @@ class ScenarioListFragment : BaseFragment() {
                 val item = viewModel.scenarioList[position-1]
                 itemView.let { rv ->
                     rv.scenario_id.text = String.format("[%s]", item.id)
-                    rv.tragedy_set.text = item.set
+                    rv.tragedy_set.let { v ->
+                        v.text = item.set
+                        val d = v?.background
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            d?.colorFilter = BlendModeColorFilter(item.setColor(), BlendMode.SRC_IN)
+                        } else {
+                            d?.setTint(item.setColor())
+                            d?.setTintMode(PorterDuff.Mode.SRC_IN)
+                        }
+                    }
                     rv.scenario_title.text = item.title
                     rv.difficulty_name.text = item.difficultyName()
                     rv.difficulty.text = item.difficultyStar()
@@ -80,11 +93,7 @@ class ScenarioListFragment : BaseFragment() {
                     rv.writer.text = String.format(getString(R.string.writer_introduction), item.writer)
 
                     rv.setOnClickListener {
-                        fragmentManager?.beginTransaction()?.let { ft ->
-                            ft.addToBackStack(null)
-                            ft.add(R.id.container, ScenarioDetailFragment.newInstance(item.id))
-                            ft.commit()
-                        }
+                        activity?.startFragment(ScenarioDetailFragment::class.qualifiedName, item.id)
                     }
                 }
             }
