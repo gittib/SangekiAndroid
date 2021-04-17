@@ -7,4 +7,11 @@
     <dimen name="incident_row_size">48dp</dimen>
     <dimen name="incident_name_width">260dp</dimen>
     <dimen name="horizontal_margin">16dp</dimen>
+
+    <!-- キャラクター一覧 -->
+    <dimen name="chara_name_width">100dp</dimen>
+    <dimen name="chara_role_width">172dp</dimen>
+    <dimen name="chara_note_width">48dp</dimen>
+    <dimen name="incident_day_width">40dp</dimen>
+    <dimen name="incident_private_name_width">92dp</dimen>
 </resources>

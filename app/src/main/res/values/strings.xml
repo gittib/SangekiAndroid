@@ -24,9 +24,16 @@
     <string name="hide_private_sheet">非公開シートを隠す</string>
     <string name="day_count">日数</string>
     <string name="incident_plan">事件予定</string>
+    <string name="character_list">登場人物</string>
     <string name="caution">！！！警告！！！</string>
     <string name="caution_spoiler">申し訳ありませんが、このリストや脚本詳細画面を見てしまうと、主人公として惨劇RoopeRを遊ぶ事ができなくなる可能性があります。\n主人公として遊ぶ予定がある方は、この画面を閉じることをおすすめします。</string>
     <string name="rule_y">ルールY</string>
     <string name="rule_x1">ルールX1</string>
     <string name="rule_x2">ルールX2</string>
+    <string name="character">キャラクター</string>
+    <string name="chara">キャラ</string>
+    <string name="role">役職</string>
+    <string name="incident">事件</string>
+    <string name="criminal">犯人</string>
+    <string name="note">備考</string>
 </resources>

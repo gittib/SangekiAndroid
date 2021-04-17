@@ -84,12 +84,14 @@ class TragedyScenario (
 
     class CharacterData (
         val name: String,
-        val role: String?,
+        private val role: String?,
         val note: String?
-    )
+    ) {
+        fun role() = role ?: "パーソン"
+    }
 
     class IncidentData (
-        private val name: String,
+        val name: String,
         val day: Int,
         val criminal: String,
         val note: String?

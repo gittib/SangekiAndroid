@@ -2,11 +2,17 @@ package work.boardgame.sangeki_rooper.fragment
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -41,6 +47,8 @@ class ScenarioDetailFragment : BaseFragment() {
             return null
         }
         viewModel.rootView = inflater.inflate(R.layout.scenario_detail_fragment, container, false).let { rv ->
+            val res = resources
+
             rv.public_sheet_value_set.text = item.setName()
             rv.public_sheet_value_loop.text = String.format("%sループ", item.loop())
             rv.public_sheet_value_day.text = String.format("%d日", item.day)
@@ -80,6 +88,85 @@ class ScenarioDetailFragment : BaseFragment() {
             } ?: run {
                 rv.rule_x2_label.visibility = View.GONE
                 rv.rule_x2.visibility = View.GONE
+            }
+
+            rv.character_role_list.let { v ->
+                var row = 1
+                item.characterList.forEach { ch ->
+                    v.addView(TextView(context).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            columnSpec = GridLayout.spec(0)
+                            rowSpec = GridLayout.spec(row)
+                            width = res.getDimensionPixelSize(R.dimen.chara_name_width)
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+                        }
+                        setPadding(2, 0, 0, 0)
+                        text = ch.name
+                    })
+                    v.addView(TextView(context).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            columnSpec = GridLayout.spec(1)
+                            rowSpec = GridLayout.spec(row)
+                            gravity = Gravity.FILL_HORIZONTAL
+                        }
+                        text = ch.role()
+                    })
+                    v.addView(TextView(context).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            columnSpec = GridLayout.spec(2)
+                            rowSpec = GridLayout.spec(row)
+                            width = res.getDimensionPixelSize(R.dimen.chara_note_width)
+                        }
+                        text = ch.note
+                    })
+                    row++
+                }
+            }
+
+            rv.incident_criminal_list.let { v ->
+                var row = 1
+                item.incidentList.forEach { ch ->
+                    v.addView(TextView(context).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            columnSpec = GridLayout.spec(0)
+                            rowSpec = GridLayout.spec(row)
+                            width = res.getDimensionPixelSize(R.dimen.incident_day_width)
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+                        }
+                        setPadding(2, 0, 0, 0)
+                        textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                        text = ch.day.toString()
+                    })
+                    v.addView(TextView(context).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            columnSpec = GridLayout.spec(1)
+                            rowSpec = GridLayout.spec(row)
+                            width = res.getDimensionPixelSize(R.dimen.incident_private_name_width)
+                        }
+                        text = ch.name
+                    })
+                    v.addView(TextView(context).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            columnSpec = GridLayout.spec(2)
+                            rowSpec = GridLayout.spec(row)
+                            gravity = Gravity.FILL_HORIZONTAL
+                        }
+                        text = ch.criminal
+                    })
+                    v.addView(TextView(context).apply {
+                        layoutParams = GridLayout.LayoutParams().apply {
+                            columnSpec = GridLayout.spec(3)
+                            rowSpec = GridLayout.spec(row)
+                            width = res.getDimensionPixelSize(R.dimen.chara_note_width)
+                        }
+                        text = ch.note
+                    })
+                    row++
+                }
             }
 
             rv.show_private.setOnClickListener {
