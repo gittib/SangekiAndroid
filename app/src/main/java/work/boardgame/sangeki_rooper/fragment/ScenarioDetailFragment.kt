@@ -13,9 +13,11 @@ import android.widget.GridLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.grid_item_chara_role_row.view.*
 import kotlinx.android.synthetic.main.grid_item_incident_day.view.*
 import kotlinx.android.synthetic.main.grid_item_incident_name.view.*
 import kotlinx.android.synthetic.main.scenario_detail_fragment.view.*
@@ -102,16 +104,21 @@ class ScenarioDetailFragment : BaseFragment() {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
                         }
-                        setPadding(2, 0, 0, 0)
+                        setPadding(res.getDimensionPixelSize(R.dimen.chara_name_margin_left),
+                                0, 0, 0)
                         text = ch.name
                     })
-                    v.addView(TextView(context).apply {
-                        layoutParams = GridLayout.LayoutParams().apply {
+                    v.addView(inflater.inflate(R.layout.grid_item_chara_role_row, v, false).let { iv ->
+                        iv.layoutParams = GridLayout.LayoutParams().apply {
                             columnSpec = GridLayout.spec(1)
                             rowSpec = GridLayout.spec(row)
-                            gravity = Gravity.FILL_HORIZONTAL
+                            width = res.getDimensionPixelSize(R.dimen.chara_role_width)
                         }
-                        text = ch.role()
+                        iv.zettaiYuukouMushi.text = if (ch.isZettaiYuukouMushi()) "◆" else "◇"
+                        iv.yuukouMushi.text = if (ch.isYuukouMushi()) "♥" else "♡" // TODO 友好無視は画像にする
+                        iv.fushi.text = if (ch.isFushi()) "★" else "☆"
+                        iv.role_name.text = ch.role()
+                        iv
                     })
                     v.addView(TextView(context).apply {
                         layoutParams = GridLayout.LayoutParams().apply {
@@ -133,12 +140,14 @@ class ScenarioDetailFragment : BaseFragment() {
                             columnSpec = GridLayout.spec(0)
                             rowSpec = GridLayout.spec(row)
                             width = res.getDimensionPixelSize(R.dimen.incident_day_width)
+                            gravity = Gravity.FILL_VERTICAL
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
                         }
                         setPadding(2, 0, 0, 0)
                         textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                        gravity = Gravity.CENTER_VERTICAL
                         text = ch.day.toString()
                     })
                     v.addView(TextView(context).apply {
@@ -146,23 +155,28 @@ class ScenarioDetailFragment : BaseFragment() {
                             columnSpec = GridLayout.spec(1)
                             rowSpec = GridLayout.spec(row)
                             width = res.getDimensionPixelSize(R.dimen.incident_private_name_width)
+                            gravity = Gravity.FILL_VERTICAL
                         }
+                        gravity = Gravity.CENTER_VERTICAL
                         text = ch.name
                     })
                     v.addView(TextView(context).apply {
                         layoutParams = GridLayout.LayoutParams().apply {
                             columnSpec = GridLayout.spec(2)
                             rowSpec = GridLayout.spec(row)
-                            gravity = Gravity.FILL_HORIZONTAL
+                            gravity = Gravity.FILL
                         }
+                        gravity = Gravity.CENTER_VERTICAL
                         text = ch.criminal
                     })
                     v.addView(TextView(context).apply {
                         layoutParams = GridLayout.LayoutParams().apply {
                             columnSpec = GridLayout.spec(3)
                             rowSpec = GridLayout.spec(row)
-                            width = res.getDimensionPixelSize(R.dimen.chara_note_width)
+                            width = res.getDimensionPixelSize(R.dimen.incident_note_width)
+                            gravity = Gravity.FILL_VERTICAL
                         }
+                        gravity = Gravity.CENTER_VERTICAL
                         text = ch.note
                     })
                     row++

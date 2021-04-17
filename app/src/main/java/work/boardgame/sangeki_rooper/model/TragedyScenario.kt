@@ -82,12 +82,55 @@ class TragedyScenario (
         return s
     }
 
+    @Suppress("SpellCheckingInspection")
     class CharacterData (
         val name: String,
         private val role: String?,
         val note: String?
     ) {
-        fun role() = role ?: "パーソン"
+        fun role() = if (role?.trim()?.isNotEmpty() == true) role.trim() else "パーソン"
+
+        fun isZettaiYuukouMushi() = when (role) {
+            "カルティスト",
+            "ウィッチ",
+            "ゼッタイシャ",
+            "パラノイア" -> true
+            else -> false
+        }
+
+        fun isYuukouMushi() = when (role) {
+            "カルティスト",
+            "ウィッチ",
+            "ゼッタイシャ",
+            "パラノイア",
+            "キラー",
+            "クロマク",
+            "ファクター",
+            "ニンジャ",
+            "ドリッパー",
+            "ヴァンパイア",
+            "ウェアウルフ",
+            "ナイトメア",
+            "ディープワン",
+            "フェイスレス",
+            "イレイザー",
+            "アベンジャー" -> true
+            else -> false
+        }
+
+        fun isFushi() = when (role) {
+            "タイムトラベラー",
+            "イモータル",
+            "メイタンテイ",
+            "ヴァンパイア",
+            "ナイトメア",
+            "ミカケダオシ",
+            "ヒトハシラ",
+            "フェイスレス",
+            "イレイザー",
+            "パイドパイパー" -> true
+            else -> false
+        }
     }
 
     class IncidentData (
