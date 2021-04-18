@@ -2,7 +2,7 @@ package work.boardgame.sangeki_rooper.fragment
 
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -11,9 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.setPadding
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -92,6 +90,7 @@ class ScenarioDetailFragment : BaseFragment() {
                 rv.rule_x2.visibility = View.GONE
             }
 
+            rv.character_count.text = String.format("(%d人)", item.characterList.size)
             rv.character_role_list.let { v ->
                 var row = 1
                 item.characterList.forEach { ch ->
@@ -115,9 +114,15 @@ class ScenarioDetailFragment : BaseFragment() {
                             width = res.getDimensionPixelSize(R.dimen.chara_role_width)
                         }
                         iv.zettaiYuukouMushi.text = if (ch.isZettaiYuukouMushi()) "◆" else "◇"
-                        iv.yuukouMushi.text = if (ch.isYuukouMushi()) "♥" else "♡" // TODO 友好無視は画像にする
+                        iv.yuukouMushi.setImageDrawable(ResourcesCompat.getDrawable(res,
+                                if (ch.isYuukouMushi()) R.drawable.broken_heart else R.drawable.lovely_heart,
+                                context?.theme))
                         iv.fushi.text = if (ch.isFushi()) "★" else "☆"
-                        iv.role_name.text = ch.role()
+                        iv.role_name.let { tv ->
+                            tv.text = ch.role()
+                            tv.typeface = if (ch.role() == "パーソン") Typeface.DEFAULT
+                            else Typeface.DEFAULT_BOLD
+                        }
                         iv
                     })
                     v.addView(TextView(context).apply {
@@ -182,6 +187,17 @@ class ScenarioDetailFragment : BaseFragment() {
                     row++
                 }
             }
+
+            rv.scenario_notice_text.let { v ->
+                if (item.advice.notice?.isNotEmpty() == true) {
+                    v.visibility = View.VISIBLE
+                    v.text = item.advice.notice
+                } else {
+                    v.visibility = View.GONE
+                }
+            }
+            rv.scenario_summary_text.text = item.advice.summary
+            rv.guide_for_writer_text.text = item.advice.detail
 
             rv.show_private.setOnClickListener {
                 rv.private_wrapper.let { w ->

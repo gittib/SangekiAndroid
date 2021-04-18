@@ -36,4 +36,9 @@
     <string name="incident">事件</string>
     <string name="criminal">犯人</string>
     <string name="note">備考</string>
+    <string name="scenario_feature">シナリオの特徴</string>
+    <string name="guide_for_writer">脚本家への指針</string>
+    <string name="writer_card_template">置き方テンプレ</string>
+    <string name="top_page_title">ペンスキーの惨劇RoopeR</string>
+    <string name="top_page_note">惨劇RoopeRの独自脚本をお求めの脚本家へ向けたアプリです。</string>
 </resources>

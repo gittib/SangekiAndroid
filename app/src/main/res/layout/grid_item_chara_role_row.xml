@@ -15,13 +15,16 @@
         android:text="◆"
         tools:ignore="HardcodedText" />
 
-    <TextView
+    <ImageView
         android:id="@+id/yuukouMushi"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/zettaiYuukouMushi"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="@dimen/chara_role_icon_size"
-        android:layout_height="wrap_content" />
+        android:layout_height="@dimen/chara_role_icon_size"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/lovely_heart"/>
 
     <TextView
         android:id="@+id/fushi"
