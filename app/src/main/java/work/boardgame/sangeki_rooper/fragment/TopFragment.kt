@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.top_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.TopViewModel
+import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 
 class TopFragment : BaseFragment() {
@@ -31,6 +32,10 @@ class TopFragment : BaseFragment() {
             }
             rv.scenario_list_image.setOnClickListener { rv.scenario_list_title.performClick() }
             rv.scenario_list_note.setOnClickListener { rv.scenario_list_title.performClick() }
+
+            rv.footer_text.text = rv.footer_text.text.toString()
+                    .replace("__SANGEKI_ROOPER_URL__", Define.SangekiRooperUrl.TOP)
+                    .replace("__CREATIVE_COMMONS_URL__", Define.SangekiRooperUrl.CREATIVE_COMMONS)
 
             rv
         }

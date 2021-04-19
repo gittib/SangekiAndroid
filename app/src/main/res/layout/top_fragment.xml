@@ -9,7 +9,7 @@
 
     <ScrollView
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/footer_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp">
         <LinearLayout
@@ -45,12 +45,15 @@
                 style="@style/Css.TopFragment.Note"
                 android:text="@string/scenario_note"/>
 
+            <TextView
+                android:id="@+id/footer_text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:textSize="12sp"
+                android:text="@string/footer_copy_light"
+                android:autoLink="web" />
         </LinearLayout>
     </ScrollView>
-
-    <TextView
-        android:id="@+id/footer_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
