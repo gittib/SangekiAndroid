@@ -15,6 +15,7 @@ import work.boardgame.sangeki_rooper.model.TragedyScenario
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
+import work.boardgame.sangeki_rooper.util.toJson
 
 class SplashActivity : BaseActivity() {
     private val TAG = SplashActivity::class.simpleName
@@ -35,6 +36,7 @@ class SplashActivity : BaseActivity() {
             .subscribeOn(Schedulers.io())
             .subscribe(object : SingleObserver<List<TragedyScenario>> {
                 override fun onSuccess(t: List<TragedyScenario>) {
+                    Logger.d(TAG, t.toJson())
                     prefs.edit()
                         .putString(Define.SharedPreferencesKey.SCENARIOS, Gson().toJson(t))
                         .apply()
@@ -59,6 +61,7 @@ class SplashActivity : BaseActivity() {
                     } ?: run {
                         AlertDialog.Builder(this@SplashActivity)
                                 .setMessage(R.string.failed_to_download_scenario)
+                                .setCancelable(false)
                                 .setPositiveButton(R.string.ok) { _, _ ->
                                     finish()
                                 }

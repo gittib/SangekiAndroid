@@ -2,7 +2,9 @@ package work.boardgame.sangeki_rooper.fragment
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -25,6 +27,7 @@ import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
 import work.boardgame.sangeki_rooper.model.TragedyScenario
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
+import work.boardgame.sangeki_rooper.util.Util
 
 class ScenarioDetailFragment : BaseFragment() {
     private val TAG = ScenarioDetailFragment::class.simpleName
@@ -68,6 +71,14 @@ class ScenarioDetailFragment : BaseFragment() {
                 inflater.inflate(R.layout.grid_item_incident_name, rv.incident_list, false).let { v ->
                     item.incidentList.find { it.day == i }?.let { incidentData ->
                         v.incident_name.text = incidentData.publicName()
+                        v.incident_name.setOnLongClickListener {
+                            AlertDialog.Builder(activity)
+                                    .setTitle(incidentData.publicName())
+                                    .setMessage(Util.incidentExplain(incidentData.publicName()))
+                                    .setPositiveButton(R.string.ok, null)
+                                    .show()
+                            true
+                        }
                     }
                     v.layoutParams = (v.layoutParams as GridLayout.LayoutParams).also { lp ->
                         lp.columnSpec = GridLayout.spec(1)

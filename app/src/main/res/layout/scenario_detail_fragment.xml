@@ -278,6 +278,7 @@
                     android:layout_width="match_parent"
                     android:textSize="14sp"
                     android:textColor="@color/red"
+                    android:paddingBottom="20dp"
                     tools:text="※注意事項" />
 
                 <TextView
