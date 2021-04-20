@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.grid_item_chara_role_row.view.*
 import kotlinx.android.synthetic.main.grid_item_incident_day.view.*
 import kotlinx.android.synthetic.main.grid_item_incident_name.view.*
+import kotlinx.android.synthetic.main.inc_difficulty_row.view.*
 import kotlinx.android.synthetic.main.scenario_detail_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
@@ -77,6 +78,8 @@ class ScenarioDetailFragment : BaseFragment() {
             }
 
             rv.scenario_title.text = item.title
+            rv.detail_difficulty_name.text = item.difficultyName()
+            rv.detail_difficulty_star.text = item.difficultyStar()
             rv.rule_y.text = item.ruleY()
             rv.rule_x1.text = item.ruleX1()
             item.ruleX2()?.let {
