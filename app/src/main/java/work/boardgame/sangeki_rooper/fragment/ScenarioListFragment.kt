@@ -33,12 +33,11 @@ class ScenarioListFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel.rootView = inflater.inflate(R.layout.scenario_list_fragment, container, false).let { rv ->
+        viewModel.rootView = inflater.inflate(R.layout.scenario_list_fragment, container, false).also { rv ->
             rv.scenario_list.let {
                 it.layoutManager = LinearLayoutManager(context)
                 it.adapter = ScenarioListAdapter()
             }
-            rv
         }
 
         return viewModel.rootView

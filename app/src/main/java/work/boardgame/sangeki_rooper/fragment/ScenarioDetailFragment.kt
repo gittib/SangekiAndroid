@@ -46,7 +46,7 @@ class ScenarioDetailFragment : BaseFragment() {
             fragmentManager?.popBackStack()
             return null
         }
-        viewModel.rootView = inflater.inflate(R.layout.scenario_detail_fragment, container, false).let { rv ->
+        viewModel.rootView = inflater.inflate(R.layout.scenario_detail_fragment, container, false).also { rv ->
             val res = resources
 
             rv.public_sheet_value_set.text = item.setName()
@@ -56,10 +56,9 @@ class ScenarioDetailFragment : BaseFragment() {
 
             for (i in 1..item.day) {
                 inflater.inflate(R.layout.grid_item_incident_day, rv.incident_list, false).let { v ->
-                    v.layoutParams = (v.layoutParams as GridLayout.LayoutParams).let { lp ->
+                    v.layoutParams = (v.layoutParams as GridLayout.LayoutParams).also { lp ->
                         lp.columnSpec = GridLayout.spec(0)
                         lp.rowSpec = GridLayout.spec(i)
-                        lp
                     }
                     v.day_count.text = String.format("%d", i)
                     rv.incident_list.addView(v)
@@ -69,10 +68,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     item.incidentList.find { it.day == i }?.let { incidentData ->
                         v.incident_name.text = incidentData.publicName()
                     }
-                    v.layoutParams = (v.layoutParams as GridLayout.LayoutParams).let { lp ->
+                    v.layoutParams = (v.layoutParams as GridLayout.LayoutParams).also { lp ->
                         lp.columnSpec = GridLayout.spec(1)
                         lp.rowSpec = GridLayout.spec(i)
-                        lp
                     }
                     rv.incident_list.addView(v)
                 }
@@ -94,24 +92,24 @@ class ScenarioDetailFragment : BaseFragment() {
             rv.character_role_list.let { v ->
                 var row = 1
                 item.characterList.forEach { ch ->
-                    v.addView(TextView(context).apply {
-                        layoutParams = GridLayout.LayoutParams().apply {
-                            columnSpec = GridLayout.spec(0)
-                            rowSpec = GridLayout.spec(row)
-                            width = res.getDimensionPixelSize(R.dimen.chara_name_width)
+                    v.addView(TextView(context).also { tv ->
+                        tv.layoutParams = GridLayout.LayoutParams().also { lp ->
+                            lp.columnSpec = GridLayout.spec(0)
+                            lp.rowSpec = GridLayout.spec(row)
+                            lp.width = res.getDimensionPixelSize(R.dimen.chara_name_width)
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+                            tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
                         }
-                        setPadding(res.getDimensionPixelSize(R.dimen.chara_name_margin_left),
+                        tv.setPadding(res.getDimensionPixelSize(R.dimen.chara_name_margin_left),
                                 0, 0, 0)
-                        text = ch.name
+                        tv.text = ch.name
                     })
-                    v.addView(inflater.inflate(R.layout.grid_item_chara_role_row, v, false).let { iv ->
-                        iv.layoutParams = GridLayout.LayoutParams().apply {
-                            columnSpec = GridLayout.spec(1)
-                            rowSpec = GridLayout.spec(row)
-                            width = res.getDimensionPixelSize(R.dimen.chara_role_width)
+                    v.addView(inflater.inflate(R.layout.grid_item_chara_role_row, v, false).also { iv ->
+                        iv.layoutParams = GridLayout.LayoutParams().also { lp ->
+                            lp.columnSpec = GridLayout.spec(1)
+                            lp.rowSpec = GridLayout.spec(row)
+                            lp.width = res.getDimensionPixelSize(R.dimen.chara_role_width)
                         }
                         iv.zettaiYuukouMushi.text = if (ch.isZettaiYuukouMushi()) "◆" else "◇"
                         iv.yuukouMushi.setImageDrawable(ResourcesCompat.getDrawable(res,
@@ -123,66 +121,61 @@ class ScenarioDetailFragment : BaseFragment() {
                             tv.typeface = if (ch.role() == "パーソン") Typeface.DEFAULT
                             else Typeface.DEFAULT_BOLD
                         }
-                        iv
                     })
-                    v.addView(TextView(context).apply {
-                        layoutParams = GridLayout.LayoutParams().apply {
-                            columnSpec = GridLayout.spec(2)
-                            rowSpec = GridLayout.spec(row)
-                            width = res.getDimensionPixelSize(R.dimen.chara_note_width)
+                    v.addView(TextView(context).also { tv ->
+                        tv.layoutParams = GridLayout.LayoutParams().also { lp ->
+                            lp.columnSpec = GridLayout.spec(2)
+                            lp.rowSpec = GridLayout.spec(row)
+                            lp.width = res.getDimensionPixelSize(R.dimen.chara_note_width)
                         }
-                        text = ch.note
+                        tv.text = ch.note
                     })
                     row++
                 }
             }
 
-            rv.incident_criminal_list.let { v ->
+            rv.incident_criminal_list.let { lv ->
                 var row = 1
                 item.incidentList.forEach { ch ->
-                    v.addView(TextView(context).apply {
-                        layoutParams = GridLayout.LayoutParams().apply {
-                            columnSpec = GridLayout.spec(0)
-                            rowSpec = GridLayout.spec(row)
-                            width = res.getDimensionPixelSize(R.dimen.incident_day_width)
-                            gravity = Gravity.FILL_VERTICAL
+                    lv.addView(TextView(context).also { v ->
+                        v.layoutParams = GridLayout.LayoutParams().also { lp ->
+                            lp.columnSpec = GridLayout.spec(0)
+                            lp.rowSpec = GridLayout.spec(row)
+                            lp.width = res.getDimensionPixelSize(R.dimen.incident_day_width)
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
+                            v.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
                         }
-                        setPadding(2, 0, 0, 0)
-                        textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                        gravity = Gravity.CENTER_VERTICAL
-                        text = ch.day.toString()
+                        v.setPadding(2, 0, 0, 0)
+                        v.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                        v.gravity = Gravity.CENTER_VERTICAL
+                        v.text = ch.day.toString()
                     })
-                    v.addView(TextView(context).apply {
-                        layoutParams = GridLayout.LayoutParams().apply {
-                            columnSpec = GridLayout.spec(1)
-                            rowSpec = GridLayout.spec(row)
-                            width = res.getDimensionPixelSize(R.dimen.incident_private_name_width)
-                            gravity = Gravity.FILL_VERTICAL
+                    lv.addView(TextView(context).also { v ->
+                        v.layoutParams = GridLayout.LayoutParams().also { lp ->
+                            lp.columnSpec = GridLayout.spec(1)
+                            lp.rowSpec = GridLayout.spec(row)
+                            lp.width = res.getDimensionPixelSize(R.dimen.incident_private_name_width)
                         }
-                        gravity = Gravity.CENTER_VERTICAL
-                        text = ch.name
+                        v.gravity = Gravity.CENTER_VERTICAL
+                        v.text = ch.name
                     })
-                    v.addView(TextView(context).apply {
-                        layoutParams = GridLayout.LayoutParams().apply {
-                            columnSpec = GridLayout.spec(2)
-                            rowSpec = GridLayout.spec(row)
-                            gravity = Gravity.FILL
+                    lv.addView(TextView(context).also { v ->
+                        v.layoutParams = GridLayout.LayoutParams().also { lp ->
+                            lp.columnSpec = GridLayout.spec(2)
+                            lp.rowSpec = GridLayout.spec(row)
                         }
-                        gravity = Gravity.CENTER_VERTICAL
-                        text = ch.criminal
+                        v.gravity = Gravity.CENTER_VERTICAL
+                        v.text = ch.criminal
                     })
-                    v.addView(TextView(context).apply {
-                        layoutParams = GridLayout.LayoutParams().apply {
-                            columnSpec = GridLayout.spec(3)
-                            rowSpec = GridLayout.spec(row)
-                            width = res.getDimensionPixelSize(R.dimen.incident_note_width)
-                            gravity = Gravity.FILL_VERTICAL
+                    lv.addView(TextView(context).also { v ->
+                        v.layoutParams = GridLayout.LayoutParams().also { lp ->
+                            lp.columnSpec = GridLayout.spec(3)
+                            lp.rowSpec = GridLayout.spec(row)
+                            lp.width = res.getDimensionPixelSize(R.dimen.incident_note_width)
                         }
-                        gravity = Gravity.CENTER_VERTICAL
-                        text = ch.note
+                        v.gravity = Gravity.CENTER_VERTICAL
+                        v.text = ch.note
                     })
                     row++
                 }
@@ -216,8 +209,6 @@ class ScenarioDetailFragment : BaseFragment() {
                     }
                 }
             }
-
-            rv
         }
         return viewModel.rootView
     }

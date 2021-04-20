@@ -26,7 +26,7 @@ class TopFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         Logger.methodStart(TAG)
-        viewModel.rootView = inflater.inflate(R.layout.top_fragment, container, false).let { rv ->
+        viewModel.rootView = inflater.inflate(R.layout.top_fragment, container, false).also { rv ->
             rv.scenario_list_title.setOnClickListener {
                 activity?.startFragment(ScenarioListFragment::class.qualifiedName)
             }
@@ -36,8 +36,6 @@ class TopFragment : BaseFragment() {
             rv.footer_text.text = rv.footer_text.text.toString()
                     .replace("__SANGEKI_ROOPER_URL__", Define.SangekiRooperUrl.TOP)
                     .replace("__CREATIVE_COMMONS_URL__", Define.SangekiRooperUrl.CREATIVE_COMMONS)
-
-            rv
         }
         return viewModel.rootView
     }

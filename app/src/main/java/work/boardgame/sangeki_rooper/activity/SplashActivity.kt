@@ -39,8 +39,8 @@ class SplashActivity : BaseActivity() {
                         .putString(Define.SharedPreferencesKey.SCENARIOS, Gson().toJson(t))
                         .apply()
                     Handler(mainLooper).postDelayed({
-                        startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).apply {
-                            putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
+                        startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).also {
+                            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
                         })
                         finish()
                     }, 1000L)
@@ -51,8 +51,8 @@ class SplashActivity : BaseActivity() {
                     Logger.w(TAG, Throwable(e))
                     prefs.getString(Define.SharedPreferencesKey.SCENARIOS, null)?.let {
                         Handler(mainLooper).postDelayed({
-                            startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).apply {
-                                putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
+                            startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).also {
+                                it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
                             })
                             finish()
                         }, 1000L)
