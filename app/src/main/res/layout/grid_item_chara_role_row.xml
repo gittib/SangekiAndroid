@@ -48,6 +48,11 @@
         android:layout_height="wrap_content"
         android:paddingLeft="8dp"
         android:paddingRight="2dp"
+        android:maxLines="1"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeTextType="uniform"
         android:textColor="@color/text_color_strong"
-        tools:text="キーパーソン"/>
+        tools:text="キーパーソン"
+        tools:targetApi="o" />
 </androidx.constraintlayout.widget.ConstraintLayout>

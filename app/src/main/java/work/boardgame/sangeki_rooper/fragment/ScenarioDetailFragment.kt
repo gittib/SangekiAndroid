@@ -2,9 +2,7 @@ package work.boardgame.sangeki_rooper.fragment
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -20,6 +18,7 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.grid_item_chara_role_row.view.*
 import kotlinx.android.synthetic.main.grid_item_incident_day.view.*
 import kotlinx.android.synthetic.main.grid_item_incident_name.view.*
+import kotlinx.android.synthetic.main.grid_item_long_text_row.view.*
 import kotlinx.android.synthetic.main.inc_difficulty_row.view.*
 import kotlinx.android.synthetic.main.scenario_detail_fragment.view.*
 import work.boardgame.sangeki_rooper.R
@@ -106,18 +105,13 @@ class ScenarioDetailFragment : BaseFragment() {
             rv.character_role_list.let { v ->
                 var row = 1
                 item.characterList.forEach { ch ->
-                    v.addView(TextView(context).also { tv ->
+                    v.addView(inflater.inflate(R.layout.grid_item_long_text_row, v, false).also { tv ->
                         tv.layoutParams = GridLayout.LayoutParams().also { lp ->
                             lp.columnSpec = GridLayout.spec(0)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = res.getDimensionPixelSize(R.dimen.chara_name_width)
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
-                        }
-                        tv.setPadding(res.getDimensionPixelSize(R.dimen.chara_name_margin_left),
-                                0, 0, 0)
-                        tv.text = ch.name
+                        tv.long_text.text = ch.name
                     })
                     v.addView(inflater.inflate(R.layout.grid_item_chara_role_row, v, false).also { iv ->
                         iv.layoutParams = GridLayout.LayoutParams().also { lp ->
@@ -165,22 +159,26 @@ class ScenarioDetailFragment : BaseFragment() {
                         v.gravity = Gravity.CENTER_VERTICAL
                         v.text = ch.day.toString()
                     })
-                    lv.addView(TextView(context).also { v ->
+                    lv.addView(inflater.inflate(R.layout.grid_item_long_text_row, lv, false).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
                             lp.columnSpec = GridLayout.spec(1)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = res.getDimensionPixelSize(R.dimen.incident_private_name_width)
                         }
-                        v.gravity = Gravity.CENTER_VERTICAL
-                        v.text = ch.name
+                        v.long_text.also { tv ->
+                            tv.text = ch.name
+                            tv.layoutParams = tv.layoutParams.also { lp ->
+                                lp.width = res.getDimensionPixelSize(R.dimen.incident_private_name_width)
+                            }
+                        }
                     })
-                    lv.addView(TextView(context).also { v ->
+                    lv.addView(inflater.inflate(R.layout.grid_item_long_text_row, lv, false).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
                             lp.columnSpec = GridLayout.spec(2)
                             lp.rowSpec = GridLayout.spec(row)
+                            lp.width = res.getDimensionPixelSize(R.dimen.chara_name_width)
                         }
-                        v.gravity = Gravity.CENTER_VERTICAL
-                        v.text = ch.criminal
+                        v.long_text.text = ch.criminal
                     })
                     lv.addView(TextView(context).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
@@ -205,6 +203,8 @@ class ScenarioDetailFragment : BaseFragment() {
             }
             rv.scenario_summary_text.text = item.advice.summary
             rv.guide_for_writer_text.text = item.advice.detail
+
+            // TODO 置き方テンプレの表示
 
             rv.show_private.setOnClickListener {
                 rv.private_wrapper.let { w ->

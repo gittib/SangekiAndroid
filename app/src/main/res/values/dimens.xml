@@ -9,12 +9,12 @@
     <dimen name="horizontal_margin">16dp</dimen>
 
     <!-- キャラクター一覧 -->
-    <dimen name="chara_name_width">100dp</dimen>
+    <dimen name="chara_name_width">80dp</dimen>
     <dimen name="chara_name_margin_left">4dp</dimen>
     <dimen name="chara_role_icon_size">16dp</dimen>
     <dimen name="chara_role_width">172dp</dimen>
     <dimen name="chara_note_width">80dp</dimen>
     <dimen name="incident_day_width">40dp</dimen>
-    <dimen name="incident_private_name_width">92dp</dimen>
+    <dimen name="incident_private_name_width">100dp</dimen>
     <dimen name="incident_note_width">48dp</dimen>
 </resources>
