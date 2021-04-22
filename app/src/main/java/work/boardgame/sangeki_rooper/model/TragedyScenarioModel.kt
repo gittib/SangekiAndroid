@@ -3,7 +3,7 @@ package work.boardgame.sangeki_rooper.model
 import android.graphics.Color
 
 @Suppress("unused")
-class TragedyScenario (
+class TragedyScenarioModel (
     val id: String,
     val title: String?,
     val recommended: Boolean?,

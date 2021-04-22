@@ -11,7 +11,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.TopFragment
-import work.boardgame.sangeki_rooper.model.TragedyScenario
+import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
@@ -33,8 +33,8 @@ class LaunchActivity : BaseActivity() {
             .getScenarioList()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : SingleObserver<List<TragedyScenario>> {
-                override fun onSuccess(t: List<TragedyScenario>) {
+            .subscribe(object : SingleObserver<List<TragedyScenarioModel>> {
+                override fun onSuccess(t: List<TragedyScenarioModel>) {
                     prefs.edit().putString(Define.SharedPreferencesKey.SCENARIOS, Gson().toJson(t)).apply()
                     Handler(mainLooper).postDelayed({
                         startApp()

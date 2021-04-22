@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.inc_difficulty_row.view.*
 import kotlinx.android.synthetic.main.scenario_detail_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
-import work.boardgame.sangeki_rooper.model.TragedyScenario
+import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
@@ -234,8 +234,8 @@ class ScenarioDetailFragment : BaseFragment() {
         arguments?.let { a ->
             val id = a.getString(BUNDLE_KEY_SCENARIO_ID)
             val scenarioList = prefs?.getString(Define.SharedPreferencesKey.SCENARIOS, null)?.let { s ->
-                val type = object:TypeToken<List<TragedyScenario>>(){}.type
-                Gson().fromJson<List<TragedyScenario>>(s, type)
+                val type = object:TypeToken<List<TragedyScenarioModel>>(){}.type
+                Gson().fromJson<List<TragedyScenarioModel>>(s, type)
             }
             viewModel.scenario = scenarioList?.find { it.id == id }
         }

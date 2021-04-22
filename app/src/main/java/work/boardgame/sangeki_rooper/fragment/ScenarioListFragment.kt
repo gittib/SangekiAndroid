@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.adapter_item_scenario.view.*
 import kotlinx.android.synthetic.main.scenario_list_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioListViewModel
-import work.boardgame.sangeki_rooper.model.TragedyScenario
+import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
 
 class ScenarioListFragment : BaseFragment() {
@@ -47,7 +47,7 @@ class ScenarioListFragment : BaseFragment() {
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(ScenarioListViewModel::class.java)
         prefs?.getString(Define.SharedPreferencesKey.SCENARIOS, null)?.let {
-            val type = object: TypeToken<List<TragedyScenario>>(){}.type
+            val type = object: TypeToken<List<TragedyScenarioModel>>(){}.type
             viewModel.scenarioList = Gson().fromJson(it, type)
         }
         viewModel.scenarioList = viewModel.scenarioList.filter { it.secret != true }
