@@ -14,8 +14,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.grid_item_chara_role_row.view.*
 import kotlinx.android.synthetic.main.grid_item_incident_day.view.*
 import kotlinx.android.synthetic.main.grid_item_incident_name.view.*
@@ -25,8 +23,6 @@ import kotlinx.android.synthetic.main.linear_item_template_standby.view.*
 import kotlinx.android.synthetic.main.scenario_detail_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
-import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
-import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 

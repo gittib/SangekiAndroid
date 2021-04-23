@@ -12,14 +12,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.adapter_item_scenario.view.*
 import kotlinx.android.synthetic.main.scenario_list_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioListViewModel
-import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
-import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Util
 
 class ScenarioListFragment : BaseFragment() {

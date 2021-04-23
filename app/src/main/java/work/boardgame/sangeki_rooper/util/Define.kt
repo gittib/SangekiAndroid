@@ -7,6 +7,7 @@ object Define {
     }
 
     object SharedPreferencesKey {
+        const val LAST_UPDATED_SCENARIO = "LAST_UPDATED_SCENARIO"
         const val SCENARIOS = "SCENARIOS"
         const val USER_AGENT = "USER_AGENT"
     }
