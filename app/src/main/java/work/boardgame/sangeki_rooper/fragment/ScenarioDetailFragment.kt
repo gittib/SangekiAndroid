@@ -60,16 +60,15 @@ class ScenarioDetailFragment : BaseFragment() {
             rv.public_sheet_special_value.text = item.specialRule()
 
             for (i in 1..item.day) {
-                inflater.inflate(R.layout.grid_item_incident_day, rv.incident_list, false).let { v ->
+                rv.incident_list.addView(inflater.inflate(R.layout.grid_item_incident_day, rv.incident_list, false).also { v ->
                     v.layoutParams = (v.layoutParams as GridLayout.LayoutParams).also { lp ->
                         lp.columnSpec = GridLayout.spec(0)
                         lp.rowSpec = GridLayout.spec(i)
                     }
                     v.day_count.text = String.format("%d", i)
-                    rv.incident_list.addView(v)
-                }
+                })
 
-                inflater.inflate(R.layout.grid_item_incident_name, rv.incident_list, false).let { v ->
+                rv.incident_list.addView(inflater.inflate(R.layout.grid_item_incident_name, rv.incident_list, false).also { v ->
                     item.incidentList.find { it.day == i }?.let { incidentData ->
                         v.incident_name.text = incidentData.publicName()
                         v.incident_name.setOnLongClickListener {
@@ -85,8 +84,7 @@ class ScenarioDetailFragment : BaseFragment() {
                         lp.columnSpec = GridLayout.spec(1)
                         lp.rowSpec = GridLayout.spec(i)
                     }
-                    rv.incident_list.addView(v)
-                }
+                })
             }
 
             rv.scenario_title.text = item.title
