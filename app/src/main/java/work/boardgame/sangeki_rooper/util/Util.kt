@@ -5,12 +5,16 @@ import android.webkit.WebView
 import androidx.annotation.StringRes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import work.boardgame.sangeki_rooper.BuildConfig
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 object Util {
     private val TAG = Util::class.simpleName
@@ -52,6 +56,22 @@ object Util {
         } else {
             prefs.getString(Define.SharedPreferencesKey.USER_AGENT, null)
                 ?: throw IllegalStateException("user agent string is not initialized yet!")
+        }
+    }
+
+    fun getScenarioList(context: Context):List<TragedyScenarioModel> {
+        Logger.methodStart(TAG)
+        val prefs = context.getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        val str = prefs.getString(Define.SharedPreferencesKey.SCENARIOS, null) ?: run {
+            Logger.d(TAG, "downloaded scenario data is null. load asset.")
+            val assetManager = context.resources.assets
+            val inputStream = assetManager.open("initial_scenario_list.json")
+            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            bufferedReader.readText()
+        }
+        return str.let {
+            val type = object:TypeToken<List<TragedyScenarioModel>>(){}.type
+            Gson().fromJson(it, type)
         }
     }
 

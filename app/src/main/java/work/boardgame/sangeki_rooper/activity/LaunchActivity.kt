@@ -43,12 +43,8 @@ class LaunchActivity : BaseActivity() {
 
                 override fun onSubscribe(d: Disposable) {}
                 override fun onError(e: Throwable) {
-                    prefs.getString(Define.SharedPreferencesKey.SCENARIOS, null)?.let {
-                        startApp()
-                    } ?: run {
-                        Toast.makeText(this@LaunchActivity, R.string.failed_to_download_scenario, Toast.LENGTH_LONG).show()
-                        finish()
-                    }
+                    Logger.w(TAG, Throwable(e))
+                    startApp()
                 }
             })
     }

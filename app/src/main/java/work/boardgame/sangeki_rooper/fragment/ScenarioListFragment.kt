@@ -20,6 +20,7 @@ import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioListViewModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
+import work.boardgame.sangeki_rooper.util.Util
 
 class ScenarioListFragment : BaseFragment() {
 
@@ -46,11 +47,7 @@ class ScenarioListFragment : BaseFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(ScenarioListViewModel::class.java)
-        prefs?.getString(Define.SharedPreferencesKey.SCENARIOS, null)?.let {
-            val type = object: TypeToken<List<TragedyScenarioModel>>(){}.type
-            viewModel.scenarioList = Gson().fromJson(it, type)
-        }
-        viewModel.scenarioList = viewModel.scenarioList.filter { it.secret != true }
+        viewModel.scenarioList = Util.getScenarioList(context).filter { it.secret != true }
                 .sortedWith(Comparator { o1, o2 ->
                     var d = o1.setIndex() - o2.setIndex()
                     if (d == 0) d = o1.difficulty - o2.difficulty

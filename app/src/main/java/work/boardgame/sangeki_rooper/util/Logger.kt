@@ -102,14 +102,20 @@ object Logger {
      * "■--- メソッド名 -----"って毎回書くのが面倒なので関数化
      */
     @JvmStatic
-    fun methodStart(tag: String?, s:String? = "") {
+    fun methodStart(tag: String?) = methodStart(tag, "")
+    @JvmStatic
+    fun methodStart(tag: String?, s:String?) {
+        if (!ENABLE_LOG) return
         try {
             val thisMethodName = object : Any() {}.javaClass.enclosingMethod!!.name
             val stackTraces = Thread.currentThread().stackTrace
             for (i in 0 until stackTraces.size - 1) {
                 val trace = stackTraces[i]
                 if (trace.methodName == thisMethodName) {
-                    i(tag, "■--- " + stackTraces[i + 1].methodName + " ----- $s")
+                    when (stackTraces[i+1].methodName) {
+                        thisMethodName -> i(tag, "■--- " + stackTraces.getOrNull(i+2)?.methodName + " ----- $s")
+                        else -> i(tag, "■--- " + stackTraces[i+1].methodName + " ----- $s")
+                    }
                     return
                 }
             }

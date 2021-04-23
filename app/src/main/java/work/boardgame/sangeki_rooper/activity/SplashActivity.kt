@@ -1,6 +1,5 @@
 package work.boardgame.sangeki_rooper.activity
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -9,7 +8,6 @@ import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.TopFragment
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
@@ -51,26 +49,12 @@ class SplashActivity : BaseActivity() {
                 override fun onSubscribe(d: Disposable) {}
                 override fun onError(e: Throwable) {
                     Logger.w(TAG, Throwable(e))
-                    prefs.getString(Define.SharedPreferencesKey.SCENARIOS, null)?.let {
-                        Handler(mainLooper).postDelayed({
-                            startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).also {
-                                it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
-                            })
-                            finish()
-                        }, 1000L)
-                    } ?: run {
-                        AlertDialog.Builder(this@SplashActivity)
-                                .setMessage(R.string.failed_to_download_scenario)
-                                .setCancelable(false)
-                                .setPositiveButton(R.string.ok) { _, _ ->
-                                    finish()
-                                }
-                                .setNegativeButton(R.string.retry) { _, _ ->
-                                    startActivity(Intent(this@SplashActivity, SplashActivity::class.java))
-                                    finish()
-                                }
-                                .show()
-                    }
+                    Handler(mainLooper).postDelayed({
+                        startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).also {
+                            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
+                        })
+                        finish()
+                    }, 1000L)
                 }
             })
     }

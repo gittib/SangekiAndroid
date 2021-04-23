@@ -281,11 +281,8 @@ class ScenarioDetailFragment : BaseFragment() {
         viewModel = ViewModelProvider(this).get(ScenarioDetailViewModel::class.java)
         arguments?.let { a ->
             val id = a.getString(BUNDLE_KEY_SCENARIO_ID)
-            val scenarioList = prefs?.getString(Define.SharedPreferencesKey.SCENARIOS, null)?.let { s ->
-                val type = object:TypeToken<List<TragedyScenarioModel>>(){}.type
-                Gson().fromJson<List<TragedyScenarioModel>>(s, type)
-            }
-            viewModel.scenario = scenarioList?.find { it.id == id }
+            val scenarioList = Util.getScenarioList(context)
+            viewModel.scenario = scenarioList.find { it.id == id }
         }
     }
 
