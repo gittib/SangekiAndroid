@@ -98,7 +98,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 style="@style/Css.ScenarioDetail"
                 android:layout_width="match_parent"
-                android:paddingBottom="60dp"
+                android:paddingBottom="@dimen/footer_height"
                 android:visibility="gone"
                 tools:visibility="visible">
 

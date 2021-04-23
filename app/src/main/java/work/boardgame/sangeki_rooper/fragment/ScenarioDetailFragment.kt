@@ -47,11 +47,14 @@ class ScenarioDetailFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        Logger.methodStart(TAG)
         val item = viewModel.scenario ?: run {
             fragmentManager?.popBackStack()
             return null
         }
         viewModel.rootView = inflater.inflate(R.layout.scenario_detail_fragment, container, false).also { rv ->
+            rv.setOnClickListener { Logger.v(TAG, "クリックイベントバブリング対策") }
+
             val res = resources
 
             rv.public_sheet_value_set.text = item.setName()

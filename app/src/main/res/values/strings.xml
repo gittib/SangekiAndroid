@@ -41,5 +41,13 @@
     <string name="writer_card_template">置き方テンプレ</string>
     <string name="top_page_title">ペンスキーの惨劇RoopeR</string>
     <string name="top_page_note">惨劇RoopeRの独自脚本をお求めの脚本家へ向けたアプリです。</string>
-    <string name="footer_copy_light">本アプリは BakaFire Party のゲーム「惨劇RoopeR」のファンアプリです。また、惨劇コモンズの画像素材を使用しています。\n\n「惨劇RoopeR」のサイトはこちら\n__SANGEKI_ROOPER_URL__\n\n惨劇コモンズ by BakaFire, 紺ノ玲 is licensed under a Creative Commons 表示 - 継承 2.1 日本 License\n__CREATIVE_COMMONS_URL__</string>
+    <string name="footer_copy_light">
+        本アプリは BakaFire Party のゲーム「惨劇RoopeR」のファンアプリです。また、惨劇コモンズの画像素材を使用しています。\n
+        \n
+        「惨劇RoopeR」のサイトはこちら\n
+        __SANGEKI_ROOPER_URL__\n
+        \n
+        惨劇コモンズ by BakaFire, 紺ノ玲 is licensed under a Creative Commons 表示 - 継承 2.1 日本 License\n
+        __CREATIVE_COMMONS_URL__
+    </string>
 </resources>
