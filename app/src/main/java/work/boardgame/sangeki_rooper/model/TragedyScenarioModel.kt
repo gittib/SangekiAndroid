@@ -17,7 +17,8 @@ class TragedyScenarioModel (
     val day: Int,
     val characterList: List<CharacterData>,
     val incidentList: List<IncidentData>,
-    val advice: AdviceInfo
+    val advice: AdviceInfo,
+    val templateInfo: List<TemplateInfo>?
 ) {
     fun setIndex() = when (set) {
         "FS" -> 0
@@ -140,7 +141,7 @@ class TragedyScenarioModel (
         val note: String?
     ) {
         fun publicName() = when (name) {
-            "偽装事件" -> note ?: name
+            "偽装事件" -> if (note?.isNotEmpty() == true) note else name
             else -> name
         }
     }
@@ -149,22 +150,28 @@ class TragedyScenarioModel (
         val notice:String?,
         val summary:String?,
         val detail: String?,
-        val victoryConditions: List<VictoryCondition>?,
-        val templateInfo: List<TemplateInfo>
+        val victoryConditions: List<VictoryCondition>?
     ) {
         class VictoryCondition (
             val condition: String,
             val way: List<String>
         )
+    }
 
-        class TemplateInfo (
+    class TemplateInfo (
             val loop: String,
-            val day: Int,
-            val set: List<SetCard>
+            val standby: String?,
+            val perDay: List<TemplatePerDay>
+    ) {
+        class TemplatePerDay (
+                val day: Int,
+                val pattern:List<SetCard>
         ) {
+            fun dayStr():String = if (day == 1) "初日" else String.format("%d日", day)
+
             class SetCard (
-                val target: String,
-                val card: String
+                    val target: String,
+                    val card: String
             )
         }
     }

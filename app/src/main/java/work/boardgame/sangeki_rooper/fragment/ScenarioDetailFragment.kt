@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.grid_item_incident_day.view.*
 import kotlinx.android.synthetic.main.grid_item_incident_name.view.*
 import kotlinx.android.synthetic.main.grid_item_long_text_row.view.*
 import kotlinx.android.synthetic.main.inc_difficulty_row.view.*
+import kotlinx.android.synthetic.main.linear_item_template_standby.view.*
 import kotlinx.android.synthetic.main.scenario_detail_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
@@ -204,7 +206,52 @@ class ScenarioDetailFragment : BaseFragment() {
             rv.scenario_summary_text.text = item.advice.summary
             rv.guide_for_writer_text.text = item.advice.detail
 
-            // TODO 置き方テンプレの表示
+            // 置き方テンプレの表示
+            if (item.templateInfo?.isNotEmpty() == true) {
+                rv.template_for_writer_title.visibility = View.VISIBLE
+                rv.template_for_writer_text.let { lv ->
+                    lv.visibility = View.VISIBLE
+                    item.templateInfo.forEach { li ->
+                        lv.addView(TextView(context).also { v ->
+                            v.layoutParams = LinearLayout.LayoutParams(0, 0).also { lp ->
+                                lp.width = ViewGroup.LayoutParams.MATCH_PARENT
+                                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                            }
+                            v.typeface = Typeface.DEFAULT_BOLD
+                            v.setPadding(res.getDimensionPixelSize(R.dimen.template_loop_padding),
+                                    res.getDimensionPixelSize(R.dimen.template_loop_top_padding), 0, 0)
+                            v.text = li.loop
+                        })
+                        if (li.standby?.isNotEmpty() == true) {
+                            lv.addView(inflater.inflate(R.layout.linear_item_template_standby, lv, false).also { v ->
+                                v.loop_standby.text = li.standby
+                            })
+                        }
+                        li.perDay.forEach { da ->
+                            if (da.day > 0) {
+                                lv.addView(TextView(context).also { v ->
+                                    v.layoutParams = LinearLayout.LayoutParams(0, 0).also { lp ->
+                                        lp.width = ViewGroup.LayoutParams.MATCH_PARENT
+                                        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                                    }
+                                    v.setPadding(res.getDimensionPixelSize(R.dimen.template_day_padding), 0, 0, 0)
+                                    v.text = da.dayStr()
+                                })
+                            }
+                            da.pattern.forEach { pt ->
+                                lv.addView(TextView(context).also { v ->
+                                    v.layoutParams = LinearLayout.LayoutParams(0, 0).also { lp ->
+                                        lp.width = ViewGroup.LayoutParams.MATCH_PARENT
+                                        lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                                    }
+                                    v.setPadding(res.getDimensionPixelSize(R.dimen.template_card_padding), 0, 0, 0)
+                                    v.text = String.format("%s に「%s」", pt.target, pt.card)
+                                })
+                            }
+                        }
+                    }
+                }
+            }
 
             rv.show_private.setOnClickListener {
                 rv.private_wrapper.let { w ->

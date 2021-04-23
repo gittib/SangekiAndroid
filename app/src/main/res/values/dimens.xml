@@ -14,7 +14,15 @@
     <dimen name="chara_role_icon_size">16dp</dimen>
     <dimen name="chara_role_width">172dp</dimen>
     <dimen name="chara_note_width">80dp</dimen>
+
+    <!-- 事件一覧 -->
     <dimen name="incident_day_width">40dp</dimen>
     <dimen name="incident_private_name_width">100dp</dimen>
     <dimen name="incident_note_width">48dp</dimen>
+
+    <!-- テンプレート -->
+    <dimen name="template_loop_top_padding">16dp</dimen>
+    <dimen name="template_loop_padding">2dp</dimen>
+    <dimen name="template_day_padding">20dp</dimen>
+    <dimen name="template_card_padding">40dp</dimen>
 </resources>

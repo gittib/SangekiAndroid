@@ -51,6 +51,9 @@
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
     </style>
+    <style name="Css.ScenarioDetail.Text.Private">
+        <item name="android:textSize">14sp</item>
+    </style>
     <style name="Css.ScenarioDetail.IncidentList">
         <item name="android:columnCount">2</item>
         <item name="android:layout_marginLeft">8dp</item>

@@ -98,6 +98,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 style="@style/Css.ScenarioDetail"
                 android:layout_width="match_parent"
+                android:paddingBottom="60dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
@@ -274,9 +275,8 @@
                 <TextView
                     android:id="@+id/scenario_notice_text"
                     app:layout_constraintTop_toBottomOf="@id/scenario_detail_title"
-                    style="@style/Css.ScenarioDetail.Text"
+                    style="@style/Css.ScenarioDetail.Text.Private"
                     android:layout_width="match_parent"
-                    android:textSize="14sp"
                     android:textColor="@color/red"
                     android:paddingBottom="20dp"
                     tools:text="※注意事項" />
@@ -284,9 +284,8 @@
                 <TextView
                     android:id="@+id/scenario_summary_text"
                     app:layout_constraintTop_toBottomOf="@id/scenario_notice_text"
-                    style="@style/Css.ScenarioDetail.Text"
+                    style="@style/Css.ScenarioDetail.Text.Private"
                     android:layout_width="match_parent"
-                    android:textSize="14sp"
                     tools:text="初心者向けの脚本です。" />
 
                 <TextView
@@ -299,10 +298,8 @@
                 <TextView
                     android:id="@+id/guide_for_writer_text"
                     app:layout_constraintTop_toBottomOf="@id/guide_for_writer_title"
-                    style="@style/Css.ScenarioDetail.Text"
+                    style="@style/Css.ScenarioDetail.Text.Private"
                     android:layout_width="match_parent"
-                    android:textSize="14sp"
-                    android:paddingBottom="60dp"
                     tools:text="テンプレに従いましょう。" />
 
                 <TextView
@@ -310,7 +307,16 @@
                     app:layout_constraintTop_toBottomOf="@id/guide_for_writer_text"
                     app:layout_constraintLeft_toLeftOf="parent"
                     style="@style/Css.ScenarioDetail.Title"
-                    android:text="@string/writer_card_template" />
+                    android:visibility="gone"
+                    android:text="@string/writer_card_template"
+                    tools:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/template_for_writer_text"
+                    app:layout_constraintTop_toBottomOf="@id/template_for_writer_title"
+                    style="@style/Css.ScenarioDetail.Text.Private"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

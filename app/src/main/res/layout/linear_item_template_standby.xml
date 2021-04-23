@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="@dimen/template_day_padding"
+    android:paddingRight="0dp">
+
+    <TextView
+        android:id="@+id/loop_standby_prefix"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minLines="2"
+        android:text="ループ開始時："/>
+
+    <TextView
+        android:id="@+id/loop_standby"
+        app:layout_constraintTop_toTopOf="@id/loop_standby_prefix"
+        app:layout_constraintLeft_toRightOf="@id/loop_standby_prefix"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="手先は病院に配置する。学者には暗躍カウンターを乗せる。" />
+</androidx.constraintlayout.widget.ConstraintLayout>
