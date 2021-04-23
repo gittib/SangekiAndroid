@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.grid_item_chara_role_row.view.*
@@ -110,6 +111,9 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = res.getDimensionPixelSize(R.dimen.chara_name_width)
                         }
+                        if (row % 2 == 0) {
+                            context?.let { tv.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
+                        }
                         tv.long_text.text = ch.name
                     })
                     v.addView(inflater.inflate(R.layout.grid_item_chara_role_row, v, false).also { iv ->
@@ -117,6 +121,9 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.columnSpec = GridLayout.spec(1)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = res.getDimensionPixelSize(R.dimen.chara_role_width)
+                        }
+                        if (row % 2 == 0) {
+                            context?.let { iv.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
                         iv.zettaiYuukouMushi.text = if (ch.isZettaiYuukouMushi()) "◆" else "◇"
                         iv.yuukouMushi.setImageDrawable(ResourcesCompat.getDrawable(res,
@@ -134,6 +141,9 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.columnSpec = GridLayout.spec(2)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = res.getDimensionPixelSize(R.dimen.chara_note_width)
+                        }
+                        if (row % 2 == 0) {
+                            context?.let { tv.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
                         tv.text = ch.note
                     })
@@ -156,6 +166,9 @@ class ScenarioDetailFragment : BaseFragment() {
                         v.setPadding(2, 0, 0, 0)
                         v.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
                         v.gravity = Gravity.CENTER_VERTICAL
+                        if (row % 2 == 0) {
+                            context?.let { v.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
+                        }
                         v.text = ch.day.toString()
                     })
                     lv.addView(inflater.inflate(R.layout.grid_item_long_text_row, lv, false).also { v ->
@@ -163,6 +176,9 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.columnSpec = GridLayout.spec(1)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = res.getDimensionPixelSize(R.dimen.incident_private_name_width)
+                        }
+                        if (row % 2 == 0) {
+                            context?.let { v.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
                         v.long_text.also { tv ->
                             tv.text = ch.name
@@ -177,6 +193,9 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = res.getDimensionPixelSize(R.dimen.chara_name_width)
                         }
+                        if (row % 2 == 0) {
+                            context?.let { v.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
+                        }
                         v.long_text.text = ch.criminal
                     })
                     lv.addView(TextView(context).also { v ->
@@ -184,6 +203,9 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.columnSpec = GridLayout.spec(3)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = res.getDimensionPixelSize(R.dimen.incident_note_width)
+                        }
+                        if (row % 2 == 0) {
+                            context?.let { v.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
                         v.gravity = Gravity.CENTER_VERTICAL
                         v.text = ch.note

@@ -4,6 +4,7 @@
     <color name="border">@color/white</color>
     <color name="underline">@color/white</color>
     <color name="background_inverse">@color/white</color>
+    <color name="background_alt_row">@color/dark_blue</color>
     <color name="text_color_notice">@color/red</color>
     <color name="text_color_strong">@color/white</color>
     <color name="text_color_inverse">@color/black</color>
