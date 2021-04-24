@@ -107,9 +107,9 @@ class ScenarioDetailFragment : BaseFragment() {
                 item.characterList.forEach { ch ->
                     v.addView(inflater.inflate(R.layout.grid_item_long_text_row, v, false).also { tv ->
                         tv.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(0)
+                            lp.columnSpec = GridLayout.spec(0, GridLayout.FILL, 8f)
                             lp.rowSpec = GridLayout.spec(row)
-                            lp.width = res.getDimensionPixelSize(R.dimen.chara_name_width)
+                            lp.width = 0
                         }
                         if (row % 2 == 0) {
                             context?.let { tv.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
@@ -118,9 +118,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     })
                     v.addView(inflater.inflate(R.layout.grid_item_chara_role_row, v, false).also { iv ->
                         iv.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(1)
+                            lp.columnSpec = GridLayout.spec(1, GridLayout.FILL, 17f)
                             lp.rowSpec = GridLayout.spec(row)
-                            lp.width = res.getDimensionPixelSize(R.dimen.chara_role_width)
+                            lp.width = 0
                         }
                         if (row % 2 == 0) {
                             context?.let { iv.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
@@ -138,9 +138,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     })
                     v.addView(TextView(context).also { tv ->
                         tv.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(2)
+                            lp.columnSpec = GridLayout.spec(2, GridLayout.FILL, 8f)
                             lp.rowSpec = GridLayout.spec(row)
-                            lp.width = res.getDimensionPixelSize(R.dimen.chara_note_width)
+                            lp.width = 0
                         }
                         if (row % 2 == 0) {
                             context?.let { tv.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
@@ -156,9 +156,9 @@ class ScenarioDetailFragment : BaseFragment() {
                 item.incidentList.forEach { ch ->
                     lv.addView(TextView(context).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(0)
+                            lp.columnSpec = GridLayout.spec(0, GridLayout.FILL, 4f)
                             lp.rowSpec = GridLayout.spec(row)
-                            lp.width = res.getDimensionPixelSize(R.dimen.incident_day_width)
+                            lp.width = 0
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             v.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM)
@@ -173,9 +173,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     })
                     lv.addView(inflater.inflate(R.layout.grid_item_long_text_row, lv, false).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(1)
+                            lp.columnSpec = GridLayout.spec(1, GridLayout.FILL, 10f)
                             lp.rowSpec = GridLayout.spec(row)
-                            lp.width = res.getDimensionPixelSize(R.dimen.incident_private_name_width)
+                            lp.width = 0
                         }
                         if (row % 2 == 0) {
                             context?.let { v.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
@@ -183,15 +183,15 @@ class ScenarioDetailFragment : BaseFragment() {
                         v.long_text.also { tv ->
                             tv.text = ch.name
                             tv.layoutParams = tv.layoutParams.also { lp ->
-                                lp.width = res.getDimensionPixelSize(R.dimen.incident_private_name_width)
+                                lp.width = 0
                             }
                         }
                     })
                     lv.addView(inflater.inflate(R.layout.grid_item_long_text_row, lv, false).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(2)
+                            lp.columnSpec = GridLayout.spec(2, GridLayout.FILL, 8f)
                             lp.rowSpec = GridLayout.spec(row)
-                            lp.width = res.getDimensionPixelSize(R.dimen.chara_name_width)
+                            lp.width = 0
                         }
                         if (row % 2 == 0) {
                             context?.let { v.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
@@ -200,9 +200,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     })
                     lv.addView(TextView(context).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(3)
+                            lp.columnSpec = GridLayout.spec(3, GridLayout.FILL, 5f)
                             lp.rowSpec = GridLayout.spec(row)
-                            lp.width = res.getDimensionPixelSize(R.dimen.incident_note_width)
+                            lp.width = 0
                         }
                         if (row % 2 == 0) {
                             context?.let { v.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }

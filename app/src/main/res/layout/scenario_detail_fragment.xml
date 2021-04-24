@@ -196,29 +196,34 @@
 
                     <GridLayout
                         android:id="@+id/character_role_list"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
+                        android:layout_margin="2dp"
                         android:layout_gravity="center_horizontal"
                         android:columnCount="3"
                         android:padding="1dp"
                         android:background="@drawable/bg_stroke_black">
 
                         <TextView
-                            android:layout_width="@dimen/chara_name_width"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="8"
+                            android:layout_gravity="fill"
                             android:background="@color/background_inverse"
                             android:textColor="@color/text_color_inverse"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
                             android:text="@string/chara"/>
                         <TextView
-                            android:layout_gravity="fill_horizontal"
-                            android:minWidth="@dimen/chara_role_width"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="17"
+                            android:layout_gravity="fill"
                             android:background="@color/background_inverse"
                             android:textColor="@color/text_color_inverse"
                             android:text="@string/role"/>
                         <TextView
-                            android:layout_width="@dimen/chara_note_width"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="8"
+                            android:layout_gravity="fill"
                             android:background="@color/background_inverse"
                             android:textColor="@color/text_color_inverse"
                             android:paddingLeft="4dp"
@@ -233,29 +238,39 @@
 
                     <GridLayout
                         android:id="@+id/incident_criminal_list"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
                         android:padding="1dp"
                         android:columnCount="4"
                         android:background="@drawable/bg_stroke_black">
 
                         <TextView
                             style="@style/Css.ScenarioDetail.ListTitle"
-                            android:layout_width="@dimen/incident_day_width"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="4"
+                            android:layout_gravity="fill"
                             android:gravity="center_horizontal"
                             android:text="@string/day_count"/>
                         <TextView
                             style="@style/Css.ScenarioDetail.ListTitle"
-                            android:layout_width="@dimen/incident_private_name_width"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="10"
+                            android:layout_gravity="fill"
                             android:text="@string/incident"/>
                         <TextView
                             style="@style/Css.ScenarioDetail.ListTitle"
-                            android:layout_width="@dimen/chara_name_width"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="8"
+                            android:layout_gravity="fill"
                             android:text="@string/criminal"/>
                         <TextView
                             style="@style/Css.ScenarioDetail.ListTitle"
-                            android:layout_width="@dimen/incident_note_width"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="4"
+                            android:layout_gravity="fill"
                             android:gravity="center_horizontal"
                             android:text="@string/note"/>
                     </GridLayout>
