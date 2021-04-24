@@ -18,6 +18,7 @@
 
     <!-- 使用するカラー定義。カラーコード指定禁止 -->
     <color name="splash_bg">@color/black</color>
+    <color name="link">@color/teal_700</color>
     <color name="border">@color/dark_gray</color>
     <color name="underline">@color/black</color>
     <color name="background_inverse">@color/black</color>

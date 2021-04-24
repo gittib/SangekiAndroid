@@ -2,10 +2,7 @@ package work.boardgame.sangeki_rooper.activity
 
 import android.os.Bundle
 import work.boardgame.sangeki_rooper.R
-import work.boardgame.sangeki_rooper.fragment.BaseFragment
-import work.boardgame.sangeki_rooper.fragment.ScenarioDetailFragment
-import work.boardgame.sangeki_rooper.fragment.ScenarioListFragment
-import work.boardgame.sangeki_rooper.fragment.TopFragment
+import work.boardgame.sangeki_rooper.fragment.*
 import work.boardgame.sangeki_rooper.util.Logger
 import java.lang.IllegalArgumentException
 
@@ -47,6 +44,7 @@ class ContainerActivity : BaseActivity() {
                 TopFragment::class.qualifiedName -> TopFragment.newInstance()
                 ScenarioListFragment::class.qualifiedName -> ScenarioListFragment.newInstance()
                 ScenarioDetailFragment::class.qualifiedName -> ScenarioDetailFragment.newInstance(data as String)
+                AboutFragment::class.qualifiedName -> AboutFragment.newInstance()
                 else -> throw IllegalArgumentException("invalid fragment name: $fragmentName")
             }
         } catch (e: ClassCastException) {

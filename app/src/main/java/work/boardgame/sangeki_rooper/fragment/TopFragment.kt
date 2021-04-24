@@ -33,9 +33,9 @@ class TopFragment : BaseFragment() {
             rv.scenario_list_image.setOnClickListener { rv.scenario_list_title.performClick() }
             rv.scenario_list_note.setOnClickListener { rv.scenario_list_title.performClick() }
 
-            rv.footer_text.text = rv.footer_text.text.toString()
-                    .replace("__SANGEKI_ROOPER_URL__", Define.SangekiRooperUrl.TOP)
-                    .replace("__CREATIVE_COMMONS_URL__", Define.SangekiRooperUrl.CREATIVE_COMMONS)
+            rv.footer_text.setOnClickListener {
+                activity?.startFragment(AboutFragment::class.qualifiedName)
+            }
         }
         return viewModel.rootView
     }
