@@ -26,6 +26,7 @@ import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
+import work.boardgame.sangeki_rooper.util.toJson
 
 class ScenarioDetailFragment : BaseFragment() {
     private val TAG = ScenarioDetailFragment::class.simpleName
@@ -49,6 +50,8 @@ class ScenarioDetailFragment : BaseFragment() {
             fragmentManager?.popBackStack()
             return null
         }
+        Logger.d(TAG, "scenario = " + item.toJson())
+
         viewModel.rootView = inflater.inflate(R.layout.scenario_detail_fragment, container, false).also { rv ->
             rv.setOnClickListener { Logger.v(TAG, "クリックイベントバブリング対策") }
 
@@ -300,7 +303,10 @@ class ScenarioDetailFragment : BaseFragment() {
         arguments?.let { a ->
             val id = a.getString(BUNDLE_KEY_SCENARIO_ID)
             val scenarioList = Util.getScenarioList(context)
-            viewModel.scenario = scenarioList.find { it.id == id }
+            viewModel.scenario = scenarioList.find { it.id == id } ?: run {
+                Logger.w(TAG, "脚本データ取得失敗！ id = $id")
+                null
+            }
         }
     }
 
