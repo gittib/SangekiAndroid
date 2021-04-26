@@ -206,7 +206,7 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_columnWeight="8"
+                            android:layout_columnWeight="@dimen/chara_role_col_weight_name"
                             android:layout_gravity="fill"
                             android:background="@color/background_inverse"
                             android:textColor="@color/text_color_inverse"
@@ -215,14 +215,14 @@
                             android:text="@string/chara"/>
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_columnWeight="17"
+                            android:layout_columnWeight="@dimen/chara_role_col_weight_role"
                             android:layout_gravity="fill"
                             android:background="@color/background_inverse"
                             android:textColor="@color/text_color_inverse"
                             android:text="@string/role"/>
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_columnWeight="8"
+                            android:layout_columnWeight="@dimen/chara_role_col_weight_note"
                             android:layout_gravity="fill"
                             android:background="@color/background_inverse"
                             android:textColor="@color/text_color_inverse"
@@ -250,26 +250,29 @@
                         <TextView
                             style="@style/Css.ScenarioDetail.ListTitle"
                             android:layout_width="0dp"
-                            android:layout_columnWeight="4"
+                            android:layout_columnWeight="@dimen/incident_col_weight_day"
                             android:layout_gravity="fill"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeMaxTextSize="14sp"
+                            app:autoSizeMinTextSize="8sp"
                             android:gravity="center_horizontal"
                             android:text="@string/day_count"/>
                         <TextView
                             style="@style/Css.ScenarioDetail.ListTitle"
                             android:layout_width="0dp"
-                            android:layout_columnWeight="10"
+                            android:layout_columnWeight="@dimen/incident_col_weight_name"
                             android:layout_gravity="fill"
                             android:text="@string/incident"/>
                         <TextView
                             style="@style/Css.ScenarioDetail.ListTitle"
                             android:layout_width="0dp"
-                            android:layout_columnWeight="8"
+                            android:layout_columnWeight="@dimen/incident_col_weight_criminal"
                             android:layout_gravity="fill"
                             android:text="@string/criminal"/>
                         <TextView
                             style="@style/Css.ScenarioDetail.ListTitle"
                             android:layout_width="0dp"
-                            android:layout_columnWeight="4"
+                            android:layout_columnWeight="@dimen/incident_col_weight_note"
                             android:layout_gravity="fill"
                             android:gravity="center_horizontal"
                             android:text="@string/note"/>

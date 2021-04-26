@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -110,7 +111,9 @@ class ScenarioDetailFragment : BaseFragment() {
                 item.characterList.forEach { ch ->
                     v.addView(inflater.inflate(R.layout.grid_item_long_text_row, v, false).also { tv ->
                         tv.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(0, GridLayout.FILL, 8f)
+                            val weight = TypedValue().also {
+                                res.getValue(R.dimen.chara_role_col_weight_name, it, true) }
+                            lp.columnSpec = GridLayout.spec(0, GridLayout.FILL, weight.float)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = 0
                         }
@@ -121,7 +124,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     })
                     v.addView(inflater.inflate(R.layout.grid_item_chara_role_row, v, false).also { iv ->
                         iv.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(1, GridLayout.FILL, 17f)
+                            val weight = TypedValue().also {
+                                res.getValue(R.dimen.chara_role_col_weight_role, it, true) }
+                            lp.columnSpec = GridLayout.spec(1, GridLayout.FILL, weight.float)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = 0
                         }
@@ -141,7 +146,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     })
                     v.addView(TextView(context).also { tv ->
                         tv.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(2, GridLayout.FILL, 8f)
+                            val weight = TypedValue().also {
+                                res.getValue(R.dimen.chara_role_col_weight_note, it, true) }
+                            lp.columnSpec = GridLayout.spec(2, GridLayout.FILL, weight.float)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = 0
                         }
@@ -159,7 +166,9 @@ class ScenarioDetailFragment : BaseFragment() {
                 item.incidentList.forEach { ch ->
                     lv.addView(TextView(context).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(0, GridLayout.FILL, 4f)
+                            val weight = TypedValue().also {
+                                res.getValue(R.dimen.incident_col_weight_day, it, true) }
+                            lp.columnSpec = GridLayout.spec(0, GridLayout.FILL, weight.float)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = 0
                         }
@@ -176,7 +185,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     })
                     lv.addView(inflater.inflate(R.layout.grid_item_long_text_row, lv, false).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(1, GridLayout.FILL, 10f)
+                            val weight = TypedValue().also {
+                                res.getValue(R.dimen.incident_col_weight_name, it, true) }
+                            lp.columnSpec = GridLayout.spec(1, GridLayout.FILL, weight.float)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = 0
                         }
@@ -192,7 +203,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     })
                     lv.addView(inflater.inflate(R.layout.grid_item_long_text_row, lv, false).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(2, GridLayout.FILL, 8f)
+                            val weight = TypedValue().also {
+                                res.getValue(R.dimen.incident_col_weight_criminal, it, true) }
+                            lp.columnSpec = GridLayout.spec(2, GridLayout.FILL, weight.float)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = 0
                         }
@@ -203,7 +216,9 @@ class ScenarioDetailFragment : BaseFragment() {
                     })
                     lv.addView(TextView(context).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
-                            lp.columnSpec = GridLayout.spec(3, GridLayout.FILL, 5f)
+                            val weight = TypedValue().also {
+                                res.getValue(R.dimen.incident_col_weight_note, it, true) }
+                            lp.columnSpec = GridLayout.spec(3, GridLayout.FILL, weight.float)
                             lp.rowSpec = GridLayout.spec(row)
                             lp.width = 0
                         }

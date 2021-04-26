@@ -14,11 +14,18 @@
     <dimen name="chara_role_icon_size">14sp</dimen>
     <dimen name="chara_role_width">172dp</dimen>
     <dimen name="chara_note_width">80dp</dimen>
+    <dimen name="chara_role_col_weight_name" format="float">8.0</dimen>
+    <dimen name="chara_role_col_weight_role" format="float">17.0</dimen>
+    <dimen name="chara_role_col_weight_note" format="float">8.0</dimen>
 
     <!-- 事件一覧 -->
     <dimen name="incident_day_width">40dp</dimen>
     <dimen name="incident_private_name_width">100dp</dimen>
     <dimen name="incident_note_width">48dp</dimen>
+    <dimen name="incident_col_weight_day" format="float">4.0</dimen>
+    <dimen name="incident_col_weight_name" format="float">10.0</dimen>
+    <dimen name="incident_col_weight_criminal" format="float">8.0</dimen>
+    <dimen name="incident_col_weight_note" format="float">5.0</dimen>
 
     <!-- テンプレート -->
     <dimen name="template_loop_top_padding">16dp</dimen>
