@@ -12,6 +12,14 @@ object Define {
         const val USER_AGENT = "USER_AGENT"
     }
 
+    object SangekiBoard {
+        const val SHRINE = 1
+        const val HOSPITAL = 2
+        const val CITY = 3
+        const val SCHOOL = 4
+        const val OTHER = 5
+    }
+
     const val APP_USER_AGENT = "SangekiRooperAndroid"
     const val SHARED_PREFERENCES_NAME = "NAME"
 }
