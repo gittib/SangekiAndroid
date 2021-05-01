@@ -22,6 +22,9 @@ android {
         // layout関連の不要な警告をチェック対象外にする
         disable 'ContentDescription', 'RtlHardcoded'
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 
     buildTypes {
         debug {
