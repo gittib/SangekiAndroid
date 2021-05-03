@@ -4,6 +4,10 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    <style name="Css.Base"/>
+    <style name="Css.Base.TextView">
+        <item name="android:textSize">14sp</item>
+    </style>
 
     <style name="Css.TopFragment" />
     <style name="Css.TopFragment.Title">
@@ -27,6 +31,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginBottom">16dp</item>
     </style>
 
     <style name="Css.ScenarioDetail"/>
@@ -73,5 +78,12 @@
     <style name="Css.ScenarioDetail.RuleList">
         <item name="android:textSize">22sp</item>
         <item name="android:layout_marginLeft">8dp</item>
+    </style>
+
+    <style name="Css.KifuStandby" />
+    <style name="Css.KifuStandby.Spinner">
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:minWidth">80dp</item>
     </style>
 </resources>

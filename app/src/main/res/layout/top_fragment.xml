@@ -31,6 +31,21 @@
                 android:text="@string/top_page_note"/>
 
             <TextView
+                android:id="@+id/kifu_title"
+                style="@style/Css.TopFragment.Title"
+                android:text="@string/kifu_log"/>
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/kifu_image"
+                style="@style/Css.TopFragment.Image"
+                android:src="@drawable/heros" />
+
+            <TextView
+                android:id="@+id/kifu_note"
+                style="@style/Css.TopFragment.Note"
+                android:text="@string/kifu_log_note"/>
+
+            <TextView
                 android:id="@+id/scenario_list_title"
                 style="@style/Css.TopFragment.Title"
                 android:text="@string/scenario_list"/>
