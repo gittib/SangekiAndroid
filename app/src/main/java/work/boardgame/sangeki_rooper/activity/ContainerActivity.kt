@@ -45,6 +45,7 @@ class ContainerActivity : BaseActivity() {
                 ScenarioListFragment::class.qualifiedName -> ScenarioListFragment.newInstance()
                 ScenarioDetailFragment::class.qualifiedName -> ScenarioDetailFragment.newInstance(data as String)
                 AboutFragment::class.qualifiedName -> AboutFragment.newInstance()
+                KifuListFragment::class.qualifiedName -> KifuListFragment.newInstance()
                 KifuStandbyFragment::class.qualifiedName -> KifuStandbyFragment.newInstance()
                 else -> throw IllegalArgumentException("invalid fragment name: $fragmentName")
             }

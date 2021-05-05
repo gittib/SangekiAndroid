@@ -28,7 +28,7 @@ class TopFragment : BaseFragment() {
         Logger.methodStart(TAG)
         viewModel.rootView = inflater.inflate(R.layout.top_fragment, container, false).also { rv ->
             rv.kifu_title.setOnClickListener {
-                activity?.startFragment(KifuStandbyFragment::class.qualifiedName)
+                activity?.startFragment(KifuListFragment::class.qualifiedName)
             }
             rv.kifu_image.setOnClickListener { rv.kifu_title.performClick() }
             rv.kifu_note.setOnClickListener { rv.kifu_title.performClick() }
