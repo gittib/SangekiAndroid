@@ -25,19 +25,20 @@ class ScenarioListFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: ScenarioListViewModel
+    private var rootView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel.rootView = inflater.inflate(R.layout.scenario_list_fragment, container, false).also { rv ->
+        rootView = inflater.inflate(R.layout.scenario_list_fragment, container, false).also { rv ->
             rv.scenario_list.let {
                 it.layoutManager = LinearLayoutManager(context)
                 it.adapter = ScenarioListAdapter()
             }
         }
 
-        return viewModel.rootView
+        return rootView
     }
 
     override fun onAttach(context: Context) {

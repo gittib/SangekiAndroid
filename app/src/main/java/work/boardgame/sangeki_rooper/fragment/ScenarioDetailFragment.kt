@@ -43,6 +43,7 @@ class ScenarioDetailFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: ScenarioDetailViewModel
+    private var rootView: View? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -53,7 +54,7 @@ class ScenarioDetailFragment : BaseFragment() {
         }
         Logger.d(TAG, "scenario = " + item.toJson())
 
-        viewModel.rootView = inflater.inflate(R.layout.scenario_detail_fragment, container, false).also { rv ->
+        rootView = inflater.inflate(R.layout.scenario_detail_fragment, container, false).also { rv ->
             rv.setOnClickListener { Logger.v(TAG, "クリックイベントバブリング対策") }
 
             val res = resources
@@ -308,7 +309,7 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
         }
-        return viewModel.rootView
+        return rootView
     }
 
     override fun onAttach(context: Context) {

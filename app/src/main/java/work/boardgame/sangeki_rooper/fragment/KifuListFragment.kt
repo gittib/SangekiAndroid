@@ -21,16 +21,17 @@ class KifuListFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: KifuListViewModel
+    private var rootView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         Logger.methodStart(TAG)
-        viewModel.rootView = inflater.inflate(R.layout.kifu_list_fragment, container, false).also { rv ->
+        rootView = inflater.inflate(R.layout.kifu_list_fragment, container, false).also { rv ->
             rv.kifu_list.adapter = KifuListAdapter()
         }
-        return viewModel.rootView
+        return rootView
     }
 
     override fun onAttach(context: Context) {

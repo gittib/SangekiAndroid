@@ -25,11 +25,12 @@ class AboutFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: AboutViewModel
+    private var rootView: View? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         Logger.methodStart(TAG)
-        viewModel.rootView = inflater.inflate(R.layout.about_fragment, container, false).also { rv ->
+        rootView = inflater.inflate(R.layout.about_fragment, container, false).also { rv ->
             rv.cc_by_sa.setOnClickListener {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Define.SangekiRooperUrl.CREATIVE_COMMONS)))
             }
@@ -39,7 +40,7 @@ class AboutFragment : BaseFragment() {
             }
             rv.app_version.text = String.format("アプリバージョン： %s", BuildConfig.VERSION_NAME)
         }
-        return viewModel.rootView
+        return rootView
     }
 
     override fun onAttach(context: Context) {
