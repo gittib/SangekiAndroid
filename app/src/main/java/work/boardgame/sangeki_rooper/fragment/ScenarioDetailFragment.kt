@@ -326,4 +326,11 @@ class ScenarioDetailFragment : BaseFragment() {
         }
     }
 
+    override fun onDetach() {
+        Logger.methodStart(TAG)
+        fragmentManager?.fragments?.find { it is ScenarioListFragment }?.let {
+            (it as ScenarioListFragment).reloadScenarioList()
+        }
+        super.onDetach()
+    }
 }

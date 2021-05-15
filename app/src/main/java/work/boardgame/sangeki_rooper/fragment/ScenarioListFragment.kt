@@ -16,9 +16,11 @@ import kotlinx.android.synthetic.main.adapter_item_scenario.view.*
 import kotlinx.android.synthetic.main.scenario_list_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioListViewModel
+import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 
 class ScenarioListFragment : BaseFragment() {
+    private val TAG = ScenarioListFragment::class.simpleName
 
     companion object {
         fun newInstance() = ScenarioListFragment()
@@ -31,6 +33,7 @@ class ScenarioListFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Logger.methodStart(TAG)
         rootView = inflater.inflate(R.layout.scenario_list_fragment, container, false).also { rv ->
             rv.scenario_list.let {
                 it.layoutManager = LinearLayoutManager(context)
@@ -42,18 +45,27 @@ class ScenarioListFragment : BaseFragment() {
     }
 
     override fun onAttach(context: Context) {
+        Logger.methodStart(TAG)
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(ScenarioListViewModel::class.java)
+        reloadScenarioList()
+    }
+
+    fun reloadScenarioList() {
+        Logger.methodStart(TAG)
+        val context = activity ?: run {
+            Logger.w(TAG, "activity == null")
+            return
+        }
         viewModel.scenarioList = Util.getScenarioList(context).filter { it.secret != true }
-                .sortedWith(Comparator { o1, o2 ->
-                    var d = o1.setIndex() - o2.setIndex()
-                    if (d == 0) d = o1.difficulty - o2.difficulty
-                    if (d == 0) {
-                        d = if (o1.id < o2.id) -1 else 1
-                    }
-                    d
-                })
-                .sortedBy { it.setIndex() * 100 + it.difficulty }
+            .sortedWith(Comparator { o1, o2 ->
+                var d:Int = o1.setIndex() - o2.setIndex()
+                if (d == 0) d = o1.id[2] - o2.id[2]
+                if (d == 0) d = o1.difficulty - o2.difficulty
+                if (d == 0) d = if (o1.id < o2.id) -1 else 1
+                d
+            })
+        rootView?.scenario_list?.adapter?.notifyDataSetChanged()
     }
 
     private object ViewType {
