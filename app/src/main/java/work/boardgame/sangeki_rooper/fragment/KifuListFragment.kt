@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.kifu_list_fragment.view.*
 import work.boardgame.sangeki_rooper.R
@@ -28,7 +29,10 @@ class KifuListFragment : BaseFragment() {
     ): View? {
         Logger.methodStart(TAG)
         viewModel.rootView = inflater.inflate(R.layout.kifu_list_fragment, container, false).also { rv ->
-            rv.kifu_list.adapter = KifuListAdapter()
+            rv.kifu_list.let {
+                it.layoutManager = LinearLayoutManager(context)
+                it.adapter = KifuListAdapter()
+            }
         }
         return viewModel.rootView
     }
@@ -54,7 +58,7 @@ class KifuListFragment : BaseFragment() {
         }
         inner class KifuViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             fun onBind(position: Int) {
-                TODO("棋譜詳細画面を開く")
+                //TODO("棋譜詳細画面を開く")
             }
         }
 
@@ -77,9 +81,7 @@ class KifuListFragment : BaseFragment() {
             }
         }
 
-        override fun getItemCount(): Int {
-            TODO("Not yet implemented")
-        }
+        override fun getItemCount(): Int = 2 // TODO 2+棋譜リスト項目数
 
         override fun getItemViewType(position: Int): Int = when (position) {
             0 -> ViewType.HEADER
