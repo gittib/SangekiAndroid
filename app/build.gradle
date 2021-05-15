@@ -18,6 +18,25 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        def properties = new Properties()
+        properties.load(project.rootProject.file('keystore.properties').newDataInputStream())
+
+        debug {
+            storeFile file(properties.getProperty('debug.path'))
+            storePassword properties.getProperty('debug.storePassword')
+            keyAlias properties.getProperty('debug.alias')
+            keyPassword properties.getProperty('debug.keyPassword')
+        }
+
+        release {
+            storeFile file(properties.getProperty('release.path'))
+            storePassword properties.getProperty('release.storePassword')
+            keyAlias properties.getProperty('release.alias')
+            keyPassword properties.getProperty('release.keyPassword')
+        }
+    }
+
     lintOptions {
         // layout関連の不要な警告をチェック対象外にする
         disable 'ContentDescription', 'RtlHardcoded'
