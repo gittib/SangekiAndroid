@@ -24,11 +24,12 @@ class KifuStandbyFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: KifuStandbyViewModel
+    private var rootView: View? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         Logger.methodStart(TAG)
-        viewModel.rootView = inflater.inflate(R.layout.kifu_standby_fragment, container, false).also { rv ->
+        rootView = inflater.inflate(R.layout.kifu_standby_fragment, container, false).also { rv ->
             rv.select_tragedy_set.let { v ->
                 v.adapter = getSpinnerAdapter(Define.TRAGEDY_SET_LIST)
                 v.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
@@ -89,7 +90,7 @@ class KifuStandbyFragment : BaseFragment() {
                 }
             }
         }
-        return viewModel.rootView
+        return rootView
     }
 
     override fun onAttach(context: Context) {

@@ -6,7 +6,6 @@ import android.view.View
 import androidx.lifecycle.ViewModel
 
 class KifuStandbyViewModel() : ViewModel(), Parcelable {
-    var rootView: View? = null
     var tragedySetName:String? = null
     var loopCount:Int = 0
     var dayCount:Int = 0

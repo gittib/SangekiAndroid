@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.top_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.TopViewModel
-import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 
 class TopFragment : BaseFragment() {
@@ -20,13 +19,14 @@ class TopFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: TopViewModel
+    private var rootView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         Logger.methodStart(TAG)
-        viewModel.rootView = inflater.inflate(R.layout.top_fragment, container, false).also { rv ->
+        rootView = inflater.inflate(R.layout.top_fragment, container, false).also { rv ->
             rv.kifu_title.setOnClickListener {
                 activity?.startFragment(KifuListFragment::class.qualifiedName)
             }
@@ -43,7 +43,7 @@ class TopFragment : BaseFragment() {
                 activity?.startFragment(AboutFragment::class.qualifiedName)
             }
         }
-        return viewModel.rootView
+        return rootView
     }
 
     override fun onAttach(context: Context) {

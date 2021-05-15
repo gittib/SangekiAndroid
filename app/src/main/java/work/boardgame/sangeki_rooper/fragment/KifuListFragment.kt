@@ -22,6 +22,7 @@ class KifuListFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: KifuListViewModel
+    private var rootView: View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +35,7 @@ class KifuListFragment : BaseFragment() {
                 it.adapter = KifuListAdapter()
             }
         }
-        return viewModel.rootView
+        return rootView
     }
 
     override fun onAttach(context: Context) {
