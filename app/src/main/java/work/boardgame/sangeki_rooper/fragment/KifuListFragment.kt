@@ -29,7 +29,7 @@ class KifuListFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         Logger.methodStart(TAG)
-        viewModel.rootView = inflater.inflate(R.layout.kifu_list_fragment, container, false).also { rv ->
+        rootView = inflater.inflate(R.layout.kifu_list_fragment, container, false).also { rv ->
             rv.kifu_list.let {
                 it.layoutManager = LinearLayoutManager(context)
                 it.adapter = KifuListAdapter()
