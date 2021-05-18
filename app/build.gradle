@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -107,4 +108,12 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     // 角丸のImageView
     implementation 'com.makeramen:roundedimageview:2.3.0'
+
+    // RoomDatabase ////////////////////////////////////////////////////////////////////////////////
+    def room_version = "2.3.0"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // RoomDatabase ここまで ////////////////////////////////////////////////////////////////////////
+
 }
