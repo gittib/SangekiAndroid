@@ -9,9 +9,11 @@ import work.boardgame.sangeki_rooper.database.typeconverter.CalenderConverter
 @Database(entities = [
     Game::class,
     Incident::class,
-    Npc::class
-], version = 1)
+    Npc::class,
+    Day::class,
+    Kifu::class
+], version = 1, exportSchema = false)
 @TypeConverters(CalenderConverter::class)
 abstract class AppDatabase: RoomDatabase() {
-    abstract fun kifuDao(): GameDao
+    abstract fun gameDao(): GameDao
 }

@@ -19,7 +19,11 @@ data class GameRelation(
     @Relation(parentColumn = "id", entityColumn = "gameId")
     val incidents: MutableList<Incident>,
     @Relation(parentColumn = "id", entityColumn = "gameId")
-    val npcs: MutableList<Npc>
+    val npcs: MutableList<Npc>,
+    @Relation(parentColumn = "id", entityColumn = "gameId")
+    val days: MutableList<Day>,
+    @Relation(parentColumn = "id", entityColumn = "gameId")
+    val kifus: MutableList<Kifu>
 )
 
 @Entity(foreignKeys = [ForeignKey(
@@ -47,4 +51,37 @@ data class Npc (
     val gameId: Long,
     var name: String?,
     var role: String?
+)
+
+@Entity(foreignKeys = [ForeignKey(
+    entity = Game::class,
+    parentColumns = ["id"],
+    childColumns = ["gameId"],
+    onDelete = ForeignKey.CASCADE
+)], indices = [Index(value = ["gameId"])])
+data class Day (
+    @PrimaryKey(autoGenerate = true) val id: Long,
+    val gameId: Long,
+    var loop: Int,
+    var day: Int,
+    var target: String,
+    var card: String
+)
+
+@Entity(foreignKeys = [ForeignKey(
+    entity = Day::class,
+    parentColumns = ["id"],
+    childColumns = ["dayId"],
+    onDelete = ForeignKey.CASCADE
+)], indices = [
+    Index(value = ["gameId"]),
+    Index(value = ["dayId"])
+])
+data class Kifu (
+    @PrimaryKey(autoGenerate = true) val id: Long,
+    val gameId: Long,
+    val dayId: Long,
+    var fromWriter: Boolean,
+    var target: String,
+    var card: String
 )
