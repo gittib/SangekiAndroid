@@ -15,6 +15,7 @@ import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.util.*
 
 object Util {
     private val TAG = Util::class.simpleName
@@ -75,6 +76,30 @@ object Util {
         }
     }
 
+    fun tragedySetIndex(abbrSetName: String) = when (abbrSetName) {
+        "FS" -> 0
+        "BTX" -> 1
+        "MZ" -> 2
+        "MC", "MCX" -> 3
+        "HSA" -> 4
+        "WM" -> 5
+        "UM" -> 10
+        else -> 99
+    }
+    fun tragedySetName(abbrSetName: String) = when (abbrSetName) {
+        "FS" -> "First Steps"
+        "BT" -> "Basic Tragedy"
+        "BTX" -> "Basic Tragedy χ"
+        "MZ" -> "Midnight Zone"
+        "MC" -> "Mystery Circle"
+        "MCX" -> "Mystery Circle χ"
+        "HS" -> "Haunted Stage"
+        "HSA" -> "Haunted Stage Again"
+        "WM" -> "Weird Mythology"
+        "UM" -> "Unvoiced Malicious"
+        else -> "謎の惨劇セット"
+    }
+
     fun incidentExplain(incidentName:String) = when(incidentName) {
         "殺人事件" -> "可能ならば犯人と同一エリアにいる犯人以外の任意のキャラクターを死亡させる。"
         "不安拡大" -> "任意のキャラクター1人の上に不安カウンターを2つ置き、別の任意のキャラクター1人の上に暗躍カウンターを１つ置く。"
@@ -124,4 +149,10 @@ object Util {
 fun Any.toJson(pretty:Boolean = true): String {
     return if (pretty) GsonBuilder().setPrettyPrinting().create().toJson(this)
     else Gson().toJson(this)
+}
+fun Calendar.format(format:String = "%04d/%02d/%02d %02d:%02d"): String {
+    return String.format(format,
+    this[Calendar.YEAR], this[Calendar.MONTH]+1, this[Calendar.DAY_OF_MONTH],
+    this[Calendar.HOUR_OF_DAY], this[Calendar.MINUTE], this[Calendar.SECOND],
+    this[Calendar.MILLISECOND]%1000)
 }

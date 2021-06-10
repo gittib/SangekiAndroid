@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.annotation.DrawableRes
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.util.Define
+import work.boardgame.sangeki_rooper.util.Util
 
 @Suppress("unused")
 class TragedyScenarioModel (
@@ -23,30 +24,9 @@ class TragedyScenarioModel (
     val advice: AdviceInfo,
     val templateInfo: List<TemplateInfo>?
 ) {
-    fun setIndex() = when (set) {
-        "FS" -> 0
-        "BTX" -> 1
-        "MZ" -> 2
-        "MC", "MCX" -> 3
-        "HSA" -> 4
-        "WM" -> 5
-        "UM" -> 10
-        else -> 99
-    }
-    fun setName() = when (set) {
-        "FS" -> "First Steps"
-        "BT" -> "Basic Tragedy"
-        "BTX" -> "Basic Tragedy χ"
-        "MZ" -> "Midnight Zone"
-        "MC" -> "Mystery Circle"
-        "MCX" -> "Mystery Circle χ"
-        "HS" -> "Haunted Stage"
-        "HSA" -> "Haunted Stage Again"
-        "WM" -> "Weird Mythology"
-        "UM" -> "Unvoiced Malicious"
-        else -> "謎の惨劇セット"
-    }
-    fun setColor() = when (set) {
+    fun tragedySetIndex() = Util.tragedySetIndex(set)
+    fun tragedySetName() = Util.tragedySetName(set)
+    fun tragedySetColor() = when (set) {
         "FS" -> Color.parseColor("#00DDDD")
         "BTX" -> Color.parseColor("#0000FF")
         "MZ" -> Color.parseColor("#8800FF")

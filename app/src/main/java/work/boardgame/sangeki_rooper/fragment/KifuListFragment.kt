@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.adapter_item_kifu.view.*
 import kotlinx.android.synthetic.main.kifu_list_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuListViewModel
 import work.boardgame.sangeki_rooper.util.Logger
+import work.boardgame.sangeki_rooper.util.Util
+import work.boardgame.sangeki_rooper.util.format
 import java.lang.IllegalArgumentException
 
 class KifuListFragment : BaseFragment() {
@@ -51,7 +54,7 @@ class KifuListFragment : BaseFragment() {
     }
     private inner class KifuListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         inner class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-            fun onBind(position: Int) {
+            fun onBind() {
                 itemView.setOnClickListener {
                     activity?.startFragment(KifuStandbyFragment::class.qualifiedName)
                 }
@@ -59,7 +62,17 @@ class KifuListFragment : BaseFragment() {
         }
         inner class KifuViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             fun onBind(position: Int) {
-                //TODO("棋譜詳細画面を開く")
+                val item = viewModel.games[position-1]
+                val game = item.game
+                itemView.let { rv ->
+                    rv.kifu_summary.text = String.format("%s\n%sループ %d日",
+                            Util.tragedySetName(game.setName), game.loop, game.day)
+                    rv.create_date.text = game.createdAt.format()
+
+                    rv.setOnClickListener {
+                        TODO("棋譜詳細画面を開く")
+                    }
+                }
             }
         }
 
@@ -92,7 +105,7 @@ class KifuListFragment : BaseFragment() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             when (getItemViewType(position)) {
-                ViewType.HEADER -> (holder as HeaderViewHolder).onBind(position)
+                ViewType.HEADER -> (holder as HeaderViewHolder).onBind()
                 ViewType.KIFU -> (holder as KifuViewHolder).onBind(position)
             }
         }
