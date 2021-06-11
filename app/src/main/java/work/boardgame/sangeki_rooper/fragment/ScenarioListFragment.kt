@@ -60,7 +60,7 @@ class ScenarioListFragment : BaseFragment() {
         viewModel.scenarioList = Util.getScenarioList(context).filter { it.secret != true }
             .sortedWith(Comparator { o1, o2 ->
                 var d:Int = o1.tragedySetIndex() - o2.tragedySetIndex()
-                if (d == 0) d = o1.id[2] - o2.id[2]
+                if (d == 0) d = o1.id[1] - o2.id[1]
                 if (d == 0) d = o1.difficulty - o2.difficulty
                 if (d == 0) d = if (o1.id < o2.id) -1 else 1
                 d
