@@ -59,4 +59,5 @@
     <string name="loop_count">ループ数</string>
     <string name="kifu_list">棋譜一覧</string>
     <string name="create_new_kifu">新規ゲームの棋譜記録開始</string>
+    <string name="recommended_scenario">オススメ！</string>
 </resources>

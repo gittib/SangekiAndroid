@@ -79,6 +79,10 @@ class ScenarioListFragment : BaseFragment() {
                 val item = viewModel.scenarioList[position-1]
                 itemView.let { rv ->
                     rv.scenario_id.text = String.format("[%s]", item.id)
+                    rv.recommended_scenario.visibility = when (item.recommended) {
+                        true -> View.VISIBLE
+                        else -> View.GONE
+                    }
                     rv.tragedy_set.let { v ->
                         v.text = item.set
                         val d = v?.background

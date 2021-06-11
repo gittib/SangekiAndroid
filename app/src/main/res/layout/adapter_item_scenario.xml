@@ -28,6 +28,17 @@
             tools:text="[1001]"/>
 
         <TextView
+            android:id="@+id/recommended_scenario"
+            app:layout_constraintBaseline_toBaselineOf="@id/scenario_id"
+            app:layout_constraintLeft_toRightOf="@id/scenario_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/text_color_notice"
+            android:textStyle="bold"
+            android:text="@string/recommended_scenario"/>
+
+        <TextView
             android:id="@+id/tragedy_set"
             app:layout_constraintTop_toBottomOf="@id/scenario_id"
             app:layout_constraintLeft_toLeftOf="parent"
