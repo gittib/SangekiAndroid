@@ -86,17 +86,14 @@ object Util {
         "UM" -> 10
         else -> 99
     }
-    fun tragedySetName(abbrSetName: String) = when (abbrSetName) {
-        "FS" -> "First Steps"
-        "BT" -> "Basic Tragedy"
-        "BTX" -> "Basic Tragedy χ"
-        "MZ" -> "Midnight Zone"
-        "MC" -> "Mystery Circle"
-        "MCX" -> "Mystery Circle χ"
-        "HS" -> "Haunted Stage"
-        "HSA" -> "Haunted Stage Again"
-        "WM" -> "Weird Mythology"
-        "UM" -> "Unvoiced Malicious"
+    fun tragedySetName(context: Context?, abbrSetName: String) = when (abbrSetName) {
+        "FS" -> context?.getString(R.string.summary_name_fs)
+        "BTX" -> context?.getString(R.string.summary_name_btx)
+        "MZ" -> context?.getString(R.string.summary_name_mz)
+        "MCX" -> context?.getString(R.string.summary_name_mcx)
+        "HSA" -> context?.getString(R.string.summary_name_hsa)
+        "WM" -> context?.getString(R.string.summary_name_wm)
+        "UM" -> context?.getString(R.string.summary_name_um)
         else -> "謎の惨劇セット"
     }
 

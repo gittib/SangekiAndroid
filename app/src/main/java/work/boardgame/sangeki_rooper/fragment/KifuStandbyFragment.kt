@@ -31,7 +31,7 @@ class KifuStandbyFragment : BaseFragment() {
         Logger.methodStart(TAG)
         rootView = inflater.inflate(R.layout.kifu_standby_fragment, container, false).also { rv ->
             rv.select_tragedy_set.let { v ->
-                v.adapter = getSpinnerAdapter(Define.TRAGEDY_SET_LIST)
+                v.adapter = getSpinnerAdapter(viewModel.tragedySetSpinnerList)
                 v.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                         viewModel.tragedySetName = null
@@ -39,7 +39,7 @@ class KifuStandbyFragment : BaseFragment() {
 
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         Logger.d(TAG, "position = $position id = $id")
-                        viewModel.tragedySetName = Define.TRAGEDY_SET_LIST[position]
+                        viewModel.tragedySetName = viewModel.tragedySetSpinnerList[position]
                     }
                 }
             }
@@ -97,6 +97,15 @@ class KifuStandbyFragment : BaseFragment() {
         Logger.methodStart(TAG)
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(KifuStandbyViewModel::class.java)
+        viewModel.tragedySetSpinnerList = listOf(
+            "惨劇セットを設定して下さい",
+            getString(R.string.summary_name_fs),
+            getString(R.string.summary_name_btx),
+            getString(R.string.summary_name_mz),
+            getString(R.string.summary_name_mcx),
+            getString(R.string.summary_name_hsa),
+            getString(R.string.summary_name_wm)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

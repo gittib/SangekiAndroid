@@ -66,7 +66,7 @@ class KifuListFragment : BaseFragment() {
                 val game = item.game
                 itemView.let { rv ->
                     rv.kifu_summary.text = String.format("%s\n%sループ %d日",
-                            Util.tragedySetName(game.setName), game.loop, game.day)
+                            Util.tragedySetName(context, game.setName), game.loop, game.day)
                     rv.create_date.text = game.createdAt.format()
 
                     rv.setOnClickListener {

@@ -7,6 +7,7 @@ import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.activity.ContainerActivity
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
@@ -19,6 +20,7 @@ abstract class BaseFragment: Fragment() {
 
     protected val prefs get() = context?.getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     protected val activity get() = (getActivity() as? ContainerActivity)
+    protected val application get() = (activity?.application as? MyApplication)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -28,7 +30,10 @@ abstract class BaseFragment: Fragment() {
     /** 日次更新処理 */
     private fun dailyUpdate(context: Context) {
         val now = Calendar.getInstance().timeInMillis
-        val lastUpdated = prefs!!.getLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, 0L)
+        val lastUpdated = prefs?.getLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, 0L) ?: run {
+            Logger.d(TAG, "prefs is null")
+            return
+        }
         val oneDay = 24 * 3600 * 1000L
         if (now - lastUpdated >= oneDay) {
             Logger.i(TAG, "前回のデータ更新から1日以上時間経過してるので、データ更新処理を実行する")

@@ -116,4 +116,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     // RoomDatabase ここまで ////////////////////////////////////////////////////////////////////////
 
+    // PDFビューワ
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 }

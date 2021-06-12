@@ -22,15 +22,4 @@ object Define {
 
     const val APP_USER_AGENT = "SangekiRooperAndroid"
     const val SHARED_PREFERENCES_NAME = "NAME"
-
-    val TRAGEDY_SET_LIST = listOf(
-        "",
-        "First Steps",
-        "Basic Tragedy χ",
-        "Midnight Zone",
-        "Mystery Circle χ",
-        "Haunted Stage Again",
-        "Weird Mythology",
-        "Unvoiced Marice"
-    )
 }

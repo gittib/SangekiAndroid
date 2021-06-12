@@ -2,6 +2,15 @@
     <string name="app_name">惨劇RoopeR</string>
     <string name="api_url">http://www.boardgame.work/sangeki/</string>
 
+    <!-- ルール名 -->
+    <string name="summary_name_fs">First Steps</string>
+    <string name="summary_name_btx">Basic Tragedy χ</string>
+    <string name="summary_name_mz">Midnight Zone</string>
+    <string name="summary_name_mcx">Mystery Circle χ</string>
+    <string name="summary_name_hsa">Haunted Stage Again</string>
+    <string name="summary_name_wm">Weird Mythology</string>
+    <string name="summary_name_um">Unvoiced Marice</string>
+
     <!-- アラートメッセージ -->
     <string name="ok">@android:string/ok</string>
     <string name="cancel">@android:string/cancel</string>

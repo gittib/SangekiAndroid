@@ -59,7 +59,7 @@ class ScenarioDetailFragment : BaseFragment() {
 
             val res = resources
 
-            rv.public_sheet_value_set.text = item.tragedySetName()
+            rv.public_sheet_value_set.text = item.tragedySetName(context)
             rv.public_sheet_value_loop.text = String.format("%sループ", item.loop())
             rv.public_sheet_value_day.text = String.format("%d日", item.day)
             rv.public_sheet_special_value.text = item.specialRule()

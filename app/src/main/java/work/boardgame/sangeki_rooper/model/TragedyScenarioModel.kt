@@ -1,5 +1,6 @@
 package work.boardgame.sangeki_rooper.model
 
+import android.content.Context
 import android.graphics.Color
 import androidx.annotation.DrawableRes
 import work.boardgame.sangeki_rooper.R
@@ -25,7 +26,7 @@ class TragedyScenarioModel (
     val templateInfo: List<TemplateInfo>?
 ) {
     fun tragedySetIndex() = Util.tragedySetIndex(set)
-    fun tragedySetName() = Util.tragedySetName(set)
+    fun tragedySetName(context: Context?) = Util.tragedySetName(context, set)
     fun tragedySetColor() = when (set) {
         "FS" -> Color.parseColor("#00DDDD")
         "BTX" -> Color.parseColor("#0000FF")
