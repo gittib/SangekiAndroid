@@ -27,8 +27,13 @@ class SummaryDetailFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         Logger.methodStart(TAG)
+
+        savedInstanceState?.getParcelable<SummaryDetailViewModel>(TAG)?.let {
+            viewModel = it
+        }
+
         rootView = inflater.inflate(R.layout.summary_detail_fragment, container, false).also { rv ->
-            rv.pdf_viewer.fromAsset("summary/btx.pdf").load()
+            rv.pdf_viewer.fromAsset(viewModel.pdfAssetPath ?: "summary/btx.pdf").load()
 
             rv.menu_button.setOnClickListener {
                 if (rv.summary_drawer_layout.isDrawerOpen(GravityCompat.END)) {
@@ -48,13 +53,22 @@ class SummaryDetailFragment : BaseFragment() {
                     R.id.summary_nav_item_wm -> "summary/wm.pdf"
                     else -> null
                 }
-                fileName?.let { rv.pdf_viewer.fromAsset(it).load() }
+                fileName?.let {
+                    viewModel.pdfAssetPath = it
+                    rv.pdf_viewer.fromAsset(it).load()
+                }
                 rv.summary_drawer_layout.closeDrawer(GravityCompat.END)
 
                 true
             }
         }
         return rootView
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Logger.methodStart(TAG)
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(TAG, viewModel)
     }
 
     override fun onAttach(context: Context) {

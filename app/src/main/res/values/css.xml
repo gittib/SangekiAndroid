@@ -8,6 +8,17 @@
     <style name="Css.Base.TextView">
         <item name="android:textSize">14sp</item>
     </style>
+    <style name="Css.Base.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">44dp</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+    <style name="Css.Base.Button.Mini">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+    </style>
 
     <style name="Css.TopFragment" />
     <style name="Css.TopFragment.Title">

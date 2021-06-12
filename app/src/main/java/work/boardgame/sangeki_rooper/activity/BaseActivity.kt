@@ -2,6 +2,7 @@ package work.boardgame.sangeki_rooper.activity
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import work.boardgame.sangeki_rooper.util.Define
@@ -16,5 +17,6 @@ abstract class BaseActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Logger.methodStart(TAG)
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 }

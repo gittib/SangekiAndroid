@@ -1,6 +1,7 @@
 package work.boardgame.sangeki_rooper.activity
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import work.boardgame.sangeki_rooper.fragment.TopFragment
 import work.boardgame.sangeki_rooper.util.Logger
@@ -12,6 +13,9 @@ class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Logger.methodStart(TAG)
         super.onCreate(savedInstanceState)
+        Logger.d(TAG, requestedOrientation.toString())
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         Util.getWebViewUA(this)
 
         startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).also {

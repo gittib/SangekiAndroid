@@ -1,6 +1,8 @@
 package work.boardgame.sangeki_rooper.activity
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.Handler
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.*
 import work.boardgame.sangeki_rooper.util.Logger
@@ -25,6 +27,13 @@ class ContainerActivity : BaseActivity() {
                 ft.commit()
             }
         }
+        fragmentOnResume()
+    }
+
+    override fun onBackPressed() {
+        Logger.methodStart(TAG)
+        super.onBackPressed()
+        fragmentOnResume()
     }
 
     fun startFragment(fragmentName: String?, data:Any? = null) {
@@ -35,6 +44,7 @@ class ContainerActivity : BaseActivity() {
             ft.add(R.id.container, f)
             ft.commit()
         }
+        fragmentOnResume()
     }
 
     private fun getFragment(fragmentName: String?, data: Any? = null): BaseFragment {
@@ -52,6 +62,23 @@ class ContainerActivity : BaseActivity() {
             }
         } catch (e: ClassCastException) {
             throw IllegalArgumentException("invalid data type", e)
+        }
+    }
+
+    /**
+     * 新たに生成された or 上のフラグメントがdetachされた事で
+     * フラグメントが最前面へ表示された時の処理
+     */
+    private fun fragmentOnResume() {
+        Logger.methodStart(TAG)
+        Handler(mainLooper).post {
+            val foregroundFragment = supportFragmentManager.fragments.lastOrNull()
+            Logger.d(TAG, "foregroundFragment = " + foregroundFragment?.javaClass?.simpleName)
+
+            requestedOrientation = when (foregroundFragment) {
+                is SummaryDetailFragment -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                else -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
         }
     }
 }
