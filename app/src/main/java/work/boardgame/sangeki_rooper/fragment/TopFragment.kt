@@ -33,6 +33,12 @@ class TopFragment : BaseFragment() {
             rv.kifu_image.setOnClickListener { rv.kifu_title.performClick() }
             rv.kifu_note.setOnClickListener { rv.kifu_title.performClick() }
 
+            rv.summary_title.setOnClickListener {
+                activity?.startFragment(SummaryDetailFragment::class.qualifiedName)
+            }
+            rv.summary_image.setOnClickListener { rv.summary_title.performClick() }
+            rv.summary_note.setOnClickListener { rv.summary_title.performClick() }
+
             rv.scenario_list_title.setOnClickListener {
                 activity?.startFragment(ScenarioListFragment::class.qualifiedName)
             }
