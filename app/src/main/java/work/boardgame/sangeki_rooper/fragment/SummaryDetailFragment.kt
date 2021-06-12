@@ -3,12 +3,10 @@ package work.boardgame.sangeki_rooper.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.summary_detail_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.SummaryDetailViewModel
@@ -30,7 +28,7 @@ class SummaryDetailFragment : BaseFragment() {
     ): View? {
         Logger.methodStart(TAG)
         rootView = inflater.inflate(R.layout.summary_detail_fragment, container, false).also { rv ->
-            rv.pdf_viewer.fromAsset("summary_btx.pdf").load()
+            rv.pdf_viewer.fromAsset("summary/btx.pdf").load()
 
             rv.menu_button.setOnClickListener {
                 if (rv.summary_drawer_layout.isDrawerOpen(GravityCompat.END)) {
@@ -40,17 +38,17 @@ class SummaryDetailFragment : BaseFragment() {
                 }
             }
 
-            rv.summary_nav.setNavigationItemSelectedListener {
-                val fileName = when (it.itemId) {
-                    R.id.summary_nav_item_fs -> "summary_fs.pdf"
-                    R.id.summary_nav_item_btx -> "summary_btx.pdf"
-                    R.id.summary_nav_item_mz -> "summary_mz.pdf"
-                    R.id.summary_nav_item_mcx -> "summary_mcx.pdf"
-                    R.id.summary_nav_item_hsa -> "summary_hsa.pdf"
-                    R.id.summary_nav_item_wm -> "summary_wm.pdf"
+            rv.summary_nav.setNavigationItemSelectedListener {item ->
+                val fileName = when (item.itemId) {
+                    R.id.summary_nav_item_fs -> "summary/fs.pdf"
+                    R.id.summary_nav_item_btx -> "summary/btx.pdf"
+                    R.id.summary_nav_item_mz -> "summary/mz.pdf"
+                    R.id.summary_nav_item_mcx -> "summary/mcx.pdf"
+                    R.id.summary_nav_item_hsa -> "summary/hsa.pdf"
+                    R.id.summary_nav_item_wm -> "summary/wm.pdf"
                     else -> null
                 }
-                if (fileName != null) rootView?.pdf_viewer?.fromAsset(fileName)?.load()
+                fileName?.let { rv.pdf_viewer.fromAsset(it).load() }
                 rv.summary_drawer_layout.closeDrawer(GravityCompat.END)
 
                 true
