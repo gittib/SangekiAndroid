@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.kifu_standby_fragment.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuStandbyViewModel
-import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 
 class KifuStandbyFragment : BaseFragment() {
@@ -45,7 +44,7 @@ class KifuStandbyFragment : BaseFragment() {
             }
             rv.loop_count.let { v ->
                 v.adapter = getSpinnerAdapter(listOf(
-                    "",
+                    "ループ数を設定して下さい",
                     "1ループ",
                     "2ループ",
                     "3ループ",
@@ -68,7 +67,7 @@ class KifuStandbyFragment : BaseFragment() {
             }
             rv.day_count.let { v ->
                 v.adapter = getSpinnerAdapter(listOf(
-                    "",
+                    "日数を設定して下さい",
                     "1日",
                     "2日",
                     "3日",
