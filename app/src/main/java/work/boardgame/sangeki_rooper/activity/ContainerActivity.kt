@@ -76,7 +76,7 @@ class ContainerActivity : BaseActivity() {
             Logger.d(TAG, "foregroundFragment = " + foregroundFragment?.javaClass?.simpleName)
 
             requestedOrientation = when (foregroundFragment) {
-                is SummaryDetailFragment -> ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                is SummaryDetailFragment -> ActivityInfo.SCREEN_ORIENTATION_USER
                 else -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }
         }
