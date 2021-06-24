@@ -34,11 +34,16 @@ class KifuStandbyFragment : BaseFragment() {
                 v.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                         viewModel.tragedySetName = null
+                        onGameStateChanged()
                     }
 
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         Logger.d(TAG, "position = $position id = $id")
-                        viewModel.tragedySetName = viewModel.tragedySetSpinnerList[position]
+                        viewModel.tragedySetName = when (position) {
+                            0 -> null
+                            else -> viewModel.tragedySetSpinnerList[position]
+                        }
+                        onGameStateChanged()
                     }
                 }
             }
@@ -57,11 +62,13 @@ class KifuStandbyFragment : BaseFragment() {
                 v.onItemSelectedListener = object:AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                         viewModel.loopCount = 0
+                        onGameStateChanged()
                     }
 
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         Logger.d(TAG, "position = $position id = $id")
                         viewModel.loopCount = position
+                        onGameStateChanged()
                     }
                 }
             }
@@ -80,11 +87,13 @@ class KifuStandbyFragment : BaseFragment() {
                 v.onItemSelectedListener = object:AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                         viewModel.dayCount = 0
+                        onGameStateChanged()
                     }
 
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         Logger.d(TAG, "position = $position id = $id")
                         viewModel.dayCount = position
+                        onGameStateChanged()
                     }
                 }
             }
@@ -121,8 +130,28 @@ class KifuStandbyFragment : BaseFragment() {
     }
 
     private fun getSpinnerAdapter(items:List<String>)
-    = ArrayAdapter<String>(activity!!, android.R.layout.simple_spinner_item).also { adapter ->
+    = ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item).also { adapter ->
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        items.forEach { adapter.add(it) }
+        adapter.addAll(items)
+    }
+
+    private fun onGameStateChanged() {
+        Logger.methodStart(TAG)
+        if (viewModel.dayCount <= 0 || viewModel.loopCount <= 0 || viewModel.tragedySetName == null) {
+            Logger.d(TAG, "ゲーム設定未完了")
+            // 事件設定を隠す
+            rootView?.let { rv ->
+                rv.incident_list.removeAllViews()
+                rv.incident_list_wrapper.visibility = View.GONE
+            }
+        } else {
+            // 事件設定を表示
+            rootView?.let { rv ->
+                rv.incident_list_wrapper.visibility = View.VISIBLE
+                repeat(viewModel.dayCount) {
+                    // TODO: 事件入力欄をaddView
+                }
+            }
+        }
     }
 }

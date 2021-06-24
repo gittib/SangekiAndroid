@@ -18,6 +18,7 @@
             android:layout_margin="16dp">
 
             <GridLayout
+                android:id="@+id/summary_info_wrapper"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,6 +51,25 @@
                     android:id="@+id/day_count"
                     style="@style/Css.KifuStandby.Spinner"/>
             </GridLayout>
+
+            <LinearLayout
+                android:id="@+id/incident_list_wrapper"
+                app:layout_constraintTop_toBottomOf="@id/summary_info_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/Css.KifuStandby.Title"
+                    android:text="@string/incident_list" />
+
+                <LinearLayout
+                    android:id="@+id/incident_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                </LinearLayout>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
