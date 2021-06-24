@@ -56,7 +56,7 @@ class KifuListFragment : BaseFragment() {
         inner class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             fun onBind() {
                 itemView.setOnClickListener {
-                    activity?.startFragment(KifuStandbyFragment::class.qualifiedName)
+                    activity.startFragment(KifuStandbyFragment::class.qualifiedName)
                 }
             }
         }
@@ -95,7 +95,7 @@ class KifuListFragment : BaseFragment() {
             }
         }
 
-        override fun getItemCount(): Int = 2 // TODO 2+棋譜リスト項目数
+        override fun getItemCount(): Int = viewModel.games.size + 2
 
         override fun getItemViewType(position: Int): Int = when (position) {
             0 -> ViewType.HEADER

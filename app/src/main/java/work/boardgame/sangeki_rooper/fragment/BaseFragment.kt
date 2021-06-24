@@ -1,6 +1,7 @@
 package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import io.reactivex.SingleObserver
@@ -18,22 +19,20 @@ import java.util.*
 abstract class BaseFragment: Fragment() {
     private val TAG = BaseFragment::class.simpleName
 
-    protected val prefs get() = context?.getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-    protected val activity get() = (getActivity() as? ContainerActivity)
-    protected val application get() = (activity?.application as? MyApplication)
+    protected val prefs: SharedPreferences get() = activity.getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    protected lateinit var activity:ContainerActivity
+    protected val application get() = (activity.application as? MyApplication)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        activity = context as ContainerActivity
         dailyUpdate(context)
     }
 
     /** 日次更新処理 */
     private fun dailyUpdate(context: Context) {
         val now = Calendar.getInstance().timeInMillis
-        val lastUpdated = prefs?.getLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, 0L) ?: run {
-            Logger.d(TAG, "prefs is null")
-            return
-        }
+        val lastUpdated = prefs.getLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, 0L)
         val oneDay = 24 * 3600 * 1000L
         if (now - lastUpdated >= oneDay) {
             Logger.i(TAG, "前回のデータ更新から1日以上時間経過してるので、データ更新処理を実行する")
@@ -44,13 +43,10 @@ abstract class BaseFragment: Fragment() {
                 .subscribe(object: SingleObserver<List<TragedyScenarioModel>> {
                     override fun onSuccess(t: List<TragedyScenarioModel>) {
                         Logger.i(TAG, "脚本データ更新")
-                        prefs?.edit()?.let {
-                            it.putString(Define.SharedPreferencesKey.SCENARIOS, Gson().toJson(t))
-                                ?.putLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, now)
-                                ?.apply()
-                        } ?: run {
-                            Logger.w(TAG, "脚本データ更新失敗。 prefs.edit() is null")
-                        }
+                        prefs.edit()
+                                .putString(Define.SharedPreferencesKey.SCENARIOS, Gson().toJson(t))
+                                .putLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, now)
+                                .apply()
                     }
 
                     override fun onSubscribe(d: Disposable) {}

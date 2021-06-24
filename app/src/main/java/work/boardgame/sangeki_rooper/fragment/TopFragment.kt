@@ -28,25 +28,25 @@ class TopFragment : BaseFragment() {
         Logger.methodStart(TAG)
         rootView = inflater.inflate(R.layout.top_fragment, container, false).also { rv ->
             rv.kifu_title.setOnClickListener {
-                activity?.startFragment(KifuListFragment::class.qualifiedName)
+                activity.startFragment(KifuListFragment::class.qualifiedName)
             }
             rv.kifu_image.setOnClickListener { rv.kifu_title.performClick() }
             rv.kifu_note.setOnClickListener { rv.kifu_title.performClick() }
 
             rv.summary_title.setOnClickListener {
-                activity?.startFragment(SummaryDetailFragment::class.qualifiedName)
+                activity.startFragment(SummaryDetailFragment::class.qualifiedName)
             }
             rv.summary_image.setOnClickListener { rv.summary_title.performClick() }
             rv.summary_note.setOnClickListener { rv.summary_title.performClick() }
 
             rv.scenario_list_title.setOnClickListener {
-                activity?.startFragment(ScenarioListFragment::class.qualifiedName)
+                activity.startFragment(ScenarioListFragment::class.qualifiedName)
             }
             rv.scenario_list_image.setOnClickListener { rv.scenario_list_title.performClick() }
             rv.scenario_list_note.setOnClickListener { rv.scenario_list_title.performClick() }
 
             rv.footer_text.setOnClickListener {
-                activity?.startFragment(AboutFragment::class.qualifiedName)
+                activity.startFragment(AboutFragment::class.qualifiedName)
             }
         }
         return rootView

@@ -36,7 +36,7 @@ class ScenarioListFragment : BaseFragment() {
         Logger.methodStart(TAG)
         rootView = inflater.inflate(R.layout.scenario_list_fragment, container, false).also { rv ->
             rv.scenario_list.let {
-                it.layoutManager = LinearLayoutManager(context)
+                it.layoutManager = LinearLayoutManager(activity)
                 it.adapter = ScenarioListAdapter()
             }
         }
@@ -53,11 +53,7 @@ class ScenarioListFragment : BaseFragment() {
 
     fun reloadScenarioList() {
         Logger.methodStart(TAG)
-        val context = activity ?: run {
-            Logger.w(TAG, "activity == null")
-            return
-        }
-        viewModel.scenarioList = Util.getScenarioList(context).filter { it.secret != true }
+        viewModel.scenarioList = Util.getScenarioList(activity).filter { it.secret != true }
             .sortedWith(Comparator { o1, o2 ->
                 var d:Int = o1.tragedySetIndex() - o2.tragedySetIndex()
                 if (d == 0) d = o1.id[1] - o2.id[1]
@@ -102,14 +98,14 @@ class ScenarioListFragment : BaseFragment() {
                     rv.writer.text = String.format(getString(R.string.writer_introduction), item.writer)
 
                     rv.setOnClickListener {
-                        activity?.startFragment(ScenarioDetailFragment::class.qualifiedName, item.id)
+                        activity.startFragment(ScenarioDetailFragment::class.qualifiedName, item.id)
                     }
                 }
             }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            val inflater = LayoutInflater.from(context)
+            val inflater = LayoutInflater.from(activity)
             return when (viewType) {
                 ViewType.HEADER -> {
                     val v = inflater.inflate(R.layout.adapter_item_scenario_header, parent, false)
