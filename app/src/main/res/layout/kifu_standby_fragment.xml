@@ -57,7 +57,9 @@
                 app:layout_constraintTop_toBottomOf="@id/summary_info_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <TextView
                     style="@style/Css.KifuStandby.Title"
@@ -67,8 +69,7 @@
                     android:id="@+id/incident_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:orientation="vertical"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

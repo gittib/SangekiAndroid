@@ -37,6 +37,9 @@ class KifuListFragment : BaseFragment() {
                 it.layoutManager = LinearLayoutManager(context)
                 it.adapter = KifuListAdapter()
             }
+            rv.create_new_kifu.setOnClickListener {
+                activity.startFragment(KifuStandbyFragment::class.qualifiedName)
+            }
         }
         return rootView
     }

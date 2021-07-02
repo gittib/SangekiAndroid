@@ -7,11 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.kifu_standby_fragment.view.*
+import kotlinx.android.synthetic.main.kifu_standby_fragment.view.day_count
+import kotlinx.android.synthetic.main.linear_item_kifu_standby_incident.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuStandbyViewModel
 import work.boardgame.sangeki_rooper.util.Logger
+import work.boardgame.sangeki_rooper.util.Util
 
 class KifuStandbyFragment : BaseFragment() {
     private val TAG = KifuStandbyFragment::class.simpleName
@@ -141,16 +145,33 @@ class KifuStandbyFragment : BaseFragment() {
             Logger.d(TAG, "ゲーム設定未完了")
             // 事件設定を隠す
             rootView?.let { rv ->
-                rv.incident_list.removeAllViews()
                 rv.incident_list_wrapper.visibility = View.GONE
             }
         } else {
             // 事件設定を表示
             rootView?.let { rv ->
-                rv.incident_list_wrapper.visibility = View.VISIBLE
-                repeat(viewModel.dayCount) {
-                    // TODO: 事件入力欄をaddView
+                rv.incident_list.removeAllViews()
+                val inflater = LayoutInflater.from(activity)
+                val incidentList = Util.incidentList(activity, viewModel.tragedySetName).also {
+                    it.add(0, "--------")
                 }
+                repeat(viewModel.dayCount) { day ->
+                    val row = inflater.inflate(R.layout.linear_item_kifu_standby_incident, rv.incident_list, false).also { lv ->
+                        lv.incident_day.text = String.format("%d日目", day+1)
+                        lv.incident_name.let { v ->
+                            v.onItemSelectedListener = object: AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
+                                override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {}
+                                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                                    viewModel.incidentNameList[day] = incidentList[p2]
+                                }
+                                override fun onNothingSelected(p0: AdapterView<*>?) {}
+                            }
+                            v.adapter = getSpinnerAdapter(incidentList)
+                        }
+                    }
+                    rv.incident_list.addView(row)
+                }
+                rv.incident_list_wrapper.visibility = View.VISIBLE
             }
         }
     }

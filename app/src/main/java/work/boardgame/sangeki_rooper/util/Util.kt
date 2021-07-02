@@ -97,6 +97,26 @@ object Util {
         else -> "謎の惨劇セット"
     }
 
+    fun incidentList(context: Context, @StringRes setName: Int)
+    = incidentList(context, context.getString(setName))
+
+    fun incidentList(context: Context, tragedySetName: String?):MutableList<String> {
+        val r = context.resources
+        return when (tragedySetName) {
+            context.getString(R.string.summary_name_fs) -> r.getStringArray(R.array.incident_list_fs)
+            context.getString(R.string.summary_name_btx) -> r.getStringArray(R.array.incident_list_btx)
+            context.getString(R.string.summary_name_mz) -> r.getStringArray(R.array.incident_list_mz)
+            context.getString(R.string.summary_name_mcx) -> r.getStringArray(R.array.incident_list_mcx)
+            context.getString(R.string.summary_name_hsa) -> r.getStringArray(R.array.incident_list_hsa)
+            context.getString(R.string.summary_name_wm) -> r.getStringArray(R.array.incident_list_wm)
+            context.getString(R.string.summary_name_um) -> r.getStringArray(R.array.incident_list_um)
+            else -> {
+                Logger.w(TAG, Throwable("invalid set name: $tragedySetName"))
+                arrayOf()
+            }
+        }.toMutableList()
+    }
+
     fun incidentExplain(incidentName:String) = when(incidentName) {
         "殺人事件" -> "可能ならば犯人と同一エリアにいる犯人以外の任意のキャラクターを死亡させる。"
         "不安拡大" -> "任意のキャラクター1人の上に不安カウンターを2つ置き、別の任意のキャラクター1人の上に暗躍カウンターを１つ置く。"
