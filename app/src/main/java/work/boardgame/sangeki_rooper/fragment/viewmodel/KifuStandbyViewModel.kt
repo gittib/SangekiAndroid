@@ -10,7 +10,7 @@ class KifuStandbyViewModel() : ViewModel(), Parcelable {
     var tragedySetName:String? = null
     var loopCount:Int = 0
     var dayCount:Int = 0
-    var incidentNameList = MutableList(8) { "" }
+    var incidentNameList: MutableList<String> = MutableList(8) { "" }
     private set
 
     constructor(parcel: Parcel) : this() {

@@ -71,4 +71,8 @@
     <string name="kifu_list">棋譜一覧</string>
     <string name="create_new_kifu">新規ゲームの棋譜記録開始</string>
     <string name="recommended_scenario">オススメ！</string>
+    <string name="game_start">ゲーム開始</string>
+    <string name="kifu_delete_confirm_dialog_title">＜注意＞</string>
+    <string name="kifu_delete_confirm_dialog_message">こちらの棋譜データを削除します。\nよろしいですか？\n\n開始日時： %s\n%s\n%dループ%d日</string>
+    <string name="kifu_delete_complete_dialog_message">棋譜データを削除しました。</string>
 </resources>

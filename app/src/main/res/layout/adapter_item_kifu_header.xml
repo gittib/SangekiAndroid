@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/start_new_game_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="44dp"
@@ -12,13 +13,7 @@
         android:background="@drawable/bg_adapter_kifu_header"
         android:gravity="center"
         android:padding="8dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:text="@string/create_new_kifu" />
-    </LinearLayout>
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:text="@string/create_new_kifu" />
 </FrameLayout>

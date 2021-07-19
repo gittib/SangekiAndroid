@@ -10,7 +10,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/game_start_button">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -35,7 +37,7 @@
 
                 <TextView
                     style="@style/Css.Base.TextView"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="16dp"
                     android:text="@string/loop_count"/>
 
                 <Spinner
@@ -44,7 +46,7 @@
 
                 <TextView
                     style="@style/Css.Base.TextView"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="16dp"
                     android:text="@string/day_count"/>
 
                 <Spinner
@@ -52,9 +54,24 @@
                     style="@style/Css.KifuStandby.Spinner"/>
             </GridLayout>
 
+            <TextView
+                android:id="@+id/special_rule_label"
+                app:layout_constraintTop_toBottomOf="@id/summary_info_wrapper"
+                app:layout_constraintLeft_toLeftOf="parent"
+                style="@style/Css.KifuStandby.Title"
+                android:text="@string/special_rule" />
+
+            <EditText
+                android:id="@+id/special_rule"
+                app:layout_constraintTop_toBottomOf="@id/special_rule_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:padding="8dp"/>
+
             <LinearLayout
                 android:id="@+id/incident_list_wrapper"
-                app:layout_constraintTop_toBottomOf="@id/summary_info_wrapper"
+                app:layout_constraintTop_toBottomOf="@id/special_rule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -73,4 +90,13 @@
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/game_start_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="16dp"
+        style="@style/Css.Base.Button"
+        android:text="@string/game_start" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,15 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import kotlinx.android.synthetic.main.kifu_standby_fragment.view.*
-import kotlinx.android.synthetic.main.kifu_standby_fragment.view.day_count
 import kotlinx.android.synthetic.main.linear_item_kifu_standby_incident.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.database.dao.GameDao
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuStandbyViewModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
+import java.util.*
 
 class KifuStandbyFragment : BaseFragment() {
     private val TAG = KifuStandbyFragment::class.simpleName
@@ -24,6 +29,7 @@ class KifuStandbyFragment : BaseFragment() {
         fun newInstance() = KifuStandbyFragment()
 
         private const val SS_VIEW_MODEL = "SS_VIEW_MODEL"
+        private const val NO_INCIDENTS = "--------"
     }
 
     private lateinit var viewModel: KifuStandbyViewModel
@@ -101,6 +107,37 @@ class KifuStandbyFragment : BaseFragment() {
                     }
                 }
             }
+
+            rv.game_start_button.let { v ->
+                v.setOnClickListener {
+                    val tragedyName = viewModel.tragedySetName ?: return@setOnClickListener
+                    Logger.d(TAG, "tragedyName = $tragedyName")
+                    if (viewModel.dayCount <= 0 || viewModel.loopCount <= 0) {
+                        return@setOnClickListener
+                    }
+                    val specialRule = rootView?.special_rule?.text?.toString()
+                    viewModel.viewModelScope.launch(Dispatchers.IO) {
+                        val dao = MyApplication.db.gameDao()
+                        MyApplication.db.runInTransaction {
+                            val gameId = dao.createGame(GameDao.CreateGameModel(Calendar.getInstance(),
+                                tragedyName, viewModel.loopCount, viewModel.dayCount, specialRule))
+                            viewModel.incidentNameList.forEachIndexed { index, incidentName ->
+                                Logger.d(TAG, "index = $index, incidentName = $incidentName")
+                                when (incidentName) {
+                                    "", NO_INCIDENTS -> Logger.d(TAG, "事件無し")
+                                    else -> {
+                                        val day = index + 1
+                                        dao.createIncident(GameDao.CreateIncidentModel(gameId, day, incidentName))
+                                    }
+                                }
+                            }
+                        }
+                        withContext(Dispatchers.Main) {
+                            //TODO("棋譜入力画面へ飛ぶ")
+                        }
+                    }
+                }
+            }
         }
         return rootView
     }
@@ -153,7 +190,7 @@ class KifuStandbyFragment : BaseFragment() {
                 rv.incident_list.removeAllViews()
                 val inflater = LayoutInflater.from(activity)
                 val incidentList = Util.incidentList(activity, viewModel.tragedySetName).also {
-                    it.add(0, "--------")
+                    it.add(0, NO_INCIDENTS)
                 }
                 repeat(viewModel.dayCount) { day ->
                     val row = inflater.inflate(R.layout.linear_item_kifu_standby_incident, rv.incident_list, false).also { lv ->

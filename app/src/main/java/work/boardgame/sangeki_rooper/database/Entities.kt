@@ -49,7 +49,7 @@ data class Incident (
 data class Npc (
     @PrimaryKey(autoGenerate = true) val id: Long,
     val gameId: Long,
-    var name: String?,
+    var name: String,
     var role: String?
 )
 
@@ -64,8 +64,7 @@ data class Day (
     val gameId: Long,
     var loop: Int,
     var day: Int,
-    var target: String,
-    var card: String
+    var note: String?
 )
 
 @Entity(foreignKeys = [ForeignKey(

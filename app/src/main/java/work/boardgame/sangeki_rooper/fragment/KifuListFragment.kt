@@ -1,21 +1,26 @@
 package work.boardgame.sangeki_rooper.fragment
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adapter_item_kifu.view.*
+import kotlinx.android.synthetic.main.adapter_item_kifu_header.view.*
 import kotlinx.android.synthetic.main.kifu_list_fragment.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuListViewModel
 import work.boardgame.sangeki_rooper.util.Logger
-import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.format
-import java.lang.IllegalArgumentException
 
 class KifuListFragment : BaseFragment() {
     private val TAG = KifuListFragment::class.simpleName
@@ -48,6 +53,15 @@ class KifuListFragment : BaseFragment() {
         Logger.methodStart(TAG)
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(KifuListViewModel::class.java)
+
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            MyApplication.db.gameDao().let { dao ->
+                viewModel.games = dao.loadAllGame().toMutableList()
+                withContext(Dispatchers.Main) {
+                    rootView?.kifu_list?.adapter?.notifyDataSetChanged()
+                }
+            }
+        }
     }
 
     private object ViewType {
@@ -58,8 +72,10 @@ class KifuListFragment : BaseFragment() {
     private inner class KifuListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         inner class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             fun onBind() {
-                itemView.setOnClickListener {
-                    activity.startFragment(KifuStandbyFragment::class.qualifiedName)
+                itemView.let { rv ->
+                    rv.start_new_game_button.setOnClickListener {
+                        activity.startFragment(KifuStandbyFragment::class.qualifiedName)
+                    }
                 }
             }
         }
@@ -68,12 +84,36 @@ class KifuListFragment : BaseFragment() {
                 val item = viewModel.games[position-1]
                 val game = item.game
                 itemView.let { rv ->
-                    rv.kifu_summary.text = String.format("%s\n%sループ %d日",
-                            Util.tragedySetName(context, game.setName), game.loop, game.day)
+                    rv.kifu_summary.text = String.format("%s\n%sループ %d日", game.setName, game.loop, game.day)
                     rv.create_date.text = game.createdAt.format()
 
                     rv.setOnClickListener {
                         TODO("棋譜詳細画面を開く")
+                    }
+                    rv.setOnLongClickListener {
+                        AlertDialog.Builder(activity)
+                            .setTitle(R.string.kifu_delete_confirm_dialog_title)
+                            .setMessage(String.format(getString(R.string.kifu_delete_confirm_dialog_message),
+                                game.createdAt.format(), game.setName, game.loop, game.day))
+                            .setPositiveButton(R.string.ok) { _, _ ->
+                                viewModel.viewModelScope.launch(Dispatchers.IO) {
+                                    MyApplication.db.gameDao().deleteGame(item.game)
+                                    withContext(Dispatchers.Main) {
+                                        AlertDialog.Builder(activity)
+                                            .setMessage(R.string.kifu_delete_complete_dialog_message)
+                                            .setPositiveButton(R.string.ok, null)
+                                            .setOnDismissListener {
+                                                val index = viewModel.games.indexOfFirst { it.game.id == game.id }
+                                                viewModel.games.removeAt(index)
+                                                rootView?.kifu_list?.adapter?.notifyItemRemoved(index+1)
+                                            }
+                                            .show()
+                                    }
+                                }
+                            }
+                            .setNegativeButton(R.string.cancel, null)
+                            .show()
+                        true
                     }
                 }
             }
