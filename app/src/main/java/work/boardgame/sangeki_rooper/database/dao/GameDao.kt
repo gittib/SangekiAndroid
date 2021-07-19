@@ -13,7 +13,7 @@ interface GameDao {
 
     @Transaction
     @Query("SELECT * FROM Game WHERE id = :id")
-    fun loadGame(id:Int): GameRelation?
+    fun loadGame(id:Long): GameRelation?
     /** Selectメソッド ここまで **********************************************************************/
 
     /** Insertメソッド ここから **********************************************************************/

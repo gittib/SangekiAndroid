@@ -58,6 +58,7 @@ class ContainerActivity : BaseActivity() {
                 KifuListFragment::class.qualifiedName -> KifuListFragment.newInstance()
                 KifuStandbyFragment::class.qualifiedName -> KifuStandbyFragment.newInstance()
                 SummaryDetailFragment::class.qualifiedName -> SummaryDetailFragment.newInstance()
+                KifuDetailFragment::class.qualifiedName -> KifuDetailFragment.newInstance(data as Long)
                 else -> throw IllegalArgumentException("invalid fragment name: $fragmentName")
             }
         } catch (e: ClassCastException) {

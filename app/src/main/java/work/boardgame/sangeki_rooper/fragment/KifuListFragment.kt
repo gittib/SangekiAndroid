@@ -88,7 +88,7 @@ class KifuListFragment : BaseFragment() {
                     rv.create_date.text = game.createdAt.format()
 
                     rv.setOnClickListener {
-                        TODO("棋譜詳細画面を開く")
+                        activity.startFragment(KifuDetailFragment::class.qualifiedName, game.id)
                     }
                     rv.setOnLongClickListener {
                         AlertDialog.Builder(activity)
