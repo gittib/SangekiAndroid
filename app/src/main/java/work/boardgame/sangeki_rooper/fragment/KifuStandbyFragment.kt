@@ -2,8 +2,6 @@ package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -138,9 +136,7 @@ class KifuStandbyFragment : BaseFragment() {
                         withContext(Dispatchers.Main) {
                             activity.onBackPressed()
                             gameId?.let {
-                                Handler(Looper.getMainLooper()).post {
-                                    activity.startFragment(KifuDetailFragment::class.qualifiedName, it)
-                                }
+                                activity.startFragment(KifuDetailFragment::class.qualifiedName, it)
                             } ?: run {
                                 Logger.e(TAG, "game初期化失敗")
                             }
