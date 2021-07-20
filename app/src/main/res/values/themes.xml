@@ -17,9 +17,15 @@
 
     <style name="Theme.SangekiAndroid.DialogBase" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="android:textColorPrimary">@color/dialog_text_color</item>
+        <item name="android:windowTitleStyle">@style/Theme.SangekiAndroid.DialogBase.Title</item>
         <item name="android:buttonBarNeutralButtonStyle">@style/Theme.SangekiAndroid.DialogBase.Button.Neutral</item>
         <item name="android:buttonBarNegativeButtonStyle">@style/Theme.SangekiAndroid.DialogBase.Button.Negative</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/Theme.SangekiAndroid.DialogBase.Button.Positive</item>
+    </style>
+    <style name="Theme.SangekiAndroid.DialogBase.Title">
+        <item name="android:textColor">@color/dialog_text_color</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
     <style name="Theme.SangekiAndroid.DialogBase.Button">
         <item name="android:textColor">@color/dialog_button_text_color</item>

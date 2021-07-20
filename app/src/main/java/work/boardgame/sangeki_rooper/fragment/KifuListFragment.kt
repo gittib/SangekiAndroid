@@ -91,7 +91,7 @@ class KifuListFragment : BaseFragment() {
                         activity.startFragment(KifuDetailFragment::class.qualifiedName, game.id)
                     }
                     rv.setOnLongClickListener {
-                        AlertDialog.Builder(activity)
+                        AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                             .setTitle(R.string.kifu_delete_confirm_dialog_title)
                             .setMessage(String.format(getString(R.string.kifu_delete_confirm_dialog_message),
                                 game.createdAt.format(), game.setName, game.loop, game.day))
@@ -99,7 +99,7 @@ class KifuListFragment : BaseFragment() {
                                 viewModel.viewModelScope.launch(Dispatchers.IO) {
                                     MyApplication.db.gameDao().deleteGame(item.game)
                                     withContext(Dispatchers.Main) {
-                                        AlertDialog.Builder(activity)
+                                        AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                             .setMessage(R.string.kifu_delete_complete_dialog_message)
                                             .setPositiveButton(R.string.ok, null)
                                             .setOnDismissListener {

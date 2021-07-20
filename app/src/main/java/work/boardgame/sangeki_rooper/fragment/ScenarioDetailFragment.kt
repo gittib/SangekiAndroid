@@ -77,7 +77,7 @@ class ScenarioDetailFragment : BaseFragment() {
                     item.incidentList.find { it.day == i }?.let { incidentData ->
                         v.incident_name.text = incidentData.publicName()
                         v.incident_name.setOnLongClickListener {
-                            AlertDialog.Builder(activity)
+                            AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                     .setTitle(incidentData.publicName())
                                     .setMessage(Util.incidentExplain(incidentData.publicName()))
                                     .setPositiveButton(R.string.ok, null)
