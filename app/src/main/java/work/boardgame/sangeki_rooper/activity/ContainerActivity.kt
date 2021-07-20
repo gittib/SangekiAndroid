@@ -11,6 +11,16 @@ import java.lang.IllegalArgumentException
 class ContainerActivity : BaseActivity() {
     private val TAG = ContainerActivity::class.simpleName
 
+    /**
+     * 新たに生成された or 上のフラグメントがdetachされた事で
+     * フラグメントが最前面へ表示された時の処理をしたい場合にimplementする
+     *
+     * @see fragmentOnResume
+     */
+    interface ForegroundFragmentListener {
+        fun onForeground()
+    }
+
     object ExtraKey {
         const val FRAGMENT_NAME = "FRAGMENT_NAME"
     }
@@ -80,6 +90,8 @@ class ContainerActivity : BaseActivity() {
                 is SummaryDetailFragment -> ActivityInfo.SCREEN_ORIENTATION_USER
                 else -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }
+
+            (foregroundFragment as? ForegroundFragmentListener)?.onForeground()
         }
     }
 }

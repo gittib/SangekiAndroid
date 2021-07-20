@@ -2,6 +2,8 @@ package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -118,22 +120,30 @@ class KifuStandbyFragment : BaseFragment() {
                     val specialRule = rootView?.special_rule?.text?.toString()
                     viewModel.viewModelScope.launch(Dispatchers.IO) {
                         val dao = MyApplication.db.gameDao()
+                        var gameId:Long? = null
                         MyApplication.db.runInTransaction {
-                            val gameId = dao.createGame(GameDao.CreateGameModel(Calendar.getInstance(),
+                            gameId = dao.createGame(GameDao.CreateGameModel(Calendar.getInstance(),
                                 tragedyName, viewModel.loopCount, viewModel.dayCount, specialRule))
                             viewModel.incidentNameList.forEachIndexed { index, incidentName ->
                                 Logger.d(TAG, "index = $index, incidentName = $incidentName")
                                 when (incidentName) {
                                     "", NO_INCIDENTS -> Logger.d(TAG, "事件無し")
-                                    else -> {
+                                    else -> gameId?.let {
                                         val day = index + 1
-                                        dao.createIncident(GameDao.CreateIncidentModel(gameId, day, incidentName))
+                                        dao.createIncident(GameDao.CreateIncidentModel(it, day, incidentName))
                                     }
                                 }
                             }
                         }
                         withContext(Dispatchers.Main) {
-                            //TODO("棋譜入力画面へ飛ぶ")
+                            activity.onBackPressed()
+                            gameId?.let {
+                                Handler(Looper.getMainLooper()).post {
+                                    activity.startFragment(KifuDetailFragment::class.qualifiedName, it)
+                                }
+                            } ?: run {
+                                Logger.e(TAG, "game初期化失敗")
+                            }
                         }
                     }
                 }

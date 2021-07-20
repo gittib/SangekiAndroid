@@ -18,11 +18,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.activity.ContainerActivity
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuListViewModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.format
 
-class KifuListFragment : BaseFragment() {
+class KifuListFragment : BaseFragment(),
+    ContainerActivity.ForegroundFragmentListener
+{
     private val TAG = KifuListFragment::class.simpleName
 
     companion object {
@@ -53,10 +56,14 @@ class KifuListFragment : BaseFragment() {
         Logger.methodStart(TAG)
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(KifuListViewModel::class.java)
+    }
 
+    override fun onForeground() {
+        Logger.methodStart(TAG)
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             MyApplication.db.gameDao().let { dao ->
                 viewModel.games = dao.loadAllGame().toMutableList()
+                viewModel.games.sortByDescending { it.game.createdAt }
                 withContext(Dispatchers.Main) {
                     rootView?.kifu_list?.adapter?.notifyDataSetChanged()
                 }
@@ -99,14 +106,13 @@ class KifuListFragment : BaseFragment() {
                                 viewModel.viewModelScope.launch(Dispatchers.IO) {
                                     MyApplication.db.gameDao().deleteGame(item.game)
                                     withContext(Dispatchers.Main) {
+                                        val index = viewModel.games.indexOfFirst { it.game.id == game.id }
+                                        viewModel.games.removeAt(index)
+                                        rootView?.kifu_list?.adapter?.notifyItemRemoved(index+1)
+
                                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                             .setMessage(R.string.kifu_delete_complete_dialog_message)
                                             .setPositiveButton(R.string.ok, null)
-                                            .setOnDismissListener {
-                                                val index = viewModel.games.indexOfFirst { it.game.id == game.id }
-                                                viewModel.games.removeAt(index)
-                                                rootView?.kifu_list?.adapter?.notifyItemRemoved(index+1)
-                                            }
                                             .show()
                                     }
                                 }
