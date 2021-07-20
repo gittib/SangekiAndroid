@@ -12,9 +12,11 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import work.boardgame.sangeki_rooper.BuildConfig
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.model.RuleMasterDataModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.lang.IllegalArgumentException
 import java.util.*
 
 object Util {
@@ -76,6 +78,15 @@ object Util {
         }
     }
 
+    fun getRuleMasterData(context: Context): List<RuleMasterDataModel> {
+        val assetManager = context.resources.assets
+        val inputStream = assetManager.open("initial_scenario_list.json")
+        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+        val sJson = bufferedReader.readText()
+        val type = object: TypeToken<List<RuleMasterDataModel>>(){}.type
+        return Gson().fromJson<List<RuleMasterDataModel>>(sJson, type)
+    }
+
     fun tragedySetIndex(abbrSetName: String) = when (abbrSetName) {
         "FS" -> 0
         "BTX" -> 1
@@ -95,6 +106,16 @@ object Util {
         "WM" -> context?.getString(R.string.summary_name_wm)
         "UM" -> context?.getString(R.string.summary_name_um)
         else -> "謎の惨劇セット"
+    }
+    fun tragedySetNameAbbr(context: Context, tragedySetName: String?) = when (tragedySetName) {
+        context.getString(R.string.summary_name_fs) -> "FS"
+        context.getString(R.string.summary_name_btx) -> "BTX"
+        context.getString(R.string.summary_name_mz) -> "MZ"
+        context.getString(R.string.summary_name_mcx) -> "MCX"
+        context.getString(R.string.summary_name_hsa) -> "HSA"
+        context.getString(R.string.summary_name_wm) -> "WM"
+        context.getString(R.string.summary_name_um) -> "UM"
+        else -> throw IllegalArgumentException("invalid tragedy set name: $tragedySetName")
     }
 
     fun incidentList(context: Context, @StringRes setName: Int)

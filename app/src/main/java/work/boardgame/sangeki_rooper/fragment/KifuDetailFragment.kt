@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
-import work.boardgame.sangeki_rooper.database.GameRelation
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.toJson
+import java.lang.IllegalArgumentException
 
 class KifuDetailFragment : BaseFragment() {
     companion object {
@@ -33,6 +33,7 @@ class KifuDetailFragment : BaseFragment() {
         const val GAME_ID = "GAME_ID"
     }
 
+    private var rootView: View? = null
     private lateinit var viewModel: KifuDetailViewModel
 
     override fun onCreateView(
@@ -40,23 +41,42 @@ class KifuDetailFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         Logger.methodStart(TAG)
-        return inflater.inflate(R.layout.kifu_detail_fragment, container, false).also { rv ->
-            rv.textview.text = game?.toJson()
-        }
+        rootView = inflater.inflate(R.layout.kifu_detail_fragment, container, false)
+        applyViewData()
+        return rootView
     }
 
-    private var game: GameRelation? = null
     override fun onAttach(context: Context) {
         Logger.methodStart(TAG)
         super.onAttach(context)
-        viewModel = ViewModelProvider(this).get(KifuDetailViewModel::class.java)
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
-            arguments?.getLong(BundleKey.GAME_ID)?.let { id ->
-                game = MyApplication.db.gameDao().loadGame(id)
-                withContext(Dispatchers.Main) {
+        try {
+            viewModel = ViewModelProvider(this).get(KifuDetailViewModel::class.java)
+            viewModel.gameId = arguments?.getLong(BundleKey.GAME_ID)
+                ?: throw IllegalArgumentException("gameId is null")
+            viewModel.viewModelScope.launch(Dispatchers.IO) {
+                arguments?.getLong(BundleKey.GAME_ID)?.let { id ->
+                    viewModel.gameRelation = MyApplication.db.gameDao().loadGame(id)
+                    withContext(Dispatchers.Main) {
+                        if (viewModel.gameRelation == null) {
+                            Logger.w(TAG, "game is null")
+                            activity.onBackPressed()
+                        }
+                        applyViewData()
+                    }
                 }
             }
+        } catch (e: RuntimeException) {
+            Logger.w(TAG, Throwable(e))
+            activity.onBackPressed()
         }
-        // TODO: Use the ViewModel
+    }
+
+    private fun applyViewData() {
+        val game = viewModel.gameRelation ?: return
+        val rv = rootView ?: return
+
+        Logger.methodStart(TAG)
+
+        rv.textview.text = game.toJson()
     }
 }

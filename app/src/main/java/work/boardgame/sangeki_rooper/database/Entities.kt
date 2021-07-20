@@ -10,7 +10,8 @@ data class Game(
     var setName: String,
     var loop: Int,
     var day: Int,
-    var specialRule: String?
+    var specialRule: String?,
+    var detectiveInfo: String?
 )
 
 data class GameRelation(
