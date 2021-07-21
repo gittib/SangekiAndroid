@@ -36,9 +36,10 @@
     <string name="character_list">登場人物</string>
     <string name="caution">！！！警告！！！</string>
     <string name="caution_spoiler">申し訳ありませんが、このリストや脚本詳細画面を見てしまうと、主人公として惨劇RoopeRを遊ぶ事ができなくなる可能性があります。\n主人公として遊ぶ予定がある方は、この画面を閉じることをおすすめします。</string>
-    <string name="rule_y">ルールY</string>
-    <string name="rule_x1">ルールX1</string>
-    <string name="rule_x2">ルールX2</string>
+    <string name="rule">ルール</string>
+    <string name="ruleY">ルールY</string>
+    <string name="ruleX1">ルールX1</string>
+    <string name="ruleX2">ルールX2</string>
     <string name="character">キャラクター</string>
     <string name="chara">キャラ</string>
     <string name="role">役職</string>

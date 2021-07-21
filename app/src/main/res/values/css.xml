@@ -104,4 +104,22 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
     </style>
+
+    <style name="Css.KifuDetail" />
+    <style name="Css.KifuDetail.Title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/text_color_strong</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Css.KifuDetail.SubTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/text_color_strong</item>
+    </style>
 </resources>

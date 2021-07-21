@@ -104,6 +104,8 @@ dependencies {
     // Retrofit ここまで /////////////////////////////////////////////////////////////////////////////
 
 
+    // inline-block的な、よしなに折り返すレイアウト
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     // 円形のImageView
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     // 角丸のImageView

@@ -150,14 +150,14 @@
 
                         <TextView
                             android:textSize="22sp"
-                            android:text="@string/rule_y"/>
+                            android:text="@string/ruleY"/>
                         <TextView
                             android:id="@+id/rule_y"
                             style="@style/Css.ScenarioDetail.RuleList"
                             tools:text="殺人計画"/>
                         <TextView
                             android:textSize="22sp"
-                            android:text="@string/rule_x1"/>
+                            android:text="@string/ruleX1"/>
                         <TextView
                             android:id="@+id/rule_x1"
                             style="@style/Css.ScenarioDetail.RuleList"
@@ -167,7 +167,7 @@
                         <TextView
                             android:id="@+id/rule_x2_label"
                             android:textSize="22sp"
-                            android:text="@string/rule_x2"/>
+                            android:text="@string/ruleX2"/>
                         <TextView
                             android:id="@+id/rule_x2"
                             style="@style/Css.ScenarioDetail.RuleList"

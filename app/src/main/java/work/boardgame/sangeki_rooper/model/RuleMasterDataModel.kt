@@ -9,4 +9,10 @@ class RuleMasterDataModel (
         val isRuleY: Boolean,
         val roles: List<String>
     )
+
+    fun allRoles():List<String> {
+        val allRoles = mutableListOf<String>()
+        rules.forEach { rule -> rule.roles.forEach { allRoles.add(it) } }
+        return allRoles
+    }
 }

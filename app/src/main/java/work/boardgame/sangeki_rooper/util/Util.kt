@@ -80,7 +80,7 @@ object Util {
 
     fun getRuleMasterData(context: Context): List<RuleMasterDataModel> {
         val assetManager = context.resources.assets
-        val inputStream = assetManager.open("initial_scenario_list.json")
+        val inputStream = assetManager.open("rule_master.json")
         val bufferedReader = BufferedReader(InputStreamReader(inputStream))
         val sJson = bufferedReader.readText()
         val type = object: TypeToken<List<RuleMasterDataModel>>(){}.type

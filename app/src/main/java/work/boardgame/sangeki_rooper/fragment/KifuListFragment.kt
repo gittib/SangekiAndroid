@@ -154,8 +154,8 @@ class KifuListFragment : BaseFragment(),
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             when (getItemViewType(position)) {
-                ViewType.HEADER -> (holder as HeaderViewHolder).onBind()
-                ViewType.KIFU -> (holder as KifuViewHolder).onBind(position)
+                ViewType.HEADER -> (holder as? HeaderViewHolder)?.onBind()
+                ViewType.KIFU -> (holder as? KifuViewHolder)?.onBind(position)
             }
         }
     }

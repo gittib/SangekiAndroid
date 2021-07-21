@@ -1,6 +1,7 @@
 package work.boardgame.sangeki_rooper.database
 
 import androidx.room.*
+import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
 import java.util.*
 
 @Entity
@@ -11,7 +12,7 @@ data class Game(
     var loop: Int,
     var day: Int,
     var specialRule: String?,
-    var detectiveInfo: String?
+    var detectiveInfo: DetectiveInfoModel?
 )
 
 data class GameRelation(
