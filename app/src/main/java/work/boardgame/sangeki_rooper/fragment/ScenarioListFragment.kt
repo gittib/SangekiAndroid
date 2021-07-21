@@ -1,5 +1,6 @@
 package work.boardgame.sangeki_rooper.fragment
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -38,6 +39,27 @@ class ScenarioListFragment : BaseFragment() {
             rv.scenario_list.let {
                 it.layoutManager = LinearLayoutManager(activity)
                 it.adapter = ScenarioListAdapter()
+            }
+            rv.show_scenario_title.setOnClickListener {
+                if (viewModel.showTitle) {
+                    AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                            .setMessage("脚本タイトルを非表示にしますか？")
+                            .setPositiveButton(R.string.ok) { _, _ ->
+                                viewModel.showTitle = false
+                                rv.scenario_list.adapter?.notifyDataSetChanged()
+                            }
+                            .setNegativeButton(R.string.cancel, null)
+                            .show()
+                } else {
+                    AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                            .setMessage("脚本タイトルを表示してもよろしいですか？\n（※ネタバレになる可能性があります）")
+                            .setPositiveButton(R.string.ok) { _, _ ->
+                                viewModel.showTitle = true
+                                rv.scenario_list.adapter?.notifyDataSetChanged()
+                            }
+                            .setNegativeButton(R.string.cancel, null)
+                            .show()
+                }
             }
         }
 
@@ -89,7 +111,13 @@ class ScenarioListFragment : BaseFragment() {
                             d?.setTintMode(PorterDuff.Mode.SRC_IN)
                         }
                     }
-                    rv.scenario_title.text = item.title
+                    rv.scenario_title.let { v ->
+                        v.text = item.title
+                        v.visibility = when (viewModel.showTitle) {
+                            true -> View.VISIBLE
+                            else -> View.GONE
+                        }
+                    }
                     rv.difficulty_name.text = item.difficultyName()
                     rv.difficulty.text = item.difficultyStar()
                     rv.loop.text = item.loop()

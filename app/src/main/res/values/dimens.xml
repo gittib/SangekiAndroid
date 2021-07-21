@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="footer_height">100dp</dimen>
+    <dimen name="footer_height">160dp</dimen>
     <dimen name="label_font_size">28sp</dimen>
     <dimen name="incident_font_size">24sp</dimen>
     <dimen name="incident_margin_left">8dp</dimen>
