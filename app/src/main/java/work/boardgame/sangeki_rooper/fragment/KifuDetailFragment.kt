@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
+import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.android.synthetic.main.adapter_item_incident_detective.view.*
 import kotlinx.android.synthetic.main.kifu_detail_fragment.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +21,7 @@ import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
+import work.boardgame.sangeki_rooper.util.toJson
 
 class KifuDetailFragment : BaseFragment() {
     companion object {
@@ -72,6 +76,12 @@ class KifuDetailFragment : BaseFragment() {
         }
     }
 
+    override fun onPause() {
+        Logger.methodStart(TAG)
+        super.onPause()
+        rootView?.let { updateDetectiveInfo(it) }
+    }
+
     private fun applyViewData() {
         val rel = viewModel.gameRelation ?: return
         val rv = rootView ?: return
@@ -79,6 +89,7 @@ class KifuDetailFragment : BaseFragment() {
         Logger.methodStart(TAG)
 
         val detectiveInfo = rel.game.detectiveInfo ?: DetectiveInfoModel(activity, rel.game.setName)
+        rel.game.detectiveInfo = detectiveInfo
 
         val inflater = LayoutInflater.from(activity)
 
@@ -128,6 +139,48 @@ class KifuDetailFragment : BaseFragment() {
                     })
                 }
             }
+        }
+
+        rv.incident_list.let { lv ->
+            lv.removeAllViews()
+            viewModel.gameRelation?.incidents?.forEach { incident ->
+                lv.addView(inflater.inflate(R.layout.adapter_item_incident_detective, lv, false).also { v ->
+                    v.incident_criminal_select.adapter = CriminalSpinnerAdapter()
+                })
+            }
+        }
+    }
+
+    private fun updateDetectiveInfo(rv: View) {
+        Logger.methodStart(TAG)
+        val detect = viewModel.gameRelation?.game?.detectiveInfo ?: return
+        detect.let {
+            it.ruleY.clear()
+            it.ruleX1.clear()
+            it.ruleX2.clear()
+        }
+        rv.ruleY_list.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
+            detect.ruleY.add(it.tag as String)
+        }
+        rv.ruleX1_list.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
+            detect.ruleX1.add(it.tag as String)
+        }
+        rv.ruleX2_list.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
+            detect.ruleX2.add(it.tag as String)
+        }
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            viewModel.gameRelation?.let {
+                MyApplication.db.gameDao().saveGame(it)
+                Logger.d(TAG, it.toJson())
+            }
+        }
+    }
+
+    private inner class CriminalSpinnerAdapter: ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item) {
+        override fun getCount() = (viewModel.gameRelation?.npcs?.size ?: 0) + 1
+        override fun getItem(position: Int) = when (position) {
+            0 -> "？？？？？？？？"
+            else -> viewModel.gameRelation?.npcs?.getOrNull(position-1)?.name
         }
     }
 }

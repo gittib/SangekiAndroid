@@ -5,7 +5,7 @@ import work.boardgame.sangeki_rooper.util.Util
 
 class DetectiveInfoModel (
     context: Context,
-    val tragedySetName: String,
+    tragedySetName: String,
     val ruleY: MutableList<String> = mutableListOf(),
     val ruleX1: MutableList<String> = mutableListOf(),
     val ruleX2: MutableList<String> = mutableListOf()
@@ -24,24 +24,24 @@ class DetectiveInfoModel (
         if (ruleMaster == null) ruleMaster = Util.getRuleMasterData(context)
         if (ruleY.isEmpty()) {
             ruleY.clear()
-            ruleYs(context).forEach { ruleY.add(it) }
+            ruleYs(context, tragedySetName).forEach { ruleY.add(it) }
         }
         if (ruleX1.isEmpty() || ruleX2.isEmpty()) {
             ruleX1.clear()
             ruleX2.clear()
-            ruleXs(context).forEach {
+            ruleXs(context, tragedySetName).forEach {
                 ruleX1.add(it)
                 ruleX2.add(it)
             }
         }
     }
 
-    fun ruleYs(context: Context): List<String> {
+    fun ruleYs(context: Context, tragedySetName: String): List<String> {
         val abbr = Util.tragedySetNameAbbr(context, tragedySetName)
         return ruleMaster!!.first { it.setName == abbr }.rules.filter { it.isRuleY }.map { it.ruleName }
     }
 
-    fun ruleXs(context: Context): List<String> {
+    fun ruleXs(context: Context, tragedySetName: String): List<String> {
         val abbr = Util.tragedySetNameAbbr(context, tragedySetName)
         return ruleMaster!!.first { it.setName == abbr }.rules.filter { !it.isRuleY }.map { it.ruleName }
     }
