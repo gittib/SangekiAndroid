@@ -58,17 +58,9 @@ class KifuStandbyFragment : BaseFragment() {
                 }
             }
             rv.loop_count.let { v ->
-                v.adapter = getSpinnerAdapter(listOf(
-                    "ループ数を設定して下さい",
-                    "1ループ",
-                    "2ループ",
-                    "3ループ",
-                    "4ループ",
-                    "5ループ",
-                    "6ループ",
-                    "7ループ",
-                    "8ループ"
-                ))
+                v.adapter = getSpinnerAdapter(mutableListOf("ループ数を設定して下さい").also {
+                    for (i in 1..8) it.add("${i}ループ")
+                })
                 v.onItemSelectedListener = object:AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                         viewModel.loopCount = 0
@@ -83,17 +75,9 @@ class KifuStandbyFragment : BaseFragment() {
                 }
             }
             rv.day_count.let { v ->
-                v.adapter = getSpinnerAdapter(listOf(
-                    "日数を設定して下さい",
-                    "1日",
-                    "2日",
-                    "3日",
-                    "4日",
-                    "5日",
-                    "6日",
-                    "7日",
-                    "8日"
-                ))
+                v.adapter = getSpinnerAdapter(mutableListOf("日数を設定して下さい").also {
+                    for (i in 1..8) it.add("${i}日")
+                })
                 v.onItemSelectedListener = object:AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                         viewModel.dayCount = 0
@@ -129,6 +113,13 @@ class KifuStandbyFragment : BaseFragment() {
                                     else -> gameId?.let {
                                         val day = index + 1
                                         dao.createIncident(GameDao.CreateIncidentModel(it, day, incidentName))
+                                    }
+                                }
+                            }
+                            gameId?.let { id ->
+                                for (i in 1..viewModel.loopCount) {
+                                    for (j in 1..viewModel.dayCount) {
+                                        dao.createDay(GameDao.CreateDayModel(id, i, j))
                                     }
                                 }
                             }

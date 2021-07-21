@@ -7,10 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
+import android.widget.GridLayout
+import android.widget.TextView
 import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.android.synthetic.main.adapter_item_incident_detective.view.*
+import kotlinx.android.synthetic.main.grid_item_role_title.view.*
 import kotlinx.android.synthetic.main.kifu_detail_fragment.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,6 +22,7 @@ import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
+import work.boardgame.sangeki_rooper.model.RuleMasterDataModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.toJson
@@ -145,8 +149,28 @@ class KifuDetailFragment : BaseFragment() {
             lv.removeAllViews()
             viewModel.gameRelation?.incidents?.forEach { incident ->
                 lv.addView(inflater.inflate(R.layout.adapter_item_incident_detective, lv, false).also { v ->
+                    v.incident_day.text = String.format("%d日目", incident.day)
+                    v.incident_name.text = incident.name
                     v.incident_criminal_select.adapter = CriminalSpinnerAdapter()
+                    // TODO incident.criminalの制御
                 })
+            }
+        }
+
+        rv.character_list.let { v ->
+            master.allRoles().distinct().let { roles ->
+                val longestRole = roles.maxBy { it.length }?.replace("ー", "|")?.toCharArray()?.joinToString("\n")
+                Logger.d(TAG, "longest role = $longestRole")
+                roles.forEachIndexed { index, role ->
+                    v.addView(inflater.inflate(R.layout.grid_item_role_title, v, false).also {
+                        it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(index+1)).also { lp ->
+                            lp.width = GridLayout.LayoutParams.WRAP_CONTENT
+                            lp.height = GridLayout.LayoutParams.WRAP_CONTENT
+                        }
+                        it.background_role_name.text = longestRole
+                        it.role_name.text = role.replace("ー", "|").toCharArray().joinToString("\n")
+                    })
+                }
             }
         }
     }
