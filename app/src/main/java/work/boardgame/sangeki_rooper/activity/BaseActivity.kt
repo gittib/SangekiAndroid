@@ -8,7 +8,6 @@ import android.os.Handler
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.inc_progress_bar.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger

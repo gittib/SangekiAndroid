@@ -78,4 +78,6 @@
     <string name="kifu_delete_complete_dialog_message">棋譜データを削除しました。</string>
     <string name="add_character">キャラクター追加</string>
     <string name="unknown_chara">？？？？？？？？</string>
+    <string name="character_is_already_added">既に追加済みのキャラクターです。</string>
+    <string name="memo_for_character">%sに関するメモ</string>
 </resources>

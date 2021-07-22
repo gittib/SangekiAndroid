@@ -1,5 +1,6 @@
 package work.boardgame.sangeki_rooper.fragment
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
@@ -180,6 +181,8 @@ class KifuDetailFragment : BaseFragment() {
         }
 
         rv.character_list.let { v ->
+            v.removeAllViews()
+
             // 項目名の行
             master.allRoles().distinct().let { roles ->
                 viewModel.rolesOfRule = roles
@@ -249,6 +252,16 @@ class KifuDetailFragment : BaseFragment() {
                 lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                 lp.topMargin = 0
             }
+            it.setOnLongClickListener {
+                AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                    .setMessage(String.format("%s を削除します。よろしいですか？", chara.name))
+                    .setPositiveButton(R.string.ok) { _, _ ->
+                        deleteNpc(chara)
+                    }
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
+                true
+            }
         })
         viewModel.rolesOfRule.forEachIndexed { index, role ->
             lv.addView(layoutInflater.inflate(R.layout.grid_item_chara_role_detect_mark, lv, false).also { v ->
@@ -270,7 +283,7 @@ class KifuDetailFragment : BaseFragment() {
         }
         lv.addView(LayoutInflater.from(activity).inflate(R.layout.grid_item_chara_detect_note, lv, false).also {
             it.input_edit.let { et ->
-                et.hint = String.format("%sに関するメモ", chara.name)
+                et.hint = String.format(getString(R.string.memo_for_character), chara.name)
                 et.setText(chara.note)
                 et.doAfterTextChanged { chara.note = et.text.toString() }
             }
@@ -279,14 +292,18 @@ class KifuDetailFragment : BaseFragment() {
 
     private fun addCharacter(charaName: String) {
         Logger.methodStart(TAG)
-        var chName = charaName
         val npcs = viewModel.gameRelation?.npcs ?: return
         npcs.find { it.name == charaName }?.let {
-            // TODO 重複キャラチェック
+            // 重複キャラチェック
+            AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                .setMessage(getString(R.string.character_is_already_added))
+                .setPositiveButton(R.string.ok, null)
+                .show()
+            return
         }
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             val dao = MyApplication.db.gameDao()
-            val npc = dao.createNpc(GameDao.CreateNpcModel(viewModel.gameId!!, chName)).let {
+            val npc = dao.createNpc(GameDao.CreateNpcModel(viewModel.gameId!!, charaName)).let {
                 dao.loadNpc(it)
             }
             npcs.add(npc!!)
@@ -294,6 +311,23 @@ class KifuDetailFragment : BaseFragment() {
                 inflateCharacterRow(npc, npcs.size)
             }
         }
+    }
+
+    private fun deleteNpc(chara: Npc) {
+        Logger.methodStart(TAG)
+        viewModel.gameRelation?.let { rel ->
+            rel.incidents.filter { it.criminal == chara.name }.forEach {
+                it.criminal = getString(R.string.unknown_chara)
+            }
+
+            // TODO 棋譜データの修正
+
+            rel.npcs.remove(chara)
+            viewModel.viewModelScope.launch(Dispatchers.IO) {
+                MyApplication.db.gameDao().deleteNpc(chara)
+            }
+        }
+        applyViewData()
     }
 
     private fun updateDetectiveInfo(rv: View) {

@@ -73,4 +73,8 @@ interface GameDao {
     @Transaction
     @Delete
     fun deleteGame(vararg game: Game)
+
+    @Transaction
+    @Delete
+    fun deleteNpc(vararg npc: Npc)
 }
