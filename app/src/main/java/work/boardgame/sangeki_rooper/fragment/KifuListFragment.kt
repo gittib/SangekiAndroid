@@ -3,6 +3,8 @@ package work.boardgame.sangeki_rooper.fragment
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -95,7 +97,11 @@ class KifuListFragment : BaseFragment(),
                     rv.create_date.text = game.createdAt.format()
 
                     rv.setOnClickListener {
+                        activity.showProgress()
                         activity.startFragment(KifuDetailFragment::class.qualifiedName, game.id)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            activity.dismissProgress()
+                        }, 1000)
                     }
                     rv.setOnLongClickListener {
                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)

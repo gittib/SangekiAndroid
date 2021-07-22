@@ -65,10 +65,13 @@ class KifuDetailFragment : BaseFragment() {
             viewModel = ViewModelProvider(this).get(KifuDetailViewModel::class.java)
             viewModel.gameId = arguments?.getLong(BundleKey.GAME_ID)
                 ?: throw IllegalArgumentException("gameId is null")
+
+            activity.showProgress()
             viewModel.viewModelScope.launch(Dispatchers.IO) {
                 arguments?.getLong(BundleKey.GAME_ID)?.let { id ->
                     viewModel.gameRelation = MyApplication.db.gameDao().loadGame(id)
                     withContext(Dispatchers.Main) {
+                        activity.dismissProgress()
                         if (viewModel.gameRelation == null) {
                             Logger.w(TAG, "game is null")
                             activity.onBackPressed()
