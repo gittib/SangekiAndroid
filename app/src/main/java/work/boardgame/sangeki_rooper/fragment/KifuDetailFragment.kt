@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.GravityCompat
 import androidx.core.view.children
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.android.synthetic.main.adapter_item_incident_detective.view.*
 import kotlinx.android.synthetic.main.grid_item_chara_detect_note.view.*
+import kotlinx.android.synthetic.main.grid_item_chara_role_detect_mark.view.*
 import kotlinx.android.synthetic.main.grid_item_role_title.view.*
 import kotlinx.android.synthetic.main.kifu_detail_fragment.view.*
 import kotlinx.coroutines.Dispatchers
@@ -211,6 +213,15 @@ class KifuDetailFragment : BaseFragment() {
     private fun inflateCharacterRow(chara: Npc, row: Int) {
         Logger.methodStart(TAG)
         val lv = rootView?.character_list ?: return
+
+        lv.children.find {
+            val lp = it.layoutParams as GridLayout.LayoutParams
+            lp.rowSpec == GridLayout.spec(row)
+        }?.let {
+            Logger.d(TAG, "もうあるので重複して追加しない")
+            return
+        }
+
         lv.addView(TextView(activity).also {
             it.text = chara.name
             it.setBackgroundResource(R.drawable.bg_stroke_black)
@@ -222,30 +233,29 @@ class KifuDetailFragment : BaseFragment() {
             }
         })
         viewModel.rolesOfRule.forEachIndexed { index, role ->
-            lv.addView(TextView(activity).also { v ->
-                v.setTag(R.id.character_list, chara.name)
-                v.setTag(R.id.role_name, role)
-                v.setBackgroundResource(R.drawable.bg_stroke_black)
-                v.gravity = Gravity.CENTER
-                v.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+            lv.addView(layoutInflater.inflate(R.layout.grid_item_chara_role_detect_mark, lv, false).also { v ->
                 v.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+1)).also { lp ->
                     lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                     lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                 }
+                v.role_mark.text = chara.roleDetectiveList[role]
                 v.setOnClickListener {
-                    v.text = when (v.text) {
-                        "" -> "〇"
+                    it.role_mark.text = when (it.role_mark.text) {
+                        "", null -> "〇"
                         "〇" -> "×"
                         "×" -> "？"
-                        else -> ""
+                        else -> null
                     }
-                    chara.roleDetectiveList[role] = v.text.toString()
+                    chara.roleDetectiveList[role] = it.role_mark.text.toString()
                 }
             })
         }
         lv.addView(LayoutInflater.from(activity).inflate(R.layout.grid_item_chara_detect_note, lv, false).also {
-            it.input_edit.hint = String.format("%sに関するメモ", chara.name)
-            it.input_edit.setText(chara.note)
+            it.input_edit.let { et ->
+                et.hint = String.format("%sに関するメモ", chara.name)
+                et.setText(chara.note)
+                et.doAfterTextChanged { chara.note = et.text.toString() }
+            }
         })
     }
 
