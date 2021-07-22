@@ -155,8 +155,22 @@ class KifuDetailFragment : BaseFragment() {
                 lv.addView(inflater.inflate(R.layout.adapter_item_incident_detective, lv, false).also { v ->
                     v.incident_day.text = String.format("%d日目", incident.day)
                     v.incident_name.text = incident.name
-                    v.incident_criminal_select.adapter = CriminalSpinnerAdapter()
-                    // TODO incident.criminalの制御
+
+                    v.incident_criminal_select.let { sel ->
+                        sel.adapter = CriminalSpinnerAdapter()
+                        val selectedPos = rel.npcs.indexOfFirst { it.name == incident.criminal }
+                        sel.setSelection(selectedPos+1)
+                        sel.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                            override fun onItemSelected(parent: AdapterView<*>?,
+                                view: View?, position: Int, id: Long) {
+                                viewModel.gameRelation?.incidents?.find { it.day == incident.day }?.let {
+                                    it.criminal = parent?.adapter?.getItem(position) as? String?
+                                }
+                            }
+                        }
+                    }
                 })
             }
         }
@@ -244,7 +258,7 @@ class KifuDetailFragment : BaseFragment() {
                         "", null -> "〇"
                         "〇" -> "×"
                         "×" -> "？"
-                        else -> null
+                        else -> ""
                     }
                     chara.roleDetectiveList[role] = it.role_mark.text.toString()
                 }
