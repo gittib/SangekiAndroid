@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_chara_select_dialog.view.*
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.util.Logger
@@ -18,18 +20,58 @@ class CharaSelectDialogFragment : BaseDialogFragment() {
     private val TAG = CharaSelectDialogFragment::class.simpleName
 
     companion object {
-        fun newInstance(title:String?) = CharaSelectDialogFragment().apply {
+        fun newInstance(title:String?, characters: List<String>? = null) = CharaSelectDialogFragment().apply {
             arguments = Bundle().apply {
                 putString(BundleKey.DIALOG_TITLE, title)
+                characters?.let { putString(BundleKey.CHARACTER_LIST, Gson().toJson(it)) }
             }
         }
     }
 
     private object BundleKey {
         const val DIALOG_TITLE = "DIALOG_TITLE"
+        const val CHARACTER_LIST = "CHARACTER_LIST"
     }
 
     private var onSelect: (String) -> Unit = {}
+    private val charaList:List<String> by lazy {
+        arguments?.getString(BundleKey.CHARACTER_LIST)?.let {
+            val type = object: TypeToken<List<String>>(){}.type
+            Gson().fromJson<List<String>>(it, type)
+        } ?: listOf(
+            "巫女",
+            "異世界人",
+            "黒猫",
+            "幻想",
+            "妹",
+            "教祖",
+            "ご神木",
+            "入院患者",
+            "医者",
+            "ナース",
+            "軍人",
+            "学者",
+            "アイドル",
+            "サラリーマン",
+            "情報屋",
+            "刑事",
+            "A.I.",
+            "大物",
+            "マスコミ",
+            "鑑識官",
+            "コピーキャット",
+            "男子学生",
+            "女子学生",
+            "お嬢様",
+            "教師",
+            "イレギュラー",
+            "委員長",
+            "女の子",
+            "神格",
+            "転校生",
+            "手先"
+        )
+    }
 
     fun setOnSelectListener(onSelect: (String) -> Unit): CharaSelectDialogFragment {
         this.onSelect = onSelect
@@ -66,40 +108,6 @@ class CharaSelectDialogFragment : BaseDialogFragment() {
                 }
             }
         }
-
-        private val charaList = listOf(
-            "巫女",
-            "異世界人",
-            "黒猫",
-            "幻想",
-            "妹",
-            "教祖",
-            "ご神木",
-            "入院患者",
-            "医者",
-            "ナース",
-            "軍人",
-            "学者",
-            "アイドル",
-            "サラリーマン",
-            "情報屋",
-            "刑事",
-            "A.I.",
-            "大物",
-            "マスコミ",
-            "鑑識官",
-            "コピーキャット",
-            "男子学生",
-            "女子学生",
-            "お嬢様",
-            "教師",
-            "イレギュラー",
-            "委員長",
-            "女の子",
-            "神格",
-            "転校生",
-            "手先"
-        )
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val v = ImageView(activity).also {

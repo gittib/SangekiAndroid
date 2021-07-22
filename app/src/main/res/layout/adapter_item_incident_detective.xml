@@ -30,7 +30,7 @@
             android:layout_marginLeft="8dp"
             tools:text="殺人事件"/>
 
-        <androidx.appcompat.widget.AppCompatSpinner
+        <TextView
             android:id="@+id/incident_criminal_select"
             app:layout_constraintTop_toTopOf="@id/incident_day"
             app:layout_constraintLeft_toRightOf="@id/incident_name"
@@ -38,6 +38,7 @@
             app:layout_constraintBottom_toBottomOf="@id/incident_day"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"/>
+            android:layout_marginLeft="8dp"
+            android:text="@string/unknown_chara"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

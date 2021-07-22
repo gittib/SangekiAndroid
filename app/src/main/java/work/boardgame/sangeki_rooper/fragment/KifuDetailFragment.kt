@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.view.GravityCompat
 import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
@@ -157,18 +156,20 @@ class KifuDetailFragment : BaseFragment() {
                     v.incident_name.text = incident.name
 
                     v.incident_criminal_select.let { sel ->
-                        sel.adapter = CriminalSpinnerAdapter()
-                        val selectedPos = rel.npcs.indexOfFirst { it.name == incident.criminal }
-                        sel.setSelection(selectedPos+1)
-                        sel.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-                            override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-                            override fun onItemSelected(parent: AdapterView<*>?,
-                                view: View?, position: Int, id: Long) {
-                                viewModel.gameRelation?.incidents?.find { it.day == incident.day }?.let {
-                                    it.criminal = parent?.adapter?.getItem(position) as? String?
+                        sel.text = incident.criminal ?: getString(R.string.unknown_chara)
+                        sel.setOnClickListener {
+                            CharaSelectDialogFragment.newInstance("犯人を選んで下さい", viewModel.gameRelation?.npcs?.map { it.name })
+                                .setOnSelectListener { criminal ->
+                                    if (sel.text == criminal) {
+                                        sel.text = getString(R.string.unknown_chara)
+                                    } else {
+                                        sel.text = criminal
+                                    }
+                                    viewModel.gameRelation?.incidents?.find { it.day == incident.day }?.let {
+                                        it.criminal = sel.text.toString()
+                                    }
                                 }
-                            }
+                                .show(fragmentManager!!, null)
                         }
                     }
                 })
@@ -322,7 +323,7 @@ class KifuDetailFragment : BaseFragment() {
 
         override fun getCount() = (viewModel.gameRelation?.npcs?.size ?: 0) + 1
         override fun getItem(position: Int) = when (position) {
-            0 -> "？？？？？？？？"
+            0 -> getString(R.string.unknown_chara)
             else -> viewModel.gameRelation?.npcs?.getOrNull(position-1)?.name
         }
     }
