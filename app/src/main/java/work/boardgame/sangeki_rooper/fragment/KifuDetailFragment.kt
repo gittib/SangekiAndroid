@@ -242,7 +242,10 @@ class KifuDetailFragment : BaseFragment() {
                     val heroCards =kifus.filter { !it.fromWriter }.sortedBy { it.id }
                     lv.addView(inflater.inflate(R.layout.linear_item_kifu_per_day, lv, false).also { v ->
                         v.loop_day_title.text = String.format("%dループ %d日目", loop, day)
-                        v.loop_day_note.setText(dayRecord?.note)
+                        v.loop_day_note.let { tv ->
+                            tv.setText(dayRecord?.note)
+                            tv.doAfterTextChanged { dayRecord?.note = tv.text.toString() }
+                        }
 
                         writerCards.getOrNull(0)?.let {
                             v.writer1.chara_card.setImageResource(Util.cardDrawable(it.target))
@@ -297,7 +300,7 @@ class KifuDetailFragment : BaseFragment() {
                 it.add("都市")
                 it.add("学校")
             }
-            CardSelectDialogFragment.newInstance("キャラクターを選んで下さい", charas)
+            CardSelectDialogFragment.newInstance("対象を選んで下さい", charas)
                 .setOnSelectListener { target ->
                     val d = viewModel.gameRelation!!.days.find { it.loop == loop && it.day == day }
                     CardSelectDialogFragment.newInstance("行動カードを選んで下さい", isWriter)
@@ -307,8 +310,20 @@ class KifuDetailFragment : BaseFragment() {
                             view.action_card.setImageResource(if (isWriter) Util.writerCardDrawable(card)
                             else Util.heroCardDrawable(card))
 
-                            val kifu = viewModel.gameRelation!!.kifus.find { it.dayId == d!!.id }
-                            // TODO 棋譜レコードの更新
+                            // 棋譜レコードの更新
+                            val kifus = viewModel.gameRelation!!.kifus.filter { it.dayId == d!!.id && it.fromWriter == isWriter }
+                            kifus.getOrNull(index)?.let {
+                                it.target = target
+                                it.card = card
+                            } ?: run {
+                                // 棋譜レコードが無いので作成から
+                                viewModel.viewModelScope.launch(Dispatchers.IO) {
+                                    val kifuId = MyApplication.db.gameDao().createKifu(GameDao.CreateKifuModel(
+                                        viewModel.gameId!!, d!!.id, isWriter, target, card))
+                                    val kifu = MyApplication.db.gameDao().loadKifu(kifuId)
+                                    viewModel.gameRelation?.kifus?.add(kifu!!)
+                                }
+                            }
                         }
                         .show(fragmentManager!!, null)
                 }

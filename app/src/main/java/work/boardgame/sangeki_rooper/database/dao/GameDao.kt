@@ -17,6 +17,9 @@ interface GameDao {
 
     @Query("SELECT * FROM Npc WHERE id = :id")
     fun loadNpc(id:Long): Npc?
+
+    @Query("SELECT * FROM Kifu WHERE id = :id")
+    fun loadKifu(id:Long): Kifu?
     /** Selectメソッド ここまで **********************************************************************/
 
     /** Insertメソッド ここから **********************************************************************/
