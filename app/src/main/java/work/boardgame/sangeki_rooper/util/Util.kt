@@ -141,6 +141,12 @@ object Util {
 
     @DrawableRes
     fun cardDrawable(charaName: String, reverse:Boolean = false): Int {
+        when (charaName) {
+            "神社" -> return R.drawable.shrine
+            "病院" -> return R.drawable.hospital
+            "都市" -> return R.drawable.city
+            "学校" -> return R.drawable.school
+        }
         return if (reverse) {
             when (charaName.replace(Regex("[A-E]$"), "")) {
                 "巫女" -> R.drawable.character_04_0
@@ -218,6 +224,57 @@ object Util {
                 }
             }
         }
+    }
+
+    @DrawableRes
+    fun writerCardDrawable(cardName: String): Int = when(cardName) {
+        "不安+1" -> R.drawable.a_writer_cards_01
+        "不安-1" -> R.drawable.a_writer_cards_03
+        "不安禁止" -> R.drawable.a_writer_cards_04
+        "友好禁止" -> R.drawable.a_writer_cards_05
+        "暗躍+1" -> R.drawable.a_writer_cards_06
+        "暗躍+2" -> R.drawable.a_writer_cards_07
+        "移動縦" -> R.drawable.a_writer_cards_08
+        "移動横" -> R.drawable.a_writer_cards_09
+        "移動斜め" -> R.drawable.a_writer_cards_10
+        else -> R.drawable.a_writer_cards_0b
+    }
+    @DrawableRes
+    fun heroCardDrawable(cardName: String, hero:Int = 1): Int = when (hero) {
+        1 -> when(cardName) {
+            "不安+1" -> R.drawable.a_heroa_cards_01
+            "不安-1" -> R.drawable.a_heroa_cards_02
+            "友好+1" -> R.drawable.a_heroa_cards_03
+            "友好+2" -> R.drawable.a_heroa_cards_04
+            "暗躍禁止" -> R.drawable.a_heroa_cards_05
+            "移動縦" -> R.drawable.a_heroa_cards_06
+            "移動横" -> R.drawable.a_heroa_cards_07
+            "移動禁止" -> R.drawable.a_heroa_cards_08
+            else -> R.drawable.a_heroa_cards_0b
+        }
+        2 -> when(cardName) {
+            "不安+1" -> R.drawable.a_herob_cards_01
+            "不安-1" -> R.drawable.a_herob_cards_02
+            "友好+1" -> R.drawable.a_herob_cards_03
+            "友好+2" -> R.drawable.a_herob_cards_04
+            "暗躍禁止" -> R.drawable.a_herob_cards_05
+            "移動縦" -> R.drawable.a_herob_cards_06
+            "移動横" -> R.drawable.a_herob_cards_07
+            "移動禁止" -> R.drawable.a_herob_cards_08
+            else -> R.drawable.a_herob_cards_0b
+        }
+        3 -> when(cardName) {
+            "不安+1" -> R.drawable.a_heroc_cards_01
+            "不安-1" -> R.drawable.a_heroc_cards_02
+            "友好+1" -> R.drawable.a_heroc_cards_03
+            "友好+2" -> R.drawable.a_heroc_cards_04
+            "暗躍禁止" -> R.drawable.a_heroc_cards_05
+            "移動縦" -> R.drawable.a_heroc_cards_06
+            "移動横" -> R.drawable.a_heroc_cards_07
+            "移動禁止" -> R.drawable.a_heroc_cards_08
+            else -> R.drawable.a_heroc_cards_0b
+        }
+        else -> throw IllegalArgumentException("hero値が間違ってます。 1～3で指定して下さい")
     }
 
     fun incidentExplain(incidentName:String) = when(incidentName) {

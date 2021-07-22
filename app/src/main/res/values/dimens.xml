@@ -37,4 +37,6 @@
     <dimen name="role_list_chara_name_width">100dp</dimen>
     <dimen name="role_list_role_mark_size">48dp</dimen>
     <dimen name="role_list_chara_note_width">300dp</dimen>
+    <dimen name="kifu_per_day_item_width">320dp</dimen>
+    <dimen name="kifu_action_card_item_width">48dp</dimen>
 </resources>

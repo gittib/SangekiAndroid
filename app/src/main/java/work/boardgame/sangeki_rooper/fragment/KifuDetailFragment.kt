@@ -16,7 +16,9 @@ import kotlinx.android.synthetic.main.adapter_item_incident_detective.view.*
 import kotlinx.android.synthetic.main.grid_item_chara_detect_note.view.*
 import kotlinx.android.synthetic.main.grid_item_chara_role_detect_mark.view.*
 import kotlinx.android.synthetic.main.grid_item_role_title.view.*
+import kotlinx.android.synthetic.main.inc_action_card.view.*
 import kotlinx.android.synthetic.main.kifu_detail_fragment.view.*
+import kotlinx.android.synthetic.main.linear_item_kifu_per_day.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -38,7 +40,6 @@ class KifuDetailFragment : BaseFragment() {
             }
         }
 
-        private val criminalSpinnerAdapters = mutableListOf<CriminalSpinnerAdapter>()
         private val TAG = KifuDetailFragment::class.simpleName
     }
 
@@ -162,7 +163,7 @@ class KifuDetailFragment : BaseFragment() {
                     v.incident_criminal_select.let { sel ->
                         sel.text = incident.criminal ?: getString(R.string.unknown_chara)
                         sel.setOnClickListener {
-                            CharaSelectDialogFragment.newInstance("犯人を選んで下さい", viewModel.gameRelation?.npcs?.map { it.name })
+                            CardSelectDialogFragment.newInstance("犯人を選んで下さい", viewModel.gameRelation?.npcs?.map { it.name })
                                 .setOnSelectListener { criminal ->
                                     if (sel.text == criminal) {
                                         sel.text = getString(R.string.unknown_chara)
@@ -221,13 +222,97 @@ class KifuDetailFragment : BaseFragment() {
 
         rv.add_character.let { v ->
             v.setOnClickListener {
-                CharaSelectDialogFragment.newInstance("追加キャラクターを選択")
+                CardSelectDialogFragment.newInstance("追加キャラクターを選択")
                     .setOnSelectListener { charaName ->
                         Logger.d(TAG, "$charaName をえらんだ！！！")
                         addCharacter(charaName)
                     }
                     .show(fragmentManager!!, null)
             }
+        }
+
+        rv.kifu_list.let { lv ->
+            lv.removeAllViews()
+
+            for (loop in 1..rel.game.loop) {
+                for (day in 1..rel.game.day) {
+                    val dayRecord = rel.days.find { it.loop == loop && it.day == day }
+                    val kifus = rel.kifus.filter { it.dayId == dayRecord!!.id }
+                    val writerCards =kifus.filter { it.fromWriter }.sortedBy { it.id }
+                    val heroCards =kifus.filter { !it.fromWriter }.sortedBy { it.id }
+                    lv.addView(inflater.inflate(R.layout.linear_item_kifu_per_day, lv, false).also { v ->
+                        v.loop_day_title.text = String.format("%dループ %d日目", loop, day)
+                        v.loop_day_note.setText(dayRecord?.note)
+
+                        writerCards.getOrNull(0)?.let {
+                            v.writer1.chara_card.setImageResource(Util.cardDrawable(it.target))
+                            v.writer1.action_card.setImageResource(Util.writerCardDrawable(it.card))
+                        }
+                        writerCards.getOrNull(1)?.let {
+                            v.writer2.chara_card.setImageResource(Util.cardDrawable(it.target))
+                            v.writer2.action_card.setImageResource(Util.writerCardDrawable(it.card))
+                        }
+                        writerCards.getOrNull(2)?.let {
+                            v.writer3.chara_card.setImageResource(Util.cardDrawable(it.target))
+                            v.writer3.action_card.setImageResource(Util.writerCardDrawable(it.card))
+                        }
+
+                        heroCards.getOrNull(0)?.let {
+                            v.hero1.chara_card.setImageResource(Util.cardDrawable(it.target))
+                            v.hero1.action_card.setImageResource(Util.heroCardDrawable(it.card))
+                        } ?: run {
+                            v.hero1.action_card.setImageResource(Util.heroCardDrawable(""))
+                        }
+                        heroCards.getOrNull(1)?.let {
+                            v.hero2.chara_card.setImageResource(Util.cardDrawable(it.target))
+                            v.hero2.action_card.setImageResource(Util.heroCardDrawable(it.card))
+                        } ?: run {
+                            v.hero2.action_card.setImageResource(Util.heroCardDrawable(""))
+                        }
+                        heroCards.getOrNull(2)?.let {
+                            v.hero3.chara_card.setImageResource(Util.cardDrawable(it.target))
+                            v.hero3.action_card.setImageResource(Util.heroCardDrawable(it.card))
+                        } ?: run {
+                            v.hero3.action_card.setImageResource(Util.heroCardDrawable(""))
+                        }
+
+                        setActionCardClickEvent(loop, day, true, 0, v.writer1)
+                        setActionCardClickEvent(loop, day, true, 1, v.writer2)
+                        setActionCardClickEvent(loop, day, true, 2, v.writer3)
+                        setActionCardClickEvent(loop, day, false, 0, v.hero1)
+                        setActionCardClickEvent(loop, day, false, 1, v.hero2)
+                        setActionCardClickEvent(loop, day, false, 2, v.hero3)
+                    })
+                }
+            }
+        }
+    }
+
+    private fun setActionCardClickEvent(loop:Int, day:Int, isWriter:Boolean, index:Int, view:View) {
+        Logger.methodStart(TAG)
+        view.setOnClickListener {
+            val charas:List<String>? = viewModel.gameRelation?.npcs?.map { it.name }?.toMutableList()?.also {
+                it.add("神社")
+                it.add("病院")
+                it.add("都市")
+                it.add("学校")
+            }
+            CardSelectDialogFragment.newInstance("キャラクターを選んで下さい", charas)
+                .setOnSelectListener { target ->
+                    val d = viewModel.gameRelation!!.days.find { it.loop == loop && it.day == day }
+                    CardSelectDialogFragment.newInstance("行動カードを選んで下さい", isWriter)
+                        .setOnSelectListener { card ->
+                            Logger.d(TAG, "$target へ $card を")
+                            view.chara_card.setImageResource(Util.cardDrawable(target))
+                            view.action_card.setImageResource(if (isWriter) Util.writerCardDrawable(card)
+                            else Util.heroCardDrawable(card))
+
+                            val kifu = viewModel.gameRelation!!.kifus.find { it.dayId == d!!.id }
+                            // TODO 棋譜レコードの更新
+                        }
+                        .show(fragmentManager!!, null)
+                }
+                .show(fragmentManager!!, null)
         }
     }
 
@@ -350,18 +435,6 @@ class KifuDetailFragment : BaseFragment() {
                 MyApplication.db.gameDao().saveGame(it)
                 Logger.d(TAG, it.toJson())
             }
-        }
-    }
-
-    private inner class CriminalSpinnerAdapter: ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item) {
-        init {
-            criminalSpinnerAdapters.add(this)
-        }
-
-        override fun getCount() = (viewModel.gameRelation?.npcs?.size ?: 0) + 1
-        override fun getItem(position: Int) = when (position) {
-            0 -> getString(R.string.unknown_chara)
-            else -> viewModel.gameRelation?.npcs?.getOrNull(position-1)?.name
         }
     }
 }
