@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:minWidth="44dp"
+    android:minWidth="@dimen/role_list_role_mark_size"
     android:background="@drawable/bg_stroke_black"
     android:padding="4dp">
 

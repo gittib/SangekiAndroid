@@ -38,7 +38,8 @@ interface GameDao {
 
     class CreateNpcModel (
         val gameId: Long,
-        val name: String)
+        val name: String,
+        val roleDetectiveList:MutableMap<String,String> = mutableMapOf())
     @Insert(entity = Npc::class)
     fun createNpc(newRecord: CreateNpcModel): Long
 

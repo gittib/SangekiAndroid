@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/role_list_role_mark_size"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_stroke_black"
+    android:padding="4dp">
+
+    <EditText
+        android:id="@+id/input_edit"
+        android:layout_width="@dimen/role_list_chara_note_width"
+        android:layout_height="match_parent"
+        android:autofillHints="@string/chara"
+        android:inputType="text"
+        android:maxLength="200"
+        android:textSize="14sp"
+        tools:hint="サラリーマンに関するメモ" />
+</FrameLayout>

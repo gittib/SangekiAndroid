@@ -52,7 +52,9 @@ data class Npc (
     @PrimaryKey(autoGenerate = true) val id: Long,
     val gameId: Long,
     var name: String,
-    var role: String?
+    var role: String?,
+    var note: String?,
+    val roleDetectiveList: MutableMap<String, String>
 )
 
 @Entity(foreignKeys = [ForeignKey(

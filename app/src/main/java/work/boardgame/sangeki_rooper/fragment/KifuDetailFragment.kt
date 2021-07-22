@@ -2,17 +2,17 @@ package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.CheckBox
-import android.widget.GridLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.core.view.GravityCompat
 import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.android.synthetic.main.adapter_item_incident_detective.view.*
+import kotlinx.android.synthetic.main.grid_item_chara_detect_note.view.*
 import kotlinx.android.synthetic.main.grid_item_role_title.view.*
 import kotlinx.android.synthetic.main.kifu_detail_fragment.view.*
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +20,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.database.Npc
+import work.boardgame.sangeki_rooper.database.dao.GameDao
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
 import work.boardgame.sangeki_rooper.util.Logger
@@ -34,6 +36,7 @@ class KifuDetailFragment : BaseFragment() {
             }
         }
 
+        private val criminalSpinnerAdapters = mutableListOf<CriminalSpinnerAdapter>()
         private val TAG = KifuDetailFragment::class.simpleName
     }
 
@@ -146,7 +149,7 @@ class KifuDetailFragment : BaseFragment() {
 
         rv.incident_list.let { lv ->
             lv.removeAllViews()
-            viewModel.gameRelation?.incidents?.forEach { incident ->
+            rel.incidents.forEach { incident ->
                 lv.addView(inflater.inflate(R.layout.adapter_item_incident_detective, lv, false).also { v ->
                     v.incident_day.text = String.format("%d日目", incident.day)
                     v.incident_name.text = incident.name
@@ -157,9 +160,11 @@ class KifuDetailFragment : BaseFragment() {
         }
 
         rv.character_list.let { v ->
+            // 項目名の行
             master.allRoles().distinct().let { roles ->
-                viewModel.rolesCount = roles.size
-                val longestRole = roles.maxBy { it.length }?.replace("ー", "|")?.toCharArray()?.joinToString("\n")
+                viewModel.rolesOfRule = roles
+                @Suppress("DEPRECATION") val longestRole = roles.maxBy { it.length }
+                    ?.replace("ー", "|")?.toCharArray()?.joinToString("\n")
                 Logger.d(TAG, "longest role = $longestRole")
                 roles.forEachIndexed { index, role ->
                     v.addView(inflater.inflate(R.layout.grid_item_role_title, v, false).also {
@@ -173,16 +178,22 @@ class KifuDetailFragment : BaseFragment() {
                 }
                 v.addView(inflater.inflate(R.layout.grid_item_role_title, v, false).also {
                     it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(roles.size+1)).also { lp ->
-                        lp.width = GridLayout.LayoutParams.WRAP_CONTENT
+                        lp.width = resources.getDimensionPixelSize(R.dimen.role_list_chara_note_width)
                         lp.height = GridLayout.LayoutParams.WRAP_CONTENT
                     }
                     it.background_role_name.text = longestRole
                     it.role_name.let { tv ->
+                        tv.layoutParams = tv.layoutParams.also { lp ->
+                            (lp as FrameLayout.LayoutParams).gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
+                        }
                         tv.text = "備考"
                         tv.textAlignment = TextView.TEXT_ALIGNMENT_TEXT_START
                     }
                 })
             }
+
+            // 各キャラクターの行
+            rel.npcs.forEachIndexed { index, npc -> inflateCharacterRow(npc, index+1) }
         }
 
         rv.add_character.let { v ->
@@ -190,13 +201,69 @@ class KifuDetailFragment : BaseFragment() {
                 CharaSelectDialogFragment.newInstance("追加キャラクターを選択")
                     .setOnSelectListener { charaName ->
                         Logger.d(TAG, "$charaName をえらんだ！！！")
+                        addCharacter(charaName)
                     }
                     .show(fragmentManager!!, null)
-//                val dao = MyApplication.db.gameDao()
-//                val npc = dao.createNpc(GameDao.CreateNpcModel(viewModel.gameId!!, "")).let {
-//                    dao.loadNpc(it)
-//                }
-//                viewModel.gameRelation?.npcs?.add(npc!!)
+            }
+        }
+    }
+
+    private fun inflateCharacterRow(chara: Npc, row: Int) {
+        Logger.methodStart(TAG)
+        val lv = rootView?.character_list ?: return
+        lv.addView(TextView(activity).also {
+            it.text = chara.name
+            it.setBackgroundResource(R.drawable.bg_stroke_black)
+            it.gravity = Gravity.CENTER
+            it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(0)).also { lp ->
+                lp.width = resources.getDimensionPixelSize(R.dimen.role_list_chara_name_width)
+                lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
+                lp.topMargin = 0
+            }
+        })
+        viewModel.rolesOfRule.forEachIndexed { index, role ->
+            lv.addView(TextView(activity).also { v ->
+                v.setTag(R.id.character_list, chara.name)
+                v.setTag(R.id.role_name, role)
+                v.setBackgroundResource(R.drawable.bg_stroke_black)
+                v.gravity = Gravity.CENTER
+                v.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                v.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+1)).also { lp ->
+                    lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
+                    lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
+                }
+                v.setOnClickListener {
+                    v.text = when (v.text) {
+                        "" -> "〇"
+                        "〇" -> "×"
+                        "×" -> "？"
+                        else -> ""
+                    }
+                    chara.roleDetectiveList[role] = v.text.toString()
+                }
+            })
+        }
+        lv.addView(LayoutInflater.from(activity).inflate(R.layout.grid_item_chara_detect_note, lv, false).also {
+            it.input_edit.hint = String.format("%sに関するメモ", chara.name)
+            it.input_edit.setText(chara.note)
+        })
+    }
+
+    private fun addCharacter(charaName: String) {
+        Logger.methodStart(TAG)
+        var chName = charaName
+        val npcs = viewModel.gameRelation?.npcs ?: return
+        npcs.find { it.name == charaName }?.let {
+            // TODO 重複キャラチェック
+        }
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            val dao = MyApplication.db.gameDao()
+            val npc = dao.createNpc(GameDao.CreateNpcModel(viewModel.gameId!!, chName)).let {
+                dao.loadNpc(it)
+            }
+            npcs.add(npc!!)
+            withContext(Dispatchers.Main) {
+                inflateCharacterRow(npc, npcs.size)
             }
         }
     }
@@ -204,11 +271,9 @@ class KifuDetailFragment : BaseFragment() {
     private fun updateDetectiveInfo(rv: View) {
         Logger.methodStart(TAG)
         val detect = viewModel.gameRelation?.game?.detectiveInfo ?: return
-        detect.let {
-            it.ruleY.clear()
-            it.ruleX1.clear()
-            it.ruleX2.clear()
-        }
+        detect.ruleY.clear()
+        detect.ruleX1.clear()
+        detect.ruleX2.clear()
         rv.ruleY_list.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
             detect.ruleY.add(it.tag as String)
         }
@@ -227,6 +292,10 @@ class KifuDetailFragment : BaseFragment() {
     }
 
     private inner class CriminalSpinnerAdapter: ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item) {
+        init {
+            criminalSpinnerAdapters.add(this)
+        }
+
         override fun getCount() = (viewModel.gameRelation?.npcs?.size ?: 0) + 1
         override fun getItem(position: Int) = when (position) {
             0 -> "？？？？？？？？"
