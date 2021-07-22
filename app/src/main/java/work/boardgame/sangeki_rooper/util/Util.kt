@@ -2,6 +2,7 @@ package work.boardgame.sangeki_rooper.util
 
 import android.content.Context
 import android.webkit.WebView
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -136,6 +137,87 @@ object Util {
                 arrayOf()
             }
         }.toMutableList()
+    }
+
+    @DrawableRes
+    fun cardDrawable(charaName: String, reverse:Boolean = false): Int {
+        return if (reverse) {
+            when (charaName.replace(Regex("[A-E]$"), "")) {
+                "巫女" -> R.drawable.character_04_0
+                "異世界人" -> R.drawable.character_12_0
+                "黒猫" -> R.drawable.character_26_0
+                "幻想" -> R.drawable.character_20_0
+                "妹" -> R.drawable.character_31_0
+                "教祖" -> R.drawable.character_29_0
+                "ご神木", "御神木" -> R.drawable.character_30_0
+                "入院患者", "患者" -> R.drawable.character_09_0
+                "医者" -> R.drawable.character_08_0
+                "ナース" -> R.drawable.character_17_0
+                "軍人" -> R.drawable.character_25_0
+                "学者" -> R.drawable.character_19_0
+                "アイドル" -> R.drawable.character_14_0
+                "サラリーマン" -> R.drawable.character_06_0
+                "情報屋" -> R.drawable.character_07_0
+                "刑事" -> R.drawable.character_05_0
+                "A.I.", "AI" -> R.drawable.character_22_0
+                "大物" -> R.drawable.character_16_0
+                "マスコミ" -> R.drawable.character_15_0
+                "鑑識官" -> R.drawable.character_21_0
+                "コピーキャット", "C.C." -> R.drawable.character_28_0
+                "男子学生" -> R.drawable.character_01_0
+                "女子学生" -> R.drawable.character_02_0
+                "お嬢様" -> R.drawable.character_03_0
+                "教師" -> R.drawable.character_23_0
+                "イレギュラー" -> R.drawable.character_11_0
+                "委員長" -> R.drawable.character_10_0
+                "女の子" -> R.drawable.character_27_0
+                "神格" -> R.drawable.character_13_0
+                "転校生" -> R.drawable.character_24_0
+                "手先" -> R.drawable.character_18_0
+                else -> {
+                    Logger.i(TAG, "unexpected chara name: $charaName")
+                    R.drawable.extra_back
+                }
+            }
+        } else {
+            when (charaName.replace(Regex("[A-E]$"), "")) {
+                "巫女" -> R.drawable.character_04_1
+                "異世界人" -> R.drawable.character_12_1
+                "黒猫" -> R.drawable.character_26_1
+                "幻想" -> R.drawable.character_20_1
+                "妹" -> R.drawable.character_31_1
+                "教祖" -> R.drawable.character_29_1
+                "ご神木", "御神木" -> R.drawable.character_30_1
+                "入院患者", "患者" -> R.drawable.character_09_1
+                "医者" -> R.drawable.character_08_1
+                "ナース" -> R.drawable.character_17_1
+                "軍人" -> R.drawable.character_25_1
+                "学者" -> R.drawable.character_19_1
+                "アイドル" -> R.drawable.character_14_1
+                "サラリーマン" -> R.drawable.character_06_1
+                "情報屋" -> R.drawable.character_07_1
+                "刑事" -> R.drawable.character_05_1
+                "A.I.", "AI" -> R.drawable.character_22_1
+                "大物" -> R.drawable.character_16_1
+                "マスコミ" -> R.drawable.character_15_1
+                "鑑識官" -> R.drawable.character_21_1
+                "コピーキャット", "C.C." -> R.drawable.character_28_1
+                "男子学生" -> R.drawable.character_01_1
+                "女子学生" -> R.drawable.character_02_1
+                "お嬢様" -> R.drawable.character_03_1
+                "教師" -> R.drawable.character_23_1
+                "イレギュラー" -> R.drawable.character_11_1
+                "委員長" -> R.drawable.character_10_1
+                "女の子" -> R.drawable.character_27_1
+                "神格" -> R.drawable.character_13_1
+                "転校生" -> R.drawable.character_24_1
+                "手先" -> R.drawable.character_18_1
+                else -> {
+                    Logger.i(TAG, "unexpected chara name: $charaName")
+                    R.drawable.extra_back
+                }
+            }
+        }
     }
 
     fun incidentExplain(incidentName:String) = when(incidentName) {

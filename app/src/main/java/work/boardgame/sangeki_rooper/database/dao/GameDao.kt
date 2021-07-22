@@ -14,6 +14,9 @@ interface GameDao {
     @Transaction
     @Query("SELECT * FROM Game WHERE id = :id")
     fun loadGame(id:Long): GameRelation?
+
+    @Query("SELECT * FROM Npc WHERE id = :id")
+    fun loadNpc(id:Long): Npc?
     /** Selectメソッド ここまで **********************************************************************/
 
     /** Insertメソッド ここから **********************************************************************/

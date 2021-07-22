@@ -76,4 +76,5 @@
     <string name="kifu_delete_confirm_dialog_title">＜注意＞</string>
     <string name="kifu_delete_confirm_dialog_message">こちらの棋譜データを削除します。\nよろしいですか？\n\n開始日時： %s\n%s\n%dループ%d日</string>
     <string name="kifu_delete_complete_dialog_message">棋譜データを削除しました。</string>
+    <string name="add_character">キャラクター追加</string>
 </resources>

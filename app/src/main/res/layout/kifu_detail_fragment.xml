@@ -74,6 +74,11 @@
                         android:layout_row="0"/>
                 </GridLayout>
             </HorizontalScrollView>
+            <Button
+                android:id="@+id/add_character"
+                style="@style/Css.Base.Button"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/add_character"/>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

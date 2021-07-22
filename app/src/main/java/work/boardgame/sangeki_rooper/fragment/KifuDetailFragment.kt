@@ -22,7 +22,6 @@ import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
-import work.boardgame.sangeki_rooper.model.RuleMasterDataModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.toJson
@@ -159,6 +158,7 @@ class KifuDetailFragment : BaseFragment() {
 
         rv.character_list.let { v ->
             master.allRoles().distinct().let { roles ->
+                viewModel.rolesCount = roles.size
                 val longestRole = roles.maxBy { it.length }?.replace("ー", "|")?.toCharArray()?.joinToString("\n")
                 Logger.d(TAG, "longest role = $longestRole")
                 roles.forEachIndexed { index, role ->
@@ -171,6 +171,32 @@ class KifuDetailFragment : BaseFragment() {
                         it.role_name.text = role.replace("ー", "|").toCharArray().joinToString("\n")
                     })
                 }
+                v.addView(inflater.inflate(R.layout.grid_item_role_title, v, false).also {
+                    it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(roles.size+1)).also { lp ->
+                        lp.width = GridLayout.LayoutParams.WRAP_CONTENT
+                        lp.height = GridLayout.LayoutParams.WRAP_CONTENT
+                    }
+                    it.background_role_name.text = longestRole
+                    it.role_name.let { tv ->
+                        tv.text = "備考"
+                        tv.textAlignment = TextView.TEXT_ALIGNMENT_TEXT_START
+                    }
+                })
+            }
+        }
+
+        rv.add_character.let { v ->
+            v.setOnClickListener {
+                CharaSelectDialogFragment.newInstance("追加キャラクターを選択")
+                    .setOnSelectListener { charaName ->
+                        Logger.d(TAG, "$charaName をえらんだ！！！")
+                    }
+                    .show(fragmentManager!!, null)
+//                val dao = MyApplication.db.gameDao()
+//                val npc = dao.createNpc(GameDao.CreateNpcModel(viewModel.gameId!!, "")).let {
+//                    dao.loadNpc(it)
+//                }
+//                viewModel.gameRelation?.npcs?.add(npc!!)
             }
         }
     }
