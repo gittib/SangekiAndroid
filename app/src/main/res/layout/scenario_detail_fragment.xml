@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    style="@style/Theme.SangekiAndroid.Display"
     android:padding="8dp"
     tools:context=".fragment.ScenarioDetailFragment">
 
@@ -89,19 +89,248 @@
                 app:layout_constraintTop_toBottomOf="@id/incident_list"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                style="@style/Css.ScenarioDetail"
-                android:textColor="@color/white"
-                android:layout_marginTop="24dp"
-                android:text="@string/show_private_sheet" />
+                style="@style/Css.ScenarioDetail.ShowPrivate" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/private_wrapper"
-                app:layout_constraintTop_toBottomOf="@id/incident_list"
+                app:layout_constraintTop_toBottomOf="@id/show_private"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 style="@style/Css.ScenarioDetail"
+                android:layout_width="match_parent"
+                android:paddingBottom="@dimen/footer_height"
                 android:visibility="gone"
                 tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/private_sheet_title"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    style="@style/Css.ScenarioDetail.Title"
+                    android:textSize="24sp"
+                    android:text="@string/private_sheet" />
+
+                <LinearLayout
+                    android:id="@+id/private_sheet_frame"
+                    app:layout_constraintTop_toBottomOf="@id/private_sheet_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:padding="8dp"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/bg_stroke_black">
+
+                    <TextView
+                        android:id="@+id/scenario_title"
+                        style="@style/Css.ScenarioDetail.Title"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="4dp"
+                        android:textAlignment="center"
+                        tools:text="逃げ惑うタイムトラベラー" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/underline"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="1dp"
+                        android:background="@color/underline"/>
+
+                    <include
+                        layout="@layout/inc_difficulty_row"/>
+
+                    <GridLayout
+                        android:id="@+id/rule_wrapper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:columnCount="2">
+
+                        <TextView
+                            android:textSize="22sp"
+                            android:text="@string/ruleY"/>
+                        <TextView
+                            android:id="@+id/rule_y"
+                            style="@style/Css.ScenarioDetail.RuleList"
+                            tools:text="殺人計画"/>
+                        <TextView
+                            android:textSize="22sp"
+                            android:text="@string/ruleX1"/>
+                        <TextView
+                            android:id="@+id/rule_x1"
+                            style="@style/Css.ScenarioDetail.RuleList"
+                            android:textSize="22sp"
+                            android:layout_marginLeft="8dp"
+                            tools:text="不穏な噂"/>
+                        <TextView
+                            android:id="@+id/rule_x2_label"
+                            android:textSize="22sp"
+                            android:text="@string/ruleX2"/>
+                        <TextView
+                            android:id="@+id/rule_x2"
+                            style="@style/Css.ScenarioDetail.RuleList"
+                            android:textSize="22sp"
+                            android:layout_marginLeft="8dp"
+                            tools:text="友情サークル"/>
+                    </GridLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/Css.ScenarioDetail.Title"
+                            android:text="@string/character_list" />
+
+                        <TextView
+                            android:id="@+id/character_count"
+                            style="@style/Css.ScenarioDetail"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="4dp"
+                            android:textSize="12sp"
+                            tools:text="(12人)" />
+                    </LinearLayout>
+
+                    <GridLayout
+                        android:id="@+id/character_role_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:layout_gravity="center_horizontal"
+                        android:columnCount="3"
+                        android:padding="1dp"
+                        android:background="@drawable/bg_stroke_black">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="@dimen/chara_role_col_weight_name"
+                            android:layout_gravity="fill"
+                            android:background="@color/background_inverse"
+                            android:textColor="@color/text_color_inverse"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:text="@string/chara"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="@dimen/chara_role_col_weight_role"
+                            android:layout_gravity="fill"
+                            android:background="@color/background_inverse"
+                            android:textColor="@color/text_color_inverse"
+                            android:text="@string/role"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="@dimen/chara_role_col_weight_note"
+                            android:layout_gravity="fill"
+                            android:background="@color/background_inverse"
+                            android:textColor="@color/text_color_inverse"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:text="@string/note"/>
+                    </GridLayout>
+
+                    <TextView
+                        style="@style/Css.ScenarioDetail.Title"
+                        android:layout_gravity="left"
+                        android:text="@string/incident_plan" />
+
+                    <GridLayout
+                        android:id="@+id/incident_criminal_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:padding="1dp"
+                        android:columnCount="4"
+                        android:background="@drawable/bg_stroke_black">
+
+                        <TextView
+                            style="@style/Css.ScenarioDetail.ListTitle"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="@dimen/incident_col_weight_day"
+                            android:layout_gravity="fill"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeMaxTextSize="14sp"
+                            app:autoSizeMinTextSize="8sp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/day_count"/>
+                        <TextView
+                            style="@style/Css.ScenarioDetail.ListTitle"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="@dimen/incident_col_weight_name"
+                            android:layout_gravity="fill"
+                            android:text="@string/incident"/>
+                        <TextView
+                            style="@style/Css.ScenarioDetail.ListTitle"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="@dimen/incident_col_weight_criminal"
+                            android:layout_gravity="fill"
+                            android:text="@string/criminal"/>
+                        <TextView
+                            style="@style/Css.ScenarioDetail.ListTitle"
+                            android:layout_width="0dp"
+                            android:layout_columnWeight="@dimen/incident_col_weight_note"
+                            android:layout_gravity="fill"
+                            android:gravity="center_horizontal"
+                            android:text="@string/note"/>
+                    </GridLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/scenario_detail_title"
+                    app:layout_constraintTop_toBottomOf="@id/private_sheet_frame"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    style="@style/Css.ScenarioDetail.Title"
+                    android:text="@string/scenario_feature" />
+
+                <TextView
+                    android:id="@+id/scenario_notice_text"
+                    app:layout_constraintTop_toBottomOf="@id/scenario_detail_title"
+                    style="@style/Css.ScenarioDetail.Text.Private"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/red"
+                    android:paddingBottom="20dp"
+                    tools:text="※注意事項" />
+
+                <TextView
+                    android:id="@+id/scenario_summary_text"
+                    app:layout_constraintTop_toBottomOf="@id/scenario_notice_text"
+                    style="@style/Css.ScenarioDetail.Text.Private"
+                    android:layout_width="match_parent"
+                    tools:text="初心者向けの脚本です。" />
+
+                <TextView
+                    android:id="@+id/guide_for_writer_title"
+                    app:layout_constraintTop_toBottomOf="@id/scenario_summary_text"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    style="@style/Css.ScenarioDetail.Title"
+                    android:text="@string/guide_for_writer" />
+
+                <TextView
+                    android:id="@+id/guide_for_writer_text"
+                    app:layout_constraintTop_toBottomOf="@id/guide_for_writer_title"
+                    style="@style/Css.ScenarioDetail.Text.Private"
+                    android:layout_width="match_parent"
+                    tools:text="テンプレに従いましょう。" />
+
+                <TextView
+                    android:id="@+id/template_for_writer_title"
+                    app:layout_constraintTop_toBottomOf="@id/guide_for_writer_text"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    style="@style/Css.ScenarioDetail.Title"
+                    android:visibility="gone"
+                    android:text="@string/writer_card_template"
+                    tools:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/template_for_writer_text"
+                    app:layout_constraintTop_toBottomOf="@id/template_for_writer_title"
+                    style="@style/Css.ScenarioDetail.Text.Private"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

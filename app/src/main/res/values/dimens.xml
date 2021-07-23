@@ -1,9 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="footer_height">100dp</dimen>
+    <dimen name="footer_height">160dp</dimen>
     <dimen name="label_font_size">28sp</dimen>
     <dimen name="incident_font_size">24sp</dimen>
     <dimen name="incident_margin_left">8dp</dimen>
     <dimen name="incident_row_size">48dp</dimen>
     <dimen name="incident_name_width">260dp</dimen>
+    <dimen name="horizontal_margin">16dp</dimen>
+
+    <!-- キャラクター一覧 -->
+    <dimen name="chara_name_width">80dp</dimen>
+    <dimen name="chara_name_margin_left">4dp</dimen>
+    <dimen name="chara_role_icon_size">14sp</dimen>
+    <dimen name="chara_role_width">172dp</dimen>
+    <dimen name="chara_note_width">80dp</dimen>
+    <dimen name="chara_role_col_weight_name" format="float">8.0</dimen>
+    <dimen name="chara_role_col_weight_role" format="float">17.0</dimen>
+    <dimen name="chara_role_col_weight_note" format="float">8.0</dimen>
+
+    <!-- 事件一覧 -->
+    <dimen name="incident_day_width">40dp</dimen>
+    <dimen name="incident_private_name_width">100dp</dimen>
+    <dimen name="incident_note_width">48dp</dimen>
+    <dimen name="incident_col_weight_day" format="float">4.0</dimen>
+    <dimen name="incident_col_weight_name" format="float">10.0</dimen>
+    <dimen name="incident_col_weight_criminal" format="float">8.0</dimen>
+    <dimen name="incident_col_weight_note" format="float">5.0</dimen>
+
+    <!-- テンプレート -->
+    <dimen name="template_loop_top_padding">16dp</dimen>
+    <dimen name="template_loop_padding">2dp</dimen>
+    <dimen name="template_day_padding">20dp</dimen>
+    <dimen name="template_card_padding">40dp</dimen>
+
+    <!-- 棋譜画面役職一覧 -->
+    <dimen name="role_list_chara_name_width">100dp</dimen>
+    <dimen name="role_list_role_mark_size">48dp</dimen>
+    <dimen name="role_list_chara_note_width">300dp</dimen>
+    <dimen name="kifu_per_day_item_width">320dp</dimen>
+    <dimen name="kifu_action_card_item_width">48dp</dimen>
 </resources>

@@ -12,53 +12,36 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-    </style>
-    <style name="Theme.SangekiAndroid.Splash">
-        <item name="android:windowBackground">@drawable/bg_splash</item>
-    </style>
-
-    <style name="Css">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/basic_text_color</item>
     </style>
 
-    <style name="Css.GridBorder">
-        <item name="android:background">@color/black</item>
+    <style name="Theme.SangekiAndroid.DialogBase" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:textColorPrimary">@color/dialog_text_color</item>
+        <item name="android:windowTitleStyle">@style/Theme.SangekiAndroid.DialogBase.Title</item>
+        <item name="android:buttonBarNeutralButtonStyle">@style/Theme.SangekiAndroid.DialogBase.Button.Neutral</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/Theme.SangekiAndroid.DialogBase.Button.Negative</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/Theme.SangekiAndroid.DialogBase.Button.Positive</item>
     </style>
-    <style name="Css.GridBorder.Tate">
-        <item name="android:layout_width">2dp</item>
-        <item name="android:layout_height">match_parent</item>
-    </style>
-    <style name="Css.GridBorder.Yoko">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">2dp</item>
-    </style>
-    <style name="Css.ScenarioDetail"/>
-    <style name="Css.ScenarioDetail.Title">
+    <style name="Theme.SangekiAndroid.DialogBase.Title">
+        <item name="android:textColor">@color/dialog_text_color</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginTop">12dp</item>
     </style>
-    <style name="Css.ScenarioDetail.Label">
-        <item name="android:layout_width">@dimen/label_font_size</item>
-        <item name="android:layout_height">@dimen/label_font_size</item>
-        <item name="android:layout_gravity">center_vertical</item>
+    <style name="Theme.SangekiAndroid.DialogBase.Button">
+        <item name="android:textColor">@color/dialog_button_text_color</item>
     </style>
-    <style name="Css.ScenarioDetail.LabelValue">
-        <item name="android:textSize">@dimen/label_font_size</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
+    <style name="Theme.SangekiAndroid.DialogBase.Button.Neutral">
     </style>
-    <style name="Css.ScenarioDetail.Text">
-        <item name="android:textSize">18sp</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
-    </style>
-    <style name="Css.ScenarioDetail.IncidentList">
-        <item name="android:columnCount">2</item>
-        <item name="android:layout_marginLeft">8dp</item>
+    <style name="Theme.SangekiAndroid.DialogBase.Button.Negative">
         <item name="android:layout_marginRight">8dp</item>
+    </style>
+    <style name="Theme.SangekiAndroid.DialogBase.Button.Positive">
+    </style>
+
+    <style name="Theme.SangekiAndroid.Splash">
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
+    <style name="Theme.SangekiAndroid.Display">
+        <item name="android:background">@color/white</item>
     </style>
 </resources>

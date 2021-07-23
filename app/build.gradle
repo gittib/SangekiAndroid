@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -12,15 +13,37 @@ android {
         applicationId "work.boardgame.sangeki_rooper"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 1
+        versionCode 2
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        def properties = new Properties()
+        properties.load(project.rootProject.file('keystore.properties').newDataInputStream())
+
+        debug {
+            storeFile file(properties.getProperty('debug.path'))
+            storePassword properties.getProperty('debug.storePassword')
+            keyAlias properties.getProperty('debug.alias')
+            keyPassword properties.getProperty('debug.keyPassword')
+        }
+
+        release {
+            storeFile file(properties.getProperty('release.path'))
+            storePassword properties.getProperty('release.storePassword')
+            keyAlias properties.getProperty('release.alias')
+            keyPassword properties.getProperty('release.keyPassword')
+        }
+    }
+
     lintOptions {
         // layout関連の不要な警告をチェック対象外にする
         disable 'ContentDescription', 'RtlHardcoded'
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 
     buildTypes {
@@ -81,8 +104,20 @@ dependencies {
     // Retrofit ここまで /////////////////////////////////////////////////////////////////////////////
 
 
+    // inline-block的な、よしなに折り返すレイアウト
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     // 円形のImageView
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     // 角丸のImageView
     implementation 'com.makeramen:roundedimageview:2.3.0'
+
+    // RoomDatabase ////////////////////////////////////////////////////////////////////////////////
+    def room_version = "2.3.0"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // RoomDatabase ここまで ////////////////////////////////////////////////////////////////////////
+
+    // PDFビューワ
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 }

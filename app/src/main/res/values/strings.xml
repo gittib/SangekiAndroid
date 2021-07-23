@@ -1,24 +1,85 @@
 <resources>
     <string name="app_name">惨劇RoopeR</string>
     <string name="api_url">http://www.boardgame.work/sangeki/</string>
-    <string name="scenario_list">脚本リスト</string>
+
+    <!-- ルール名 -->
+    <string name="summary_name_fs">First Steps</string>
+    <string name="summary_name_btx">Basic Tragedy χ</string>
+    <string name="summary_name_mz">Midnight Zone</string>
+    <string name="summary_name_mcx">Mystery Circle χ</string>
+    <string name="summary_name_hsa">Haunted Stage Again</string>
+    <string name="summary_name_wm">Weird Mythology</string>
+    <string name="summary_name_um">Unvoiced Marice</string>
 
     <!-- アラートメッセージ -->
     <string name="ok">@android:string/ok</string>
     <string name="cancel">@android:string/cancel</string>
     <string name="failed_to_download_scenario">脚本データの初期化に失敗しました。\n通信環境の良い場所で再度お試し下さい。</string>
+    <string name="confirm_to_show_private">非公開シート情報を表示します。\nよろしいですか？</string>
+
+    <string name="scenario_list">脚本リスト</string>
+    <string name="scenario_note">主にペンスキーが考えた脚本のリストです。一部寄稿いただいた脚本もあります。\n主人公として惨劇RoopeRを遊ぶ場合はネタバレになるため、見ないほうが良いです。</string>
 
     <string name="retry">リトライ</string>
     <string name="loop">ループ</string>
     <string name="day">日</string>
     <string name="day_count_suffix">日目</string>
     <string name="public_sheet">公開シート</string>
+    <string name="private_sheet">非公開シート</string>
     <string name="writer_introduction">作者：%s</string>
     <string name="special_rule">特殊ルール</string>
     <string name="incident_list">事件リスト</string>
     <string name="show_private_sheet">非公開シートを表示</string>
+    <string name="hide_private_sheet">非公開シートを隠す</string>
     <string name="day_count">日数</string>
     <string name="incident_plan">事件予定</string>
+    <string name="character_list">登場人物</string>
     <string name="caution">！！！警告！！！</string>
     <string name="caution_spoiler">申し訳ありませんが、このリストや脚本詳細画面を見てしまうと、主人公として惨劇RoopeRを遊ぶ事ができなくなる可能性があります。\n主人公として遊ぶ予定がある方は、この画面を閉じることをおすすめします。</string>
+    <string name="rule">ルール</string>
+    <string name="ruleY">ルールY</string>
+    <string name="ruleX1">ルールX1</string>
+    <string name="ruleX2">ルールX2</string>
+    <string name="character">キャラクター</string>
+    <string name="chara">キャラ</string>
+    <string name="role">役職</string>
+    <string name="incident">事件</string>
+    <string name="criminal">犯人</string>
+    <string name="note">備考</string>
+    <string name="scenario_feature">シナリオの特徴</string>
+    <string name="guide_for_writer">脚本家への指針</string>
+    <string name="writer_card_template">置き方テンプレ</string>
+    <string name="top_page_title">ペンスキーの惨劇RoopeR</string>
+    <string name="top_page_note">惨劇RoopeRライフをちょっと便利にするアプリです。</string>
+
+    <string name="credit">クレジット</string>
+    <string name="what_is_this">このアプリは、BakaFire Party のボードゲーム「惨劇RoopeR」のファンアプリです。また、惨劇コモンズの画像素材およびルールブックの文章をアプリ内で使用しています。</string>
+    <string name="copy_light"><![CDATA[
+        惨劇コモンズ by <a href="http://bakafire.main.jp/rooper/sr_dl_04_sozai.htm">
+        BakaFire, NEKOG(紺ノ玲)</a> is licensed under a <a href="http://creativecommons.org/licenses/by-sa/2.1/jp/">
+        Creative Commons 表示 - 継承 2.1 日本 License</a><br>
+        <br>
+        <br>
+        このアプリについての問い合わせ等は、アプリ製作者の<a href="https://twitter.com/gittib_gittib">ペンスキー</a>までご連絡下さい。
+        BakaFire様、NEKOG様へこのアプリについての問い合わせ等をしないようお願いいたします。
+    ]]></string>
+    <string name="kifu_log">棋譜記録機能</string>
+    <string name="kifu_log_note">いつ、どこに、何のカードが置かれたかは、推理を進める上で時に非常に重要な情報となります。\nアプリで記録したゲームの履歴を、後から見返すこともできます。</string>
+    <string name="summary_sheets">惨劇セット サマリー</string>
+    <string name="summary_sheets_note">惨劇RoopeRを遊ぶ上で欠かせない、サマリーシートをご用意しました。\nサマリー画面のみ、画面回転に対応しています。</string>
+    <string name="tragedy_set">惨劇セット</string>
+    <string name="loop_count">ループ数</string>
+    <string name="kifu_list">棋譜一覧</string>
+    <string name="create_new_kifu">新規ゲームの棋譜記録開始</string>
+    <string name="recommended_scenario">オススメ！</string>
+    <string name="game_start">ゲーム開始</string>
+    <string name="kifu_delete_confirm_dialog_title">＜注意＞</string>
+    <string name="kifu_delete_confirm_dialog_message">こちらの棋譜データを削除します。\nよろしいですか？\n\n開始日時： %s\n%s\n%dループ%d日</string>
+    <string name="kifu_delete_complete_dialog_message">棋譜データを削除しました。</string>
+    <string name="add_character">キャラクター追加</string>
+    <string name="unknown_chara">？？？？？？？？</string>
+    <string name="character_is_already_added">既に追加済みのキャラクターです。</string>
+    <string name="memo_for_character">%sに関するメモ</string>
+    <string name="action_cards">行動カード情報</string>
+    <string name="memo_per_day">事件結果等メモ</string>
 </resources>

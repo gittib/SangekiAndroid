@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:columnCount="3"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/loop_day_title"
+        style="@style/Css.KifuDetail.SubTitle"
+        android:layout_width="@dimen/kifu_per_day_item_width"
+        android:layout_marginTop="16dp"
+        android:layout_columnSpan="3"
+        tools:text="１ループ1日目"/>
+
+    <EditText
+        android:id="@+id/loop_day_note"
+        android:layout_width="@dimen/kifu_per_day_item_width"
+        android:layout_height="wrap_content"
+        android:layout_columnSpan="3"
+        android:inputType="textMultiLine"
+        android:hint="@string/memo_per_day"/>
+
+    <include android:id="@+id/writer1" layout="@layout/inc_action_card"/>
+    <include android:id="@+id/writer2" layout="@layout/inc_action_card"/>
+    <include android:id="@+id/writer3" layout="@layout/inc_action_card"/>
+    <include android:id="@+id/hero1" layout="@layout/inc_action_card"/>
+    <include android:id="@+id/hero2" layout="@layout/inc_action_card"/>
+    <include android:id="@+id/hero3" layout="@layout/inc_action_card"/>
+</GridLayout>

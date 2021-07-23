@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="incident_list_fs">
+        <item>殺人事件</item>
+        <item>不安拡大</item>
+        <item>自殺</item>
+        <item>行方不明</item>
+        <item>遠隔殺人</item>
+        <item>病院の事件</item>
+        <item>流布</item>
+    </string-array>
+    <string-array name="incident_list_btx">
+        <item>殺人事件</item>
+        <item>不安拡大</item>
+        <item>邪気の汚染</item>
+        <item>自殺</item>
+        <item>行方不明</item>
+        <item>遠隔殺人</item>
+        <item>病院の事件</item>
+        <item>蝶の羽ばたき</item>
+        <item>流布</item>
+    </string-array>
+    <string-array name="incident_list_mz">
+        <item>連続殺人</item>
+        <item>自殺</item>
+        <item>不安拡大</item>
+        <item>行方不明</item>
+        <item>陰謀工作</item>
+        <item>病院の事件</item>
+        <item>大暴動</item>
+        <item>告白</item>
+        <item>打開</item>
+        <item>偽装自殺</item>
+        <item>偽装事件</item>
+    </string-array>
+    <string-array name="incident_list_mcx">
+        <item>連続殺人</item>
+        <item>テロリズム</item>
+        <item>病院の事件</item>
+        <item>自殺</item>
+        <item>不安拡大</item>
+        <item>前兆</item>
+        <item>猟奇殺人</item>
+        <item>偽装自殺</item>
+        <item>不審な手紙</item>
+        <item>クローズドサークル</item>
+        <item>銀の銃弾</item>
+    </string-array>
+    <string-array name="incident_list_hsa">
+        <item>冒涜殺人</item>
+        <item>不安拡大</item>
+        <item>邪気の汚染</item>
+        <item>行方不明</item>
+        <item>遂行者</item>
+        <item>噂の御呪い</item>
+        <item>立てこもり</item>
+        <item>狂気の夜</item>
+        <item>呪いの目覚め</item>
+        <item>穢れの噴出</item>
+        <item>死者の黙示録</item>
+    </string-array>
+    <string-array name="incident_list_wm">
+        <item>狂気殺人</item>
+        <item>集団自殺</item>
+        <item>不安拡大</item>
+        <item>行方不明</item>
+        <item>邪気の汚染</item>
+        <item>病院の事件</item>
+        <item>大暴動</item>
+        <item>滅びの火</item>
+        <item>猟犬の嗅覚</item>
+        <item>発見</item>
+        <item>遂行者</item>
+    </string-array>
+    <string-array name="incident_list_um">
+        <item>連続殺人</item>
+        <item>不安拡大</item>
+        <item>自殺</item>
+        <item>不法投棄</item>
+        <item>病院の事件</item>
+        <item>丑の刻参り</item>
+        <item>怨嗟の雄叫び</item>
+        <item>遂行者</item>
+        <item>悪魔との契約</item>
+        <item>告発</item>
+        <item>模倣犯</item>
+    </string-array>
+</resources>

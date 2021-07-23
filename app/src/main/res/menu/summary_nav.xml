@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/summary_nav_item_fs"
+        android:title="@string/summary_name_fs" />
+    <item
+        android:id="@+id/summary_nav_item_btx"
+        android:title="@string/summary_name_btx" />
+    <item
+        android:id="@+id/summary_nav_item_mz"
+        android:title="@string/summary_name_mz" />
+    <item
+        android:id="@+id/summary_nav_item_mcx"
+        android:title="@string/summary_name_mcx" />
+    <item
+        android:id="@+id/summary_nav_item_hsa"
+        android:title="@string/summary_name_hsa" />
+    <item
+        android:id="@+id/summary_nav_item_wm"
+        android:title="@string/summary_name_wm" />
+</menu>
