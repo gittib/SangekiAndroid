@@ -49,6 +49,7 @@ class CardSelectDialogFragment : BaseDialogFragment() {
     private val cardList:List<String> by lazy {
         if (isAction) {
             if (isWriter) listOf(
+                "",
                 "不安+1",
                 "不安-1",
                 "不安禁止",
@@ -60,6 +61,7 @@ class CardSelectDialogFragment : BaseDialogFragment() {
                 "移動斜め"
             )
             else listOf(
+                "",
                 "不安+1",
                 "不安-1",
                 "友好+1",

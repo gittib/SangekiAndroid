@@ -172,13 +172,10 @@ class KifuDetailFragment : BaseFragment() {
                     v.incident_criminal_select.let { sel ->
                         sel.text = incident.criminal ?: getString(R.string.unknown_chara)
                         sel.setOnClickListener {
-                            CardSelectDialogFragment.newInstance("犯人を選んで下さい", viewModel.gameRelation?.npcs?.map { it.name })
-                                .setOnSelectListener { criminal ->
-                                    if (sel.text == criminal) {
-                                        sel.text = getString(R.string.unknown_chara)
-                                    } else {
-                                        sel.text = criminal
-                                    }
+                            val criminalList = viewModel.gameRelation?.npcs?.map { it.name }?.toMutableList()
+                            criminalList?.add(0, getString(R.string.unknown_chara))
+                            CardSelectDialogFragment.newInstance("犯人を選んで下さい", criminalList).setOnSelectListener { criminal ->
+                                    sel.text = criminal
                                     viewModel.gameRelation?.incidents?.find { it.day == incident.day }?.let {
                                         it.criminal = sel.text.toString()
                                     }
@@ -304,6 +301,7 @@ class KifuDetailFragment : BaseFragment() {
         Logger.methodStart(TAG)
         view.setOnClickListener {
             val charas:List<String>? = viewModel.gameRelation?.npcs?.map { it.name }?.toMutableList()?.also {
+                it.add(0, "")
                 it.add("神社")
                 it.add("病院")
                 it.add("都市")
