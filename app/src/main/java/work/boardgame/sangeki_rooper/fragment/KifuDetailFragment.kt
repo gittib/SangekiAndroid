@@ -91,6 +91,12 @@ class KifuDetailFragment : BaseFragment() {
         }
     }
 
+    override fun onResume() {
+        Logger.methodStart(TAG)
+        super.onResume()
+        applyViewData()
+    }
+
     override fun onPause() {
         Logger.methodStart(TAG)
         super.onPause()
