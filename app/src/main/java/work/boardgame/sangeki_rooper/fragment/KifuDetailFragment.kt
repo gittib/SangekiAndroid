@@ -7,7 +7,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.FrameLayout
+import android.widget.GridLayout
+import android.widget.TextView
 import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
@@ -187,9 +190,9 @@ class KifuDetailFragment : BaseFragment() {
             // 項目名の行
             master.allRoles().distinct().let { roles ->
                 viewModel.rolesOfRule = roles
-                @Suppress("DEPRECATION") val longestRole = roles.maxBy { it.length }
-                    ?.replace("ー", "|")?.toCharArray()?.joinToString("\n")
-                Logger.d(TAG, "longest role = $longestRole")
+                @Suppress("DEPRECATION") val longestRole = roles.maxBy { it.length }?.also {
+                    Logger.d(TAG, "longest role = $it")
+                }?.replace("ー", "|")?.toCharArray()?.joinToString("\n")
                 roles.forEachIndexed { index, role ->
                     v.addView(inflater.inflate(R.layout.grid_item_role_title, v, false).also {
                         it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(index+1)).also { lp ->
@@ -369,6 +372,7 @@ class KifuDetailFragment : BaseFragment() {
                     lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                     lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                 }
+                v.background_chara_image.setImageResource(Util.standDrawable(chara.name))
                 v.role_mark.text = chara.roleDetectiveList[role]
                 v.setOnClickListener {
                     it.role_mark.text = when (it.role_mark.text) {
