@@ -119,7 +119,11 @@ class KifuStandbyFragment : BaseFragment() {
                             gameId?.let { id ->
                                 for (i in 1..viewModel.loopCount) {
                                     for (j in 1..viewModel.dayCount) {
-                                        dao.createDay(GameDao.CreateDayModel(id, i, j))
+                                        val dayId = dao.createDay(GameDao.CreateDayModel(id, i, j))
+                                        for (k in 1..3) {
+                                            dao.createKifu(GameDao.CreateKifuModel(id, dayId, true, "", ""))
+                                            dao.createKifu(GameDao.CreateKifuModel(id, dayId, false, "", ""))
+                                        }
                                     }
                                 }
                             }

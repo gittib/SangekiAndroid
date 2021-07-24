@@ -227,6 +227,47 @@ object Util {
     }
 
     @DrawableRes
+    fun standDrawable(charaName: String): Int {
+        return when (charaName.replace(Regex("[A-E]$"), "")) {
+            "巫女" -> R.drawable.chara_stand_04
+            "異世界人" -> R.drawable.chara_stand_12
+            "黒猫" -> R.drawable.chara_stand_26
+            "幻想" -> R.drawable.chara_stand_20
+            "妹" -> R.drawable.chara_stand_31
+            "教祖" -> R.drawable.chara_stand_29
+            "ご神木", "御神木" -> R.drawable.chara_stand_30
+            "入院患者", "患者" -> R.drawable.chara_stand_09
+            "医者" -> R.drawable.chara_stand_08
+            "ナース" -> R.drawable.chara_stand_17
+            "軍人" -> R.drawable.chara_stand_25
+            "学者" -> R.drawable.chara_stand_19
+            "アイドル" -> R.drawable.chara_stand_14
+            "サラリーマン" -> R.drawable.chara_stand_06
+            "情報屋" -> R.drawable.chara_stand_07
+            "刑事" -> R.drawable.chara_stand_05
+            "A.I.", "AI" -> R.drawable.chara_stand_22
+            "大物" -> R.drawable.chara_stand_16
+            "マスコミ" -> R.drawable.chara_stand_15
+            "鑑識官" -> R.drawable.chara_stand_21
+            "コピーキャット", "C.C." -> R.drawable.chara_stand_28
+            "男子学生" -> R.drawable.chara_stand_01
+            "女子学生" -> R.drawable.chara_stand_02
+            "お嬢様" -> R.drawable.chara_stand_03
+            "教師" -> R.drawable.chara_stand_23
+            "イレギュラー" -> R.drawable.chara_stand_11
+            "委員長" -> R.drawable.chara_stand_10
+            "女の子" -> R.drawable.chara_stand_27
+            "神格" -> R.drawable.chara_stand_13
+            "転校生" -> R.drawable.chara_stand_24
+            "手先" -> R.drawable.chara_stand_18
+            else -> {
+                Logger.i(TAG, "unexpected chara name: $charaName")
+                R.drawable.extra_back
+            }
+        }
+    }
+
+    @DrawableRes
     fun writerCardDrawable(cardName: String): Int = when(cardName) {
         "不安+1" -> R.drawable.a_writer_cards_01
         "不安-1" -> R.drawable.a_writer_cards_03

@@ -24,6 +24,7 @@
         android:layout_height="30dp"
         android:layout_marginLeft="4dp"
         android:scaleType="fitXY"
+        app:tint="@color/background_inverse"
         android:src="@drawable/card_arrow"/>
 
     <ImageView
@@ -43,5 +44,5 @@
         android:layout_marginLeft="4dp"
         android:adjustViewBounds="true"
         android:visibility="invisible"
-        android:src="@drawable/character_02_0"/>
+        android:src="@drawable/extra_back"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
