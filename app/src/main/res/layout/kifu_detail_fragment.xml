@@ -20,8 +20,24 @@
             android:paddingBottom="@dimen/footer_height">
 
             <TextView
+                android:id="@+id/game_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                tools:text="@string/game_start_time"/>
+
+            <TextView
                 style="@style/Css.KifuDetail.Title"
                 android:layout_marginTop="0dp"
+                android:text="@string/special_rule"/>
+            <TextView
+                android:id="@+id/kifu_detail_special_rule"
+                style="@style/Css.KifuDetail.SubTitle"
+                android:layout_marginTop="0dp"
+                android:text="@string/nothing_special"/>
+
+            <TextView
+                style="@style/Css.KifuDetail.Title"
                 android:text="@string/rule"/>
 
             <TextView

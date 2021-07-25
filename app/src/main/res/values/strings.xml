@@ -82,4 +82,6 @@
     <string name="memo_for_character">%sに関するメモ</string>
     <string name="action_cards">行動カード情報</string>
     <string name="memo_per_day">事件結果等メモ</string>
+    <string name="nothing_special">特になし</string>
+    <string name="game_start_time">%s よりゲーム開始</string>
 </resources>

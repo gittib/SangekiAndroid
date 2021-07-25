@@ -33,6 +33,7 @@ import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
+import work.boardgame.sangeki_rooper.util.format
 import work.boardgame.sangeki_rooper.util.toJson
 
 class KifuDetailFragment : BaseFragment() {
@@ -70,21 +71,7 @@ class KifuDetailFragment : BaseFragment() {
             viewModel = ViewModelProvider(this).get(KifuDetailViewModel::class.java)
             viewModel.gameId = arguments?.getLong(BundleKey.GAME_ID)
                 ?: throw IllegalArgumentException("gameId is null")
-
-            activity.showProgress()
-            viewModel.viewModelScope.launch(Dispatchers.IO) {
-                arguments?.getLong(BundleKey.GAME_ID)?.let { id ->
-                    viewModel.gameRelation = MyApplication.db.gameDao().loadGame(id)
-                    withContext(Dispatchers.Main) {
-                        activity.dismissProgress()
-                        if (viewModel.gameRelation == null) {
-                            Logger.w(TAG, "game is null")
-                            activity.onBackPressed()
-                        }
-                        applyViewData()
-                    }
-                }
-            }
+            loadGameData()
         } catch (e: RuntimeException) {
             Logger.w(TAG, Throwable(e))
             activity.onBackPressed()
@@ -94,13 +81,30 @@ class KifuDetailFragment : BaseFragment() {
     override fun onResume() {
         Logger.methodStart(TAG)
         super.onResume()
-        applyViewData()
+        loadGameData()
     }
 
     override fun onPause() {
         Logger.methodStart(TAG)
         super.onPause()
         rootView?.let { updateDetectiveInfo(it) }
+    }
+
+    private fun loadGameData() {
+        Logger.methodStart(TAG)
+
+        activity.showProgress()
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            viewModel.gameRelation = MyApplication.db.gameDao().loadGame(viewModel.gameId!!)
+            withContext(Dispatchers.Main) {
+                activity.dismissProgress()
+                if (viewModel.gameRelation == null) {
+                    Logger.w(TAG, "game is null")
+                    activity.onBackPressed()
+                }
+                applyViewData()
+            }
+        }
     }
 
     private fun applyViewData() {
@@ -113,6 +117,12 @@ class KifuDetailFragment : BaseFragment() {
         rel.game.detectiveInfo = detectiveInfo
 
         val inflater = LayoutInflater.from(activity)
+
+        rv.game_start_time.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
+
+        if (rel.game.specialRule?.isNotEmpty() == true) {
+            rv.kifu_detail_special_rule.text = rel.game.specialRule
+        }
 
         val layoutParams = ViewGroup.MarginLayoutParams(0, 0).also { lp ->
             val margin = 16
@@ -182,6 +192,15 @@ class KifuDetailFragment : BaseFragment() {
                                 }
                                 .show(fragmentManager!!, null)
                         }
+                    }
+
+                    v.setOnLongClickListener {
+                        AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                            .setTitle(incident.name)
+                            .setMessage(Util.incidentExplain(incident.name ?: ""))
+                            .setPositiveButton(R.string.ok, null)
+                            .show()
+                        true
                     }
                 })
             }
@@ -381,8 +400,8 @@ class KifuDetailFragment : BaseFragment() {
                 v.setOnClickListener {
                     it.role_mark.text = when (it.role_mark.text) {
                         "", null -> "〇"
-                        "〇" -> "×"
-                        "×" -> "？"
+                        "〇" -> "☓"
+                        "☓" -> "？"
                         else -> ""
                     }
                     chara.roleDetectiveList[role] = it.role_mark.text.toString()
