@@ -80,17 +80,12 @@
                 app:flexWrap="wrap" />
 
             <TextView
+                android:id="@+id/character_list_title"
                 style="@style/Css.KifuDetail.Title"
-                android:text="@string/incident"/>
-            <LinearLayout
-                android:id="@+id/incident_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-
-            <TextView
-                style="@style/Css.KifuDetail.Title"
-                android:text="@string/character"/>
+                android:text="@string/character"
+                android:drawablePadding="2dp"
+                app:drawableTint="@color/background_inverse"
+                app:drawableEndCompat="@drawable/ic_baseline_help_24"/>
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -105,6 +100,19 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
                 android:text="@string/add_character"/>
+
+            <TextView
+                android:id="@+id/incident_list_title"
+                style="@style/Css.KifuDetail.Title"
+                android:text="@string/incident"
+                android:drawablePadding="2dp"
+                app:drawableTint="@color/background_inverse"
+                app:drawableEndCompat="@drawable/ic_baseline_help_24" />
+            <LinearLayout
+                android:id="@+id/incident_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
 
             <TextView
                 style="@style/Css.KifuDetail.Title"

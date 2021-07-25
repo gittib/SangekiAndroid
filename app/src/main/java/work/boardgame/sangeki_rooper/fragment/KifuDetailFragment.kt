@@ -173,6 +173,12 @@ class KifuDetailFragment : BaseFragment() {
             }
         }
 
+        rv.incident_list_title.setOnClickListener {
+            AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                .setMessage(R.string.kifu_incident_list_explain_dialog_message)
+                .setPositiveButton(R.string.ok, null)
+                .show()
+        }
         rv.incident_list.let { lv ->
             lv.removeAllViews()
             rel.incidents.forEach { incident ->
@@ -207,6 +213,12 @@ class KifuDetailFragment : BaseFragment() {
             }
         }
 
+        rv.character_list_title.setOnClickListener {
+            AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                .setMessage(R.string.kifu_character_list_explain_dialog_message)
+                .setPositiveButton(R.string.ok, null)
+                .show()
+        }
         rv.character_list.let { v ->
             v.removeAllViews()
 

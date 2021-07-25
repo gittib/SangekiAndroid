@@ -8,7 +8,7 @@ import java.util.*
 interface GameDao {
     /** Selectメソッド ここから **********************************************************************/
     @Transaction
-    @Query("SELECT * FROM Game")
+    @Query("SELECT * FROM Game ORDER BY createdAt DESC")
     fun loadAllGame(): List<GameRelation>
 
     @Transaction
