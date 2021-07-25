@@ -20,6 +20,11 @@ class CardSelectDialogFragment : BaseDialogFragment() {
     private val TAG = CardSelectDialogFragment::class.simpleName
 
     companion object {
+        /**
+         *  キャラクターカード選択ダイアログを出力
+         *  @param title ダイアログタイトル
+         *  @param characters 表示するキャラクターカード名のリスト。神社等のボード名も可。
+         */
         fun newInstance(title:String?, characters: List<String>? = null) = CardSelectDialogFragment().apply {
             arguments = Bundle().apply {
                 putBoolean(BundleKey.IS_ACTION_CARD, false)
@@ -27,6 +32,12 @@ class CardSelectDialogFragment : BaseDialogFragment() {
                 characters?.let { putString(BundleKey.CHARACTER_LIST, Gson().toJson(it)) }
             }
         }
+
+        /**
+         *  行動カード選択ダイアログを出力
+         *  @param title ダイアログタイトル
+         *  @param isWriter trueなら脚本家行動カードのリスト、falseなら主人公行動カードのリスト
+         */
         fun newInstance(title:String?, isWriter:Boolean) = CardSelectDialogFragment().apply {
             arguments = Bundle().apply {
                 putBoolean(BundleKey.IS_ACTION_CARD, true)
@@ -46,8 +57,36 @@ class CardSelectDialogFragment : BaseDialogFragment() {
     private var onSelect: (String) -> Unit = {}
     private val isAction:Boolean by lazy { arguments?.getBoolean(BundleKey.IS_ACTION_CARD) ?: false }
     private val isWriter:Boolean by lazy { arguments?.getBoolean(BundleKey.ACTION_CARD_IS_WRITER) ?: false }
-    private val cardList:List<String> by lazy {
-        if (isAction) {
+    private val cardList:List<String> by lazy { initCardList() }
+
+    fun setOnSelectListener(onSelect: (String) -> Unit): CardSelectDialogFragment {
+        this.onSelect = onSelect
+        return this
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        Logger.methodStart(TAG)
+        return AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase).also { d ->
+            arguments?.getString(BundleKey.DIALOG_TITLE)?.let { d.setTitle(it) }
+            d.setView(initDialogView())
+        }.create()
+    }
+
+    private fun initDialogView(): View {
+        Logger.methodStart(TAG)
+        val inflater = LayoutInflater.from(activity)
+        val rootView = activity.window.decorView.findViewById(android.R.id.content) as ViewGroup
+        return inflater.inflate(R.layout.fragment_chara_select_dialog, rootView, false).also { rv ->
+            rv.character_list.let { v ->
+                v.layoutManager = GridLayoutManager(activity, 3)
+                v.adapter = CharaListAdapter()
+            }
+        }
+    }
+
+    private fun initCardList(): List<String> {
+        Logger.methodStart(TAG)
+        return if (isAction) {
             if (isWriter) listOf(
                 "",
                 "不安+1",
@@ -108,31 +147,6 @@ class CardSelectDialogFragment : BaseDialogFragment() {
                 "転校生",
                 "手先"
             )
-        }
-    }
-
-    fun setOnSelectListener(onSelect: (String) -> Unit): CardSelectDialogFragment {
-        this.onSelect = onSelect
-        return this
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Logger.methodStart(TAG)
-        return AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase).also { d ->
-            arguments?.getString(BundleKey.DIALOG_TITLE)?.let { d.setTitle(it) }
-            d.setView(initDialogView())
-        }.create()
-    }
-
-    private fun initDialogView(): View {
-        Logger.methodStart(TAG)
-        val inflater = LayoutInflater.from(activity)
-        val rootView = activity.window.decorView.findViewById(android.R.id.content) as ViewGroup
-        return inflater.inflate(R.layout.fragment_chara_select_dialog, rootView, false).also { rv ->
-            rv.character_list.let { v ->
-                v.layoutManager = GridLayoutManager(activity, 3)
-                v.adapter = CharaListAdapter()
-            }
         }
     }
 

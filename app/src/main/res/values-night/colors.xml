@@ -7,8 +7,10 @@
     <color name="background_alt_row">@color/dark_blue</color>
     <color name="text_color_notice">@color/red</color>
     <color name="text_color_strong">@color/white</color>
+    <color name="text_color_shadow">@color/dark_gray</color>
     <color name="text_color_inverse">@color/black</color>
     <color name="text_color_recommended">@color/light_red</color>
     <color name="dialog_text_color">@color/black</color>
     <color name="dialog_button_text_color">@color/white</color>
+    <color name="progress_background">@color/transparent_white</color>
 </resources>

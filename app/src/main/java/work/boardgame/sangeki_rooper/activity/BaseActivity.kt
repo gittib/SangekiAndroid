@@ -4,9 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.util.Define
@@ -29,8 +27,8 @@ abstract class BaseActivity:AppCompatActivity() {
     fun showProgress() {
         Logger.methodStart(TAG)
         progressCount++
-        Handler(mainLooper).post {
-            findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.VISIBLE
+        runOnUiThread {
+            findViewById<View>(R.id.progress_bar)?.visibility = View.VISIBLE
         }
     }
     fun dismissProgress() {
@@ -38,8 +36,8 @@ abstract class BaseActivity:AppCompatActivity() {
         progressCount--
         if (progressCount <= 0) {
             progressCount = 0
-            Handler(mainLooper).post {
-                findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.GONE
+            runOnUiThread {
+                findViewById<View>(R.id.progress_bar)?.visibility = View.GONE
             }
         }
     }

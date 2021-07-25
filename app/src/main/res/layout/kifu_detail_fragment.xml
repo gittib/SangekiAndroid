@@ -20,8 +20,33 @@
             android:paddingBottom="@dimen/footer_height">
 
             <TextView
+                android:id="@+id/game_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                tools:text="@string/game_start_time"/>
+
+            <TextView
+                android:id="@+id/set_loop_day"
                 style="@style/Css.KifuDetail.Title"
+                android:shadowColor="@color/text_color_shadow"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="3"
                 android:layout_marginTop="0dp"
+                tools:text="@string/set_loop_day_text"/>
+
+            <TextView
+                style="@style/Css.KifuDetail.Title"
+                android:text="@string/special_rule"/>
+            <TextView
+                android:id="@+id/kifu_detail_special_rule"
+                style="@style/Css.KifuDetail.SubTitle"
+                android:layout_marginTop="0dp"
+                android:text="@string/nothing_special"/>
+
+            <TextView
+                style="@style/Css.KifuDetail.Title"
                 android:text="@string/rule"/>
 
             <TextView
@@ -55,17 +80,12 @@
                 app:flexWrap="wrap" />
 
             <TextView
+                android:id="@+id/character_list_title"
                 style="@style/Css.KifuDetail.Title"
-                android:text="@string/incident"/>
-            <LinearLayout
-                android:id="@+id/incident_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-
-            <TextView
-                style="@style/Css.KifuDetail.Title"
-                android:text="@string/character"/>
+                android:text="@string/character"
+                android:drawablePadding="2dp"
+                app:drawableTint="@color/background_inverse"
+                app:drawableEndCompat="@drawable/ic_baseline_help_24"/>
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -80,6 +100,19 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
                 android:text="@string/add_character"/>
+
+            <TextView
+                android:id="@+id/incident_list_title"
+                style="@style/Css.KifuDetail.Title"
+                android:text="@string/incident"
+                android:drawablePadding="2dp"
+                app:drawableTint="@color/background_inverse"
+                app:drawableEndCompat="@drawable/ic_baseline_help_24" />
+            <LinearLayout
+                android:id="@+id/incident_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
 
             <TextView
                 style="@style/Css.KifuDetail.Title"

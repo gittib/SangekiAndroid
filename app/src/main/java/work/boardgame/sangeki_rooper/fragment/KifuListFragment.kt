@@ -63,12 +63,10 @@ class KifuListFragment : BaseFragment(),
     override fun onForeground() {
         Logger.methodStart(TAG)
         viewModel.viewModelScope.launch(Dispatchers.IO) {
-            MyApplication.db.gameDao().let { dao ->
-                viewModel.games = dao.loadAllGame().toMutableList()
-                viewModel.games.sortByDescending { it.game.createdAt }
-                withContext(Dispatchers.Main) {
-                    rootView?.kifu_list?.adapter?.notifyDataSetChanged()
-                }
+            val dao = MyApplication.db.gameDao()
+            viewModel.games = dao.loadAllGame().toMutableList()
+            withContext(Dispatchers.Main) {
+                rootView?.kifu_list?.adapter?.notifyDataSetChanged()
             }
         }
     }
