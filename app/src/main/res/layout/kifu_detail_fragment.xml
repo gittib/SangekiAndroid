@@ -27,8 +27,17 @@
                 tools:text="@string/game_start_time"/>
 
             <TextView
+                android:id="@+id/set_loop_day"
                 style="@style/Css.KifuDetail.Title"
+                android:shadowColor="@color/text_color_shadow"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="3"
                 android:layout_marginTop="0dp"
+                tools:text="@string/set_loop_day_text"/>
+
+            <TextView
+                style="@style/Css.KifuDetail.Title"
                 android:text="@string/special_rule"/>
             <TextView
                 android:id="@+id/kifu_detail_special_rule"

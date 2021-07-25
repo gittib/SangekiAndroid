@@ -16,6 +16,8 @@
     <color name="basic_text_color">#444444</color>
     <color name="red">#E00</color>
     <color name="light_red">#F66</color>
+    <color name="transparent_white">#80ffffff</color>
+    <color name="transparent_black">#80000000</color>
 
     <!-- 使用するカラー定義。カラーコード指定禁止 -->
     <color name="splash_bg">@color/black</color>
@@ -26,8 +28,10 @@
     <color name="background_alt_row">@color/light_blue</color>
     <color name="text_color_notice">@color/red</color>
     <color name="text_color_strong">@color/black</color>
+    <color name="text_color_shadow">@color/gray</color>
     <color name="text_color_inverse">@color/white</color>
     <color name="text_color_recommended">@color/red</color>
     <color name="dialog_text_color">@color/black</color>
     <color name="dialog_button_text_color">@color/black</color>
+    <color name="progress_background">@color/transparent_black</color>
 </resources>

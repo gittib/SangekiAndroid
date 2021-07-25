@@ -120,6 +120,7 @@ class KifuDetailFragment : BaseFragment() {
 
         rv.game_start_time.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
 
+        rv.set_loop_day.text = String.format(getString(R.string.set_loop_day_text), rel.game.setName, rel.game.loop, rel.game.day)
         if (rel.game.specialRule?.isNotEmpty() == true) {
             rv.kifu_detail_special_rule.text = rel.game.specialRule
         }
@@ -247,7 +248,7 @@ class KifuDetailFragment : BaseFragment() {
 
         rv.add_character.let { v ->
             v.setOnClickListener {
-                CardSelectDialogFragment.newInstance("追加キャラクターを選択")
+                CardSelectDialogFragment.newInstance(getString(R.string.dialog_title_choose_add_character))
                     .setOnSelectListener { charaName ->
                         Logger.d(TAG, "$charaName をえらんだ！！！")
                         addCharacter(charaName)
@@ -266,7 +267,7 @@ class KifuDetailFragment : BaseFragment() {
                     val writerCards =kifus.filter { it.fromWriter }.sortedBy { it.id }
                     val heroCards =kifus.filter { !it.fromWriter }.sortedBy { it.id }
                     lv.addView(inflater.inflate(R.layout.linear_item_kifu_per_day, lv, false).also { v ->
-                        v.loop_day_title.text = String.format("%dループ %d日目", loop, day)
+                        v.loop_day_title.text = String.format(getString(R.string.loop_day_unit_title), loop, day)
                         v.loop_day_note.let { tv ->
                             tv.setText(dayRecord?.note)
                             tv.doAfterTextChanged { dayRecord?.note = tv.text.toString() }
@@ -326,10 +327,10 @@ class KifuDetailFragment : BaseFragment() {
                 it.add("都市")
                 it.add("学校")
             }
-            CardSelectDialogFragment.newInstance("対象を選んで下さい", charas)
+            CardSelectDialogFragment.newInstance(getString(R.string.dialog_title_choose_target), charas)
                 .setOnSelectListener { target ->
                     val d = viewModel.gameRelation!!.days.find { it.loop == loop && it.day == day }
-                    CardSelectDialogFragment.newInstance("行動カードを選んで下さい", isWriter)
+                    CardSelectDialogFragment.newInstance(getString(R.string.dialog_title_choose_action), isWriter)
                         .setOnSelectListener { card ->
                             Logger.d(TAG, "$target へ $card を")
                             view.chara_card.setImageResource(Util.cardDrawable(target))
@@ -380,7 +381,7 @@ class KifuDetailFragment : BaseFragment() {
             }
             it.setOnLongClickListener {
                 AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                    .setMessage(String.format("%s を削除します。よろしいですか？", chara.name))
+                    .setMessage(String.format(getString(R.string.confirm_to_delete_character), chara.name))
                     .setPositiveButton(R.string.ok) { _, _ ->
                         deleteNpc(chara)
                     }
@@ -446,8 +447,6 @@ class KifuDetailFragment : BaseFragment() {
             rel.incidents.filter { it.criminal == chara.name }.forEach {
                 it.criminal = getString(R.string.unknown_chara)
             }
-
-            // TODO 棋譜データの修正
 
             rel.npcs.remove(chara)
             viewModel.viewModelScope.launch(Dispatchers.IO) {

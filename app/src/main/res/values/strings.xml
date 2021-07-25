@@ -84,4 +84,10 @@
     <string name="memo_per_day">事件結果等メモ</string>
     <string name="nothing_special">特になし</string>
     <string name="game_start_time">%s よりゲーム開始</string>
+    <string name="set_loop_day_text">%s %dループ %d日</string>
+    <string name="loop_day_unit_title">%dループ %d日目</string>
+    <string name="confirm_to_delete_character">%s を削除します。よろしいですか？</string>
+    <string name="dialog_title_choose_action">行動カードを選んで下さい</string>
+    <string name="dialog_title_choose_target">対象を選んで下さい</string>
+    <string name="dialog_title_choose_add_character">追加キャラクターを選択</string>
 </resources>
