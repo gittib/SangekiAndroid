@@ -7,9 +7,8 @@ import java.util.*
 @Dao
 interface GameDao {
     /** Selectメソッド ここから **********************************************************************/
-    @Transaction
     @Query("SELECT * FROM Game ORDER BY createdAt DESC")
-    fun loadAllGame(): List<GameRelation>
+    fun loadAllGame(): List<Game>
 
     @Transaction
     @Query("SELECT * FROM Game WHERE id = :id")

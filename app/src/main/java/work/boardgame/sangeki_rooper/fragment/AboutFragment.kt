@@ -2,6 +2,7 @@ package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
@@ -38,6 +39,11 @@ class AboutFragment : BaseFragment() {
                 v.text = HtmlCompat.fromHtml(getString(R.string.copy_light), HtmlCompat.FROM_HTML_MODE_COMPACT)
                 v.movementMethod = LinkMovementMethod.getInstance()
             }
+            rv.app_version_history_label.let { v ->
+                v.paintFlags = v.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                v.setOnClickListener { rv.app_version_history.visibility = View.VISIBLE }
+            }
+            rv.app_version_history.text = resources.getStringArray(R.array.update_history).joinToString("\n\n")
             rv.app_version.text = String.format("アプリバージョン： %s", BuildConfig.VERSION_NAME)
         }
         return rootView

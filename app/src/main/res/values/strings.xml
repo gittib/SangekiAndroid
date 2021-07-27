@@ -92,4 +92,5 @@
     <string name="dialog_title_choose_action">行動カードを選んで下さい</string>
     <string name="dialog_title_choose_target">対象を選んで下さい</string>
     <string name="dialog_title_choose_add_character">追加キャラクターを選択</string>
+    <string name="app_version_history">アプリ更新履歴</string>
 </resources>
