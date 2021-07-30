@@ -11,6 +11,7 @@ import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.TextView
+import androidx.core.view.GravityCompat
 import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
@@ -117,6 +118,25 @@ class KifuDetailFragment : BaseFragment() {
         rel.game.detectiveInfo = detectiveInfo
 
         val inflater = LayoutInflater.from(activity)
+
+        rv.kifu_detail_nav.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.show_kifu_preview -> {
+                    TODO("棋譜プレビューフラグメントをひょうじ")
+                }
+                R.id.delete_kifu -> {
+                    AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                            .setMessage("棋譜を削除します。よろしいですか？")
+                            .setPositiveButton(R.string.ok) { _, _ ->
+                                TODO("棋譜削除して画面閉じる")
+                            }
+                            .setNegativeButton(R.string.cancel, null)
+                            .show()
+                }
+            }
+            true
+        }
+        rv.show_kifu_detail_menu.setOnClickListener { rv.kifu_detail_layout.openDrawer(GravityCompat.END) }
 
         rv.game_start_time.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
 

@@ -93,4 +93,6 @@
     <string name="dialog_title_choose_target">対象を選んで下さい</string>
     <string name="dialog_title_choose_add_character">追加キャラクターを選択</string>
     <string name="app_version_history">アプリ更新履歴</string>
+    <string name="kifu_preview">棋譜プレビュー</string>
+    <string name="delete_kifu">棋譜削除</string>
 </resources>
