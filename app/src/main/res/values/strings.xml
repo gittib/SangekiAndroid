@@ -75,6 +75,7 @@
     <string name="game_start">ゲーム開始</string>
     <string name="kifu_delete_confirm_dialog_title">＜注意＞</string>
     <string name="kifu_delete_confirm_dialog_message">こちらの棋譜データを削除します。\nよろしいですか？\n\n開始日時： %s\n%s\n%dループ%d日</string>
+    <string name="kifu_delete_this_confirm_dialog_message">こちらの棋譜データを削除します。\nよろしいですか？</string>
     <string name="kifu_delete_complete_dialog_message">棋譜データを削除しました。</string>
     <string name="kifu_character_list_explain_dialog_message">下の「キャラクター追加」ボタンから、今回のゲームに登場するキャラクターを選択できます。\n\n間違ったキャラクターを追加した場合、キャラクター名をロングタップすることで、キャラクターを削除することもできます。</string>
     <string name="kifu_incident_list_explain_dialog_message">事件名をロングタップすると、事件効果を確認できます。\n\nとなりの？？？？をタップすると、犯人を選択することができます。</string>
@@ -93,6 +94,7 @@
     <string name="dialog_title_choose_target">対象を選んで下さい</string>
     <string name="dialog_title_choose_add_character">追加キャラクターを選択</string>
     <string name="app_version_history">アプリ更新履歴</string>
+    <string name="show_summary">サマリー確認</string>
     <string name="kifu_preview">棋譜プレビュー</string>
     <string name="delete_kifu">棋譜削除</string>
 </resources>

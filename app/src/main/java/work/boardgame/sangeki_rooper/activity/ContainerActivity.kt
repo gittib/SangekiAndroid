@@ -23,6 +23,7 @@ class ContainerActivity : BaseActivity() {
 
     object ExtraKey {
         const val FRAGMENT_NAME = "FRAGMENT_NAME"
+        const val FRAGMENT_DATA = "FRAGMENT_DATA"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +33,13 @@ class ContainerActivity : BaseActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().let { ft ->
-                val f = getFragment(intent.getStringExtra(ExtraKey.FRAGMENT_NAME))
+                val fragmentName = intent.getStringExtra(ExtraKey.FRAGMENT_NAME)
+                val fragmentData = when (fragmentName) {
+                    SummaryDetailFragment::class.qualifiedName ->
+                        intent.getIntExtra(ExtraKey.FRAGMENT_DATA, -1)
+                    else -> null
+                }
+                val f = getFragment(fragmentName, fragmentData)
                 ft.add(R.id.container, f)
                 ft.commit()
             }
@@ -67,7 +74,7 @@ class ContainerActivity : BaseActivity() {
                 AboutFragment::class.qualifiedName -> AboutFragment.newInstance()
                 KifuListFragment::class.qualifiedName -> KifuListFragment.newInstance()
                 KifuStandbyFragment::class.qualifiedName -> KifuStandbyFragment.newInstance()
-                SummaryDetailFragment::class.qualifiedName -> SummaryDetailFragment.newInstance()
+                SummaryDetailFragment::class.qualifiedName -> SummaryDetailFragment.newInstance(data as Int?)
                 KifuDetailFragment::class.qualifiedName -> KifuDetailFragment.newInstance(data as Long)
                 else -> throw IllegalArgumentException("invalid fragment name: $fragmentName")
             }

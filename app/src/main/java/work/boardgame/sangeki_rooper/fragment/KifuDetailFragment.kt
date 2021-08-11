@@ -2,6 +2,7 @@ package work.boardgame.sangeki_rooper.fragment
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.activity.ContainerActivity
 import work.boardgame.sangeki_rooper.database.Npc
 import work.boardgame.sangeki_rooper.database.dao.GameDao
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
@@ -121,14 +123,36 @@ class KifuDetailFragment : BaseFragment() {
 
         rv.kifu_detail_nav.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.show_summary -> {
+                    startActivity(Intent(activity, ContainerActivity::class.java).also {
+                        it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment::class.qualifiedName)
+                        val abbr = Util.tragedySetNameAbbr(activity, viewModel.gameRelation?.game?.setName)
+                        Logger.d(TAG, "abbr = $abbr")
+                        val resId:Int? = when (abbr) {
+                            "FS" -> R.id.summary_nav_item_fs
+                            "BTX" -> R.id.summary_nav_item_btx
+                            "MZ" -> R.id.summary_nav_item_mz
+                            "MCX" -> R.id.summary_nav_item_mcx
+                            "HSA" -> R.id.summary_nav_item_hsa
+                            "WM" -> R.id.summary_nav_item_wm
+                            else -> null
+                        }
+                        it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_DATA, resId)
+                    })
+                    rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
+                }
                 R.id.show_kifu_preview -> {
                     TODO("棋譜プレビューフラグメントをひょうじ")
                 }
                 R.id.delete_kifu -> {
                     AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                            .setMessage("棋譜を削除します。よろしいですか？")
+                            .setTitle(R.string.kifu_delete_confirm_dialog_title)
+                            .setMessage(R.string.kifu_delete_this_confirm_dialog_message)
                             .setPositiveButton(R.string.ok) { _, _ ->
-                                TODO("棋譜削除して画面閉じる")
+                                viewModel.viewModelScope.launch(Dispatchers.IO) {
+                                    viewModel.gameRelation?.game?.let { MyApplication.db.gameDao().deleteGame(it) }
+                                    withContext(Dispatchers.Main) { activity.onBackPressed() }
+                                }
                             }
                             .setNegativeButton(R.string.cancel, null)
                             .show()
@@ -506,7 +530,7 @@ class KifuDetailFragment : BaseFragment() {
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             viewModel.gameRelation?.let {
                 MyApplication.db.gameDao().saveGame(it)
-                Logger.d(TAG, it.toJson())
+                Logger.d(TAG, "saved data = " + it.toJson(false))
             }
         }
     }
