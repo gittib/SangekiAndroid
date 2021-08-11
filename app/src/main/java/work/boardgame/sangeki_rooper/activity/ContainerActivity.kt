@@ -35,8 +35,7 @@ class ContainerActivity : BaseActivity() {
             supportFragmentManager.beginTransaction().let { ft ->
                 val fragmentName = intent.getStringExtra(ExtraKey.FRAGMENT_NAME)
                 val fragmentData = when (fragmentName) {
-                    SummaryDetailFragment::class.qualifiedName ->
-                        intent.getIntExtra(ExtraKey.FRAGMENT_DATA, -1)
+                    SummaryDetailFragment::class.qualifiedName -> intent.getStringExtra(ExtraKey.FRAGMENT_DATA)
                     else -> null
                 }
                 val f = getFragment(fragmentName, fragmentData)
@@ -74,7 +73,7 @@ class ContainerActivity : BaseActivity() {
                 AboutFragment::class.qualifiedName -> AboutFragment.newInstance()
                 KifuListFragment::class.qualifiedName -> KifuListFragment.newInstance()
                 KifuStandbyFragment::class.qualifiedName -> KifuStandbyFragment.newInstance()
-                SummaryDetailFragment::class.qualifiedName -> SummaryDetailFragment.newInstance(data as Int?)
+                SummaryDetailFragment::class.qualifiedName -> SummaryDetailFragment.newInstance(data as String?)
                 KifuDetailFragment::class.qualifiedName -> KifuDetailFragment.newInstance(data as Long)
                 else -> throw IllegalArgumentException("invalid fragment name: $fragmentName")
             }

@@ -128,16 +128,7 @@ class KifuDetailFragment : BaseFragment() {
                         it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment::class.qualifiedName)
                         val abbr = Util.tragedySetNameAbbr(activity, viewModel.gameRelation?.game?.setName)
                         Logger.d(TAG, "abbr = $abbr")
-                        val resId:Int? = when (abbr) {
-                            "FS" -> R.id.summary_nav_item_fs
-                            "BTX" -> R.id.summary_nav_item_btx
-                            "MZ" -> R.id.summary_nav_item_mz
-                            "MCX" -> R.id.summary_nav_item_mcx
-                            "HSA" -> R.id.summary_nav_item_hsa
-                            "WM" -> R.id.summary_nav_item_wm
-                            else -> null
-                        }
-                        it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_DATA, resId)
+                        it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_DATA, abbr)
                     })
                     rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
                 }

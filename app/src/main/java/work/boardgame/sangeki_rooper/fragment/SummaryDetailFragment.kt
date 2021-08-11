@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.IdRes
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.summary_detail_fragment.view.*
@@ -17,16 +16,16 @@ class SummaryDetailFragment : BaseFragment() {
     private val TAG = SummaryDetailFragment::class.simpleName
 
     companion object {
-        fun newInstance(@IdRes defMenuId: Int? = null) = SummaryDetailFragment().apply {
-            Logger.d(TAG, "defMenuId = $defMenuId")
+        fun newInstance(defSetAbbr: String? = null) = SummaryDetailFragment().apply {
+            Logger.d(TAG, "defSetAbbr = $defSetAbbr")
             arguments = Bundle().apply {
-                putInt(BundleKey.INITIAL_SET_ID, defMenuId ?: -1)
+                putString(BundleKey.INITIAL_SET_ABBR, defSetAbbr)
             }
         }
     }
 
     private object BundleKey {
-        const val INITIAL_SET_ID = "INITIAL_SET_ID"
+        const val INITIAL_SET_ABBR = "INITIAL_SET_ABBR"
     }
 
     private lateinit var viewModel: SummaryDetailViewModel
@@ -86,13 +85,13 @@ class SummaryDetailFragment : BaseFragment() {
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(SummaryDetailViewModel::class.java)
 
-        viewModel.pdfAssetPath = when (arguments?.getInt(BundleKey.INITIAL_SET_ID)) {
-            R.id.summary_nav_item_fs -> "summary/fs.pdf"
-            R.id.summary_nav_item_btx -> "summary/btx.pdf"
-            R.id.summary_nav_item_mz -> "summary/mz.pdf"
-            R.id.summary_nav_item_mcx -> "summary/mcx.pdf"
-            R.id.summary_nav_item_hsa -> "summary/hsa.pdf"
-            R.id.summary_nav_item_wm -> "summary/wm.pdf"
+        viewModel.pdfAssetPath = when (arguments?.getString(BundleKey.INITIAL_SET_ABBR)) {
+            "FS" -> "summary/fs.pdf"
+            "BTX" -> "summary/btx.pdf"
+            "MZ" -> "summary/mz.pdf"
+            "MCX" -> "summary/mcx.pdf"
+            "HSA" -> "summary/hsa.pdf"
+            "WM" -> "summary/wm.pdf"
             else -> null
         }
     }
