@@ -119,9 +119,6 @@ object Util {
         else -> throw IllegalArgumentException("invalid tragedy set name: $tragedySetName")
     }
 
-    fun incidentList(context: Context, @StringRes setName: Int)
-    = incidentList(context, context.getString(setName))
-
     fun incidentList(context: Context, tragedySetName: String?):MutableList<String> {
         val r = context.resources
         return when (tragedySetName) {

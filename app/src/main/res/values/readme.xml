@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="what_is_this">このアプリは、BakaFire Party のボードゲーム「惨劇RoopeR」のファンアプリです。また、惨劇コモンズの画像素材およびルールブックの文章をアプリ内で使用しています。</string>
+    <string name="copy_light"><![CDATA[
+        惨劇コモンズ by <a href="http://bakafire.main.jp/rooper/sr_dl_04_sozai.htm">
+        BakaFire, NEKOG(紺ノ玲)</a> is licensed under a <a href="http://creativecommons.org/licenses/by-sa/2.1/jp/">
+        Creative Commons 表示 - 継承 2.1 日本 License</a><br>
+        <br>
+        <br>
+        このアプリについての問い合わせ等は、アプリ製作者の<a href="https://twitter.com/gittib_gittib">ペンスキー</a>までご連絡下さい。
+        BakaFire様、NEKOG様へこのアプリについての問い合わせ等をしないようお願いいたします。
+    ]]></string>
     <string-array name="update_history">
         <item>1.0\n初回リリース</item>
         <item>1.0.1\n

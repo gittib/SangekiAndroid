@@ -24,6 +24,8 @@
     <string name="loop">ループ</string>
     <string name="day">日</string>
     <string name="day_count_suffix">日目</string>
+    <string name="loop_label">%dループ目</string>
+    <string name="day_label">%d日目</string>
     <string name="public_sheet">公開シート</string>
     <string name="private_sheet">非公開シート</string>
     <string name="writer_introduction">作者：%s</string>
@@ -53,16 +55,6 @@
     <string name="top_page_note">惨劇RoopeRライフをちょっと便利にするアプリです。</string>
 
     <string name="credit">クレジット</string>
-    <string name="what_is_this">このアプリは、BakaFire Party のボードゲーム「惨劇RoopeR」のファンアプリです。また、惨劇コモンズの画像素材およびルールブックの文章をアプリ内で使用しています。</string>
-    <string name="copy_light"><![CDATA[
-        惨劇コモンズ by <a href="http://bakafire.main.jp/rooper/sr_dl_04_sozai.htm">
-        BakaFire, NEKOG(紺ノ玲)</a> is licensed under a <a href="http://creativecommons.org/licenses/by-sa/2.1/jp/">
-        Creative Commons 表示 - 継承 2.1 日本 License</a><br>
-        <br>
-        <br>
-        このアプリについての問い合わせ等は、アプリ製作者の<a href="https://twitter.com/gittib_gittib">ペンスキー</a>までご連絡下さい。
-        BakaFire様、NEKOG様へこのアプリについての問い合わせ等をしないようお願いいたします。
-    ]]></string>
     <string name="kifu_log">棋譜記録機能</string>
     <string name="kifu_log_note">いつ、どこに、何のカードが置かれたかは、推理を進める上で時に非常に重要な情報となります。\nアプリで記録したゲームの履歴を、後から見返すこともできます。</string>
     <string name="summary_sheets">惨劇セット サマリー</string>
@@ -97,4 +89,5 @@
     <string name="show_summary">サマリー確認</string>
     <string name="kifu_preview">棋譜プレビュー</string>
     <string name="delete_kifu">棋譜削除</string>
+    <string name="choose_criminal">犯人を選んで下さい</string>
 </resources>

@@ -34,7 +34,7 @@ class ContainerActivity : BaseActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().let { ft ->
                 val fragmentName = intent.getStringExtra(ExtraKey.FRAGMENT_NAME)
-                val fragmentData = when (fragmentName) {
+                val fragmentData:Any? = when (fragmentName) {
                     SummaryDetailFragment::class.qualifiedName -> intent.getStringExtra(ExtraKey.FRAGMENT_DATA)
                     else -> null
                 }
