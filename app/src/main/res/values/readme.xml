@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="what_is_this">このアプリは、BakaFire Party のボードゲーム「惨劇RoopeR」のファンアプリです。また、惨劇コモンズの画像素材およびルールブックの文章をアプリ内で使用しています。</string>
+    <string name="copy_light"><![CDATA[
+        惨劇コモンズ by <a href="http://bakafire.main.jp/rooper/sr_dl_04_sozai.htm">
+        BakaFire, NEKOG(紺ノ玲)</a> is licensed under a <a href="http://creativecommons.org/licenses/by-sa/2.1/jp/">
+        Creative Commons 表示 - 継承 2.1 日本 License</a><br>
+        <br>
+        <br>
+        このアプリについての問い合わせ等は、アプリ製作者の<a href="https://twitter.com/gittib_gittib">ペンスキー</a>までご連絡下さい。
+        BakaFire様、NEKOG様へこのアプリについての問い合わせ等をしないようお願いいたします。
+    ]]></string>
+    <string-array name="update_history">
+        <item>1.0\n初回リリース</item>
+        <item>1.0.1\n
+            棋譜入力データが正しく保存されない場合があるバグを修正しました。\n
+            行動カード選択肢にデフォルト値を追加し、選択をキャンセルできるようにしました。\n
+            棋譜入力画面のキャラクター一覧にキャラの立ち絵を表示し、どのキャラの行か分かりやすくしました。
+        </item>
+        <item>1.0.2\n
+            棋譜入力画面に、惨劇セット名や特殊ルールが表示されていなかった点を修正しました。\n
+            一部の気づきにくい操作について、説明文を付与しました。
+        </item>
+        <item>1.0.3\n
+            更新履歴を記載しました。\n
+            棋譜画面からサマリーを開けるようになりました。\n
+            棋譜画面の動作を若干改善しました。
+        </item>
+    </string-array>
+</resources>

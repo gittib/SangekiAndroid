@@ -8,7 +8,6 @@ import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.activity.ContainerActivity
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
@@ -19,9 +18,8 @@ import java.util.*
 abstract class BaseFragment: Fragment() {
     private val TAG = BaseFragment::class.simpleName
 
-    protected val prefs: SharedPreferences get() = activity.getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+    protected val prefs: SharedPreferences get() = activity.prefs
     protected lateinit var activity:ContainerActivity
-    protected val application get() = (activity.application as? MyApplication)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

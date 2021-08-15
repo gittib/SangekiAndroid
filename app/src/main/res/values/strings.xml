@@ -24,6 +24,8 @@
     <string name="loop">ループ</string>
     <string name="day">日</string>
     <string name="day_count_suffix">日目</string>
+    <string name="loop_label">%dループ目</string>
+    <string name="day_label">%d日目</string>
     <string name="public_sheet">公開シート</string>
     <string name="private_sheet">非公開シート</string>
     <string name="writer_introduction">作者：%s</string>
@@ -53,16 +55,6 @@
     <string name="top_page_note">惨劇RoopeRライフをちょっと便利にするアプリです。</string>
 
     <string name="credit">クレジット</string>
-    <string name="what_is_this">このアプリは、BakaFire Party のボードゲーム「惨劇RoopeR」のファンアプリです。また、惨劇コモンズの画像素材およびルールブックの文章をアプリ内で使用しています。</string>
-    <string name="copy_light"><![CDATA[
-        惨劇コモンズ by <a href="http://bakafire.main.jp/rooper/sr_dl_04_sozai.htm">
-        BakaFire, NEKOG(紺ノ玲)</a> is licensed under a <a href="http://creativecommons.org/licenses/by-sa/2.1/jp/">
-        Creative Commons 表示 - 継承 2.1 日本 License</a><br>
-        <br>
-        <br>
-        このアプリについての問い合わせ等は、アプリ製作者の<a href="https://twitter.com/gittib_gittib">ペンスキー</a>までご連絡下さい。
-        BakaFire様、NEKOG様へこのアプリについての問い合わせ等をしないようお願いいたします。
-    ]]></string>
     <string name="kifu_log">棋譜記録機能</string>
     <string name="kifu_log_note">いつ、どこに、何のカードが置かれたかは、推理を進める上で時に非常に重要な情報となります。\nアプリで記録したゲームの履歴を、後から見返すこともできます。</string>
     <string name="summary_sheets">惨劇セット サマリー</string>
@@ -75,6 +67,7 @@
     <string name="game_start">ゲーム開始</string>
     <string name="kifu_delete_confirm_dialog_title">＜注意＞</string>
     <string name="kifu_delete_confirm_dialog_message">こちらの棋譜データを削除します。\nよろしいですか？\n\n開始日時： %s\n%s\n%dループ%d日</string>
+    <string name="kifu_delete_this_confirm_dialog_message">こちらの棋譜データを削除します。\nよろしいですか？</string>
     <string name="kifu_delete_complete_dialog_message">棋譜データを削除しました。</string>
     <string name="kifu_character_list_explain_dialog_message">下の「キャラクター追加」ボタンから、今回のゲームに登場するキャラクターを選択できます。\n\n間違ったキャラクターを追加した場合、キャラクター名をロングタップすることで、キャラクターを削除することもできます。</string>
     <string name="kifu_incident_list_explain_dialog_message">事件名をロングタップすると、事件効果を確認できます。\n\nとなりの？？？？をタップすると、犯人を選択することができます。</string>
@@ -92,4 +85,9 @@
     <string name="dialog_title_choose_action">行動カードを選んで下さい</string>
     <string name="dialog_title_choose_target">対象を選んで下さい</string>
     <string name="dialog_title_choose_add_character">追加キャラクターを選択</string>
+    <string name="app_version_history">アプリ更新履歴</string>
+    <string name="show_summary">サマリー確認</string>
+    <string name="kifu_preview">棋譜プレビュー</string>
+    <string name="delete_kifu">棋譜削除</string>
+    <string name="choose_criminal">犯人を選んで下さい</string>
 </resources>

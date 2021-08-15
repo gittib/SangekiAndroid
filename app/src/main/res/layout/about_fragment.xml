@@ -51,6 +51,20 @@
                 tools:text="@string/copy_light" />
 
             <TextView
+                android:id="@+id/app_version_history_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:textColor="@color/link"
+                android:text="@string/app_version_history" />
+            <TextView
+                android:id="@+id/app_version_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:visibility="gone" />
+
+            <TextView
                 android:id="@+id/app_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

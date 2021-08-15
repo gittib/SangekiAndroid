@@ -88,8 +88,7 @@ class KifuListFragment : BaseFragment(),
         }
         inner class KifuViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             fun onBind(position: Int) {
-                val item = viewModel.games[position-1]
-                val game = item.game
+                val game = viewModel.games[position-1]
                 itemView.let { rv ->
                     rv.kifu_summary.text = String.format("%s\n%sループ %d日", game.setName, game.loop, game.day)
                     rv.create_date.text = game.createdAt.format()
@@ -108,9 +107,9 @@ class KifuListFragment : BaseFragment(),
                                 game.createdAt.format(), game.setName, game.loop, game.day))
                             .setPositiveButton(R.string.ok) { _, _ ->
                                 viewModel.viewModelScope.launch(Dispatchers.IO) {
-                                    MyApplication.db.gameDao().deleteGame(item.game)
+                                    MyApplication.db.gameDao().deleteGame(game)
                                     withContext(Dispatchers.Main) {
-                                        val index = viewModel.games.indexOfFirst { it.game.id == game.id }
+                                        val index = viewModel.games.indexOfFirst { it.id == game.id }
                                         viewModel.games.removeAt(index)
                                         rootView?.kifu_list?.adapter?.notifyItemRemoved(index+1)
 

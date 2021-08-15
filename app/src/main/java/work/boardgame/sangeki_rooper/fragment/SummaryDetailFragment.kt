@@ -16,7 +16,16 @@ class SummaryDetailFragment : BaseFragment() {
     private val TAG = SummaryDetailFragment::class.simpleName
 
     companion object {
-        fun newInstance() = SummaryDetailFragment()
+        fun newInstance(defSetAbbr: String? = null) = SummaryDetailFragment().apply {
+            Logger.d(TAG, "defSetAbbr = $defSetAbbr")
+            arguments = Bundle().apply {
+                putString(BundleKey.INITIAL_SET_ABBR, defSetAbbr)
+            }
+        }
+    }
+
+    private object BundleKey {
+        const val INITIAL_SET_ABBR = "INITIAL_SET_ABBR"
     }
 
     private lateinit var viewModel: SummaryDetailViewModel
@@ -75,5 +84,15 @@ class SummaryDetailFragment : BaseFragment() {
         Logger.methodStart(TAG)
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(SummaryDetailViewModel::class.java)
+
+        viewModel.pdfAssetPath = when (arguments?.getString(BundleKey.INITIAL_SET_ABBR)) {
+            "FS" -> "summary/fs.pdf"
+            "BTX" -> "summary/btx.pdf"
+            "MZ" -> "summary/mz.pdf"
+            "MCX" -> "summary/mcx.pdf"
+            "HSA" -> "summary/hsa.pdf"
+            "WM" -> "summary/wm.pdf"
+            else -> null
+        }
     }
 }

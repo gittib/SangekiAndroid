@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/show_summary"
+        android:title="@string/show_summary" />
+    <item
+        android:id="@+id/show_kifu_preview"
+        android:title="@string/kifu_preview" />
+    <item
+        android:id="@+id/delete_kifu"
+        android:title="@string/delete_kifu" />
+</menu>

@@ -17,6 +17,7 @@ abstract class BaseActivity:AppCompatActivity() {
         getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE) }
 
     private var progressCount = 0
+    private var progressBar:View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Logger.methodStart(TAG)
@@ -24,21 +25,24 @@ abstract class BaseActivity:AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
+    override fun onStart() {
+        Logger.methodStart(TAG)
+        super.onStart()
+        progressBar = findViewById(R.id.progress_bar)
+        progressBar?.setOnClickListener { Logger.v(TAG, "クリックイベントバブリング禁止") }
+    }
+
     fun showProgress() {
         Logger.methodStart(TAG)
         progressCount++
-        runOnUiThread {
-            findViewById<View>(R.id.progress_bar)?.visibility = View.VISIBLE
-        }
+        runOnUiThread { progressBar?.visibility = View.VISIBLE }
     }
     fun dismissProgress() {
         Logger.methodStart(TAG)
         progressCount--
         if (progressCount <= 0) {
             progressCount = 0
-            runOnUiThread {
-                findViewById<View>(R.id.progress_bar)?.visibility = View.GONE
-            }
+            runOnUiThread { progressBar?.visibility = View.GONE }
         }
     }
 
