@@ -16,6 +16,7 @@ import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.adapter_item_incident_detective.view.*
 import kotlinx.android.synthetic.main.grid_item_chara_detect_note.view.*
 import kotlinx.android.synthetic.main.grid_item_chara_role_detect_mark.view.*
@@ -35,6 +36,7 @@ import work.boardgame.sangeki_rooper.database.dao.GameDao
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
 import work.boardgame.sangeki_rooper.util.*
+import java.lang.IllegalStateException
 
 class KifuDetailFragment : BaseFragment() {
     companion object {
@@ -54,6 +56,7 @@ class KifuDetailFragment : BaseFragment() {
     private var rootView: View? = null
     private lateinit var viewModel: KifuDetailViewModel
     private val ruleMaster by lazy { DetectiveInfoModel.getRuleMaster(activity) }
+    private val inflater:LayoutInflater by lazy { LayoutInflater.from(activity) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -147,6 +150,12 @@ class KifuDetailFragment : BaseFragment() {
         rootView?.let { updateDetectiveInfo(it) }
     }
 
+    override fun onDetach() {
+        Logger.methodStart(TAG)
+        repeat(100) { activity.dismissProgress() }
+        super.onDetach()
+    }
+
     private fun loadGameData() {
         Logger.methodStart(TAG)
 
@@ -173,7 +182,6 @@ class KifuDetailFragment : BaseFragment() {
         val detectiveInfo = rel.game.detectiveInfo ?: DetectiveInfoModel(activity, rel.game.setName)
         rel.game.detectiveInfo = detectiveInfo
 
-        val inflater = LayoutInflater.from(activity)
         val handler = Handler(Looper.getMainLooper())
 
         rv.game_start_time.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
@@ -234,10 +242,13 @@ class KifuDetailFragment : BaseFragment() {
         activity.showProgress()
         handler.postDelayed({
             activity.dismissProgress()
-            rv.incident_list.let { lv ->
-                lv.removeAllViews()
+
+            try {
+                val lv = rv.incident_list
                 rel.incidents.forEach { incident ->
-                    lv.addView(inflater.inflate(R.layout.adapter_item_incident_detective, lv, false).also { v ->
+                    val incidentTag = "incident-criminal-" + incident.id
+                    lv.findViewWithTag<ViewGroup>(incidentTag) ?: inflater.inflate(R.layout.adapter_item_incident_detective, lv, false).also { v ->
+                        v.tag = incidentTag
                         v.incident_day.text = String.format(getString(R.string.day_label), incident.day)
                         v.incident_name.text = incident.name
 
@@ -264,84 +275,92 @@ class KifuDetailFragment : BaseFragment() {
                                 .show()
                             true
                         }
-                    })
+
+                        lv.addView(v)
+                    }
                 }
+            } catch (e: IllegalStateException) {
+                if (getActivity() != null) throw e
             }
         }, Define.POLLING_INTERVAL)
 
         activity.showProgress()
         handler.postDelayed({
             activity.dismissProgress()
-            updateCharacterList(inflater)
+            updateCharacterList()
         }, Define.POLLING_INTERVAL * 2)
 
-        activity.showProgress()
-        handler.postDelayed({
-            activity.dismissProgress()
-            updateKifuList(inflater)
-        }, Define.POLLING_INTERVAL * 3)
+        updateKifuList(inflater)
     }
 
-    private fun updateCharacterList(inflater: LayoutInflater?) {
+    private fun updateCharacterList() {
         val rel = viewModel.gameRelation ?: return
-        val v = rootView?.character_list ?: return
+        val lv = rootView?.character_list ?: return
         Logger.methodStart(TAG)
 
-        val li = inflater ?: LayoutInflater.from(activity)
-        val abbr = Util.tragedySetNameAbbr(activity, rel.game.setName)
-        val master = ruleMaster.first { it.setName == abbr }
+        try {
+            val abbr = Util.tragedySetNameAbbr(activity, rel.game.setName)
+            val master = ruleMaster.first { it.setName == abbr }
 
-        v.removeAllViews()
+            lv.removeAllViews()
 
-        // 項目名の行
-        master.allRoles().distinct().let { roles ->
-            viewModel.rolesOfRule = roles
-            @Suppress("DEPRECATION") val longestRole = roles.maxBy { it.length }?.also {
-                Logger.d(TAG, "longest role = $it")
-            }?.replace("ー", "|")?.toCharArray()?.joinToString("\n")
+            // 項目名の行
+            master.allRoles().distinct().let { roles ->
+                viewModel.rolesOfRule = roles
 
-            roles.forEachIndexed { index, role ->
-                v.addView(li.inflate(R.layout.grid_item_role_title, v, false).also {
-                    it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(index+1)).also { lp ->
-                        lp.width = GridLayout.LayoutParams.WRAP_CONTENT
+                val longestRole by lazy {
+                    @Suppress("DEPRECATION") roles.maxBy { it.length }?.also {
+                        Logger.d(TAG, "longest role = $it")
+                    }?.replace("ー", "|")?.toCharArray()?.joinToString("\n")
+                }
+
+                roles.forEachIndexed { index, role ->
+                    val roleTitleTag = "role-title-$index"
+                    lv.findViewWithTag<ViewGroup>(roleTitleTag) ?: inflater.inflate(R.layout.grid_item_role_title, lv, false).also {
+                        it.tag = roleTitleTag
+                        it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(index+1)).also { lp ->
+                            lp.width = GridLayout.LayoutParams.WRAP_CONTENT
+                            lp.height = GridLayout.LayoutParams.WRAP_CONTENT
+                        }
+                        it.background_role_name.text = longestRole
+                        it.role_name.text = role.replace("ー", "|").toCharArray().joinToString("\n")
+                        lv.addView(it)
+                    }
+                }
+                val noteTitleTag = "note-title-tag"
+                lv.findViewWithTag<ViewGroup>(noteTitleTag) ?: inflater.inflate(R.layout.grid_item_role_title, lv, false).also {
+                    it.tag = noteTitleTag
+                    it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(roles.size+1)).also { lp ->
+                        lp.width = resources.getDimensionPixelSize(R.dimen.role_list_chara_note_width)
                         lp.height = GridLayout.LayoutParams.WRAP_CONTENT
                     }
                     it.background_role_name.text = longestRole
-                    it.role_name.text = role.replace("ー", "|").toCharArray().joinToString("\n")
-                })
-            }
-            v.addView(li.inflate(R.layout.grid_item_role_title, v, false).also {
-                it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(roles.size+1)).also { lp ->
-                    lp.width = resources.getDimensionPixelSize(R.dimen.role_list_chara_note_width)
-                    lp.height = GridLayout.LayoutParams.WRAP_CONTENT
-                }
-                it.background_role_name.text = longestRole
-                it.role_name.let { tv ->
-                    tv.layoutParams = tv.layoutParams.also { lp ->
-                        (lp as FrameLayout.LayoutParams).gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
+                    it.role_name.let { tv ->
+                        tv.layoutParams = tv.layoutParams.also { lp ->
+                            (lp as FrameLayout.LayoutParams).gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
+                        }
+                        tv.text = getString(R.string.note)
+                        tv.textAlignment = TextView.TEXT_ALIGNMENT_TEXT_START
                     }
-                    tv.text = getString(R.string.note)
-                    tv.textAlignment = TextView.TEXT_ALIGNMENT_TEXT_START
+                    lv.addView(it)
                 }
-            })
-        }
+            }
 
-        // 各キャラクターの行
-        rel.npcs.forEachIndexed { index, npc -> inflateCharacterRow(npc, index+1) }
+            // 各キャラクターの行
+            rel.npcs.forEachIndexed { index, npc -> inflateCharacterRow(npc, index+1) }
+        } catch (e: IllegalStateException) {
+            if (getActivity() != null) throw e
+        }
     }
     private fun inflateCharacterRow(chara: Npc, row: Int) {
         Logger.methodStart(TAG)
         val lv = rootView?.character_list ?: return
 
-        lv.children.find {
-            val lp = it.layoutParams as GridLayout.LayoutParams
-            lp.rowSpec == GridLayout.spec(row)
-        }?.let {
-            Logger.d(TAG, "もうあるので重複して追加しない")
-            return
-        }
+        val characterRoleTag = getCharacterRowTag(chara.name)
+        lv.findViewWithTag<View>(characterRoleTag)?.let { return }
 
         lv.addView(TextView(activity).also {
+            it.tag = characterRoleTag
             it.text = chara.name
             it.setBackgroundResource(R.drawable.bg_stroke_black)
             it.gravity = Gravity.CENTER
@@ -360,12 +379,13 @@ class KifuDetailFragment : BaseFragment() {
             }
         })
         viewModel.rolesOfRule.forEachIndexed { index, role ->
-            lv.addView(layoutInflater.inflate(R.layout.grid_item_chara_role_detect_mark, lv, false).also { v ->
+            lv.addView(inflater.inflate(R.layout.grid_item_chara_role_detect_mark, lv, false).also { v ->
+                v.tag = characterRoleTag
                 v.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+1)).also { lp ->
                     lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                     lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                 }
-                v.background_chara_image.setImageResource(Util.standDrawable(chara.name))
+                Picasso.with(activity).load(Util.standDrawable(chara.name)).into(v.background_chara_image)
                 v.role_mark.text = chara.roleDetectiveList[role]
                 v.setOnClickListener {
                     it.role_mark.text = when (it.role_mark.text) {
@@ -378,7 +398,8 @@ class KifuDetailFragment : BaseFragment() {
                 }
             })
         }
-        lv.addView(LayoutInflater.from(activity).inflate(R.layout.grid_item_chara_detect_note, lv, false).also {
+        lv.addView(inflater.inflate(R.layout.grid_item_chara_detect_note, lv, false).also {
+            it.tag = characterRoleTag
             it.input_edit.let { et ->
                 et.hint = String.format(getString(R.string.memo_for_character), chara.name)
                 et.setText(chara.note)
@@ -386,62 +407,92 @@ class KifuDetailFragment : BaseFragment() {
             }
         })
     }
+    private fun getCharacterRowTag(charaName: String) = "character-role-$charaName"
 
     private fun updateKifuList(inflater: LayoutInflater) {
         val rel = viewModel.gameRelation ?: return
         val lv = rootView?.kifu_list ?: return
         Logger.methodStart(TAG)
 
-        lv.removeAllViews()
+        val handler = Handler(Looper.getMainLooper())
+        var wait = Define.POLLING_INTERVAL
+
         for (loop in 1..rel.game.loop) {
-            lv.addView(inflater.inflate(R.layout.linear_item_kifu_loop_title, lv, false).also {
-                it.loop_title.text = String.format(getString(R.string.loop_label), loop)
-            })
+            handler.postDelayed({
+                try {
+                    val loopTag = "kifu_per_day-$loop"
+                    lv.findViewWithTag<ViewGroup>(loopTag) ?: inflater.inflate(R.layout.linear_item_kifu_loop_title, lv, false).also {
+                        it.tag = loopTag
+                        it.loop_title.text = String.format(getString(R.string.loop_label), loop)
+                        lv.addView(it)
+                    }
+                } catch (e: IllegalStateException) {
+                    if (getActivity() != null) throw e
+                }
+            }, wait)
+            wait += Define.POLLING_INTERVAL
+
             for (day in 1..rel.game.day) {
-                val dayRecord = rel.days.find { it.loop == loop && it.day == day }
-                val kifus = rel.kifus.filter { it.dayId == dayRecord!!.id }
-                val writerCards = kifus.filter { it.fromWriter }.sortedBy { it.id }
-                val heroCards = kifus.filter { !it.fromWriter }.sortedBy { it.id }
-                lv.addView(inflater.inflate(R.layout.linear_item_kifu_per_day, lv, false).also { v ->
-                    v.loop_day_title.text = String.format(getString(R.string.loop_day_unit_title), loop, day)
-                    v.loop_day_note.let { tv ->
-                        tv.setText(dayRecord?.note)
-                        tv.doAfterTextChanged { dayRecord?.note = tv.text.toString() }
-                    }
+                handler.postDelayed({
+                    try {
+                        val loopDayTag = "kifu_per_day-$loop-$day"
 
-                    writerCards.getOrNull(0)?.let {
-                        v.writer1.chara_card.setImageResource(Util.cardDrawable(it.target))
-                        v.writer1.action_card.setImageResource(Util.writerCardDrawable(it.card))
-                    }
-                    writerCards.getOrNull(1)?.let {
-                        v.writer2.chara_card.setImageResource(Util.cardDrawable(it.target))
-                        v.writer2.action_card.setImageResource(Util.writerCardDrawable(it.card))
-                    }
-                    writerCards.getOrNull(2)?.let {
-                        v.writer3.chara_card.setImageResource(Util.cardDrawable(it.target))
-                        v.writer3.action_card.setImageResource(Util.writerCardDrawable(it.card))
-                    }
+                        val dayRecord = rel.days.find { it.loop == loop && it.day == day }
+                        val kifus = rel.kifus.filter { it.dayId == dayRecord!!.id }
+                        val writerCards = kifus.filter { it.fromWriter }.sortedBy { it.id }
+                        val heroCards = kifus.filter { !it.fromWriter }.sortedBy { it.id }
 
-                    heroCards.getOrNull(0)?.let {
-                        v.hero1.chara_card.setImageResource(Util.cardDrawable(it.target))
-                        v.hero1.action_card.setImageResource(Util.heroCardDrawable(it.card))
-                    }
-                    heroCards.getOrNull(1)?.let {
-                        v.hero2.chara_card.setImageResource(Util.cardDrawable(it.target))
-                        v.hero2.action_card.setImageResource(Util.heroCardDrawable(it.card))
-                    }
-                    heroCards.getOrNull(2)?.let {
-                        v.hero3.chara_card.setImageResource(Util.cardDrawable(it.target))
-                        v.hero3.action_card.setImageResource(Util.heroCardDrawable(it.card))
-                    }
+                        val v = lv.findViewWithTag<ViewGroup>(loopDayTag) ?: inflater.inflate(R.layout.linear_item_kifu_per_day, lv, false).also { v ->
+                            v.tag = loopDayTag
 
-                    setActionCardClickEvent(loop, day, true, 0, v.writer1)
-                    setActionCardClickEvent(loop, day, true, 1, v.writer2)
-                    setActionCardClickEvent(loop, day, true, 2, v.writer3)
-                    setActionCardClickEvent(loop, day, false, 0, v.hero1)
-                    setActionCardClickEvent(loop, day, false, 1, v.hero2)
-                    setActionCardClickEvent(loop, day, false, 2, v.hero3)
-                })
+                            if (loop % 2 == 0) v.setBackgroundResource(R.drawable.bg_solid_alt_stroke_black)
+
+                            v.loop_day_title.text = String.format(getString(R.string.loop_day_unit_title), loop, day)
+
+                            setActionCardClickEvent(loop, day, true, 0, v.writer1)
+                            setActionCardClickEvent(loop, day, true, 1, v.writer2)
+                            setActionCardClickEvent(loop, day, true, 2, v.writer3)
+                            setActionCardClickEvent(loop, day, false, 0, v.hero1)
+                            setActionCardClickEvent(loop, day, false, 1, v.hero2)
+                            setActionCardClickEvent(loop, day, false, 2, v.hero3)
+                            lv.addView(v)
+                        }
+
+                        v.loop_day_note.let { tv ->
+                            tv.setText(dayRecord?.note)
+                            tv.doAfterTextChanged { dayRecord?.note = tv.text.toString() }
+                        }
+
+                        writerCards.getOrNull(0)?.let {
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer1.chara_card)
+                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer1.action_card)
+                        }
+                        writerCards.getOrNull(1)?.let {
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer2.chara_card)
+                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer2.action_card)
+                        }
+                        writerCards.getOrNull(2)?.let {
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer3.chara_card)
+                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer3.action_card)
+                        }
+
+                        heroCards.getOrNull(0)?.let {
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero1.chara_card)
+                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero1.action_card)
+                        }
+                        heroCards.getOrNull(1)?.let {
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero2.chara_card)
+                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero2.action_card)
+                        }
+                        heroCards.getOrNull(2)?.let {
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero3.chara_card)
+                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero3.action_card)
+                        }
+                    } catch (e: IllegalStateException) {
+                        if (getActivity() != null) throw e
+                    }
+                }, wait)
+                wait += Define.POLLING_INTERVAL
             }
         }
     }
@@ -460,9 +511,9 @@ class KifuDetailFragment : BaseFragment() {
                     CardSelectDialogFragment.newInstance(getString(R.string.dialog_title_choose_action), isWriter)
                         .setOnSelectListener { card ->
                             Logger.d(TAG, "$target へ $card を")
-                            view.chara_card.setImageResource(Util.cardDrawable(target))
-                            view.action_card.setImageResource(if (isWriter) Util.writerCardDrawable(card)
-                            else Util.heroCardDrawable(card))
+                            Picasso.with(activity).load(Util.cardDrawable(target)).into(view.chara_card)
+                            val imgRes = if (isWriter) Util.writerCardDrawable(card) else Util.heroCardDrawable(card)
+                            Picasso.with(activity).load(imgRes).into(view.action_card)
 
                             // 棋譜レコードの更新
                             val kifus = viewModel.gameRelation!!.kifus.filter { it.dayId == d!!.id && it.fromWriter == isWriter }
@@ -520,7 +571,7 @@ class KifuDetailFragment : BaseFragment() {
                 MyApplication.db.gameDao().deleteNpc(chara)
             }
         }
-        updateCharacterList(null)
+        updateCharacterList()
     }
 
     private fun updateDetectiveInfo(rv: View) {
