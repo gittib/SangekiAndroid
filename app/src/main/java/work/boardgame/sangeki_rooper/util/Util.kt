@@ -48,7 +48,7 @@ object Util {
     fun getWebViewUA(context:Context): String {
         Logger.methodStart(TAG)
 
-        val prefs = context.getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        val prefs = prefs(context)
 
         return if (Thread.currentThread() == context.mainLooper.thread) {
             val baseUA = WebView(context).settings.userAgentString
@@ -65,7 +65,7 @@ object Util {
 
     fun getScenarioList(context: Context):List<TragedyScenarioModel> {
         Logger.methodStart(TAG)
-        val prefs = context.getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        val prefs = prefs(context)
         val str = prefs.getString(Define.SharedPreferencesKey.SCENARIOS, null) ?: run {
             Logger.d(TAG, "downloaded scenario data is null. load asset.")
             val assetManager = context.resources.assets
@@ -139,10 +139,10 @@ object Util {
     @DrawableRes
     fun cardDrawable(charaName: String, reverse:Boolean = false): Int {
         when (charaName) {
-            "神社" -> return R.drawable.shrine
-            "病院" -> return R.drawable.hospital
-            "都市" -> return R.drawable.city
-            "学校" -> return R.drawable.school
+            "神社", "神社の群像" -> return R.drawable.shrine
+            "病院", "病院の群像" -> return R.drawable.hospital
+            "都市", "都市の群像" -> return R.drawable.city
+            "学校", "学校の群像" -> return R.drawable.school
         }
         return if (reverse) {
             when (charaName.replace(Regex("[A-E]$"), "")) {
@@ -359,6 +359,13 @@ object Util {
         "模倣犯" -> "公開シートに書かれた模倣犯以外の事件1つを宣言し、その事件効果を解決する。リーダーが行う決定があれば、それは通常通りリーダーが行う。\nこの事件が発生するか判定する時、不安カウンターの代わりに暗躍カウンターの個数を参照する。"
         else -> "サマリーに存在しない事件名なので、何も起こりません。たぶんね。"
     }
+
+    fun isGunzo(incidentName: String?) = when(incidentName) {
+        "狂気の夜", "呪いの目覚め", "穢れの噴出", "死者の黙示録" -> true
+        else -> false
+    }
+
+    private fun prefs(context: Context) = context.getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 }
 
 fun Any.toJson(pretty:Boolean = true): String {

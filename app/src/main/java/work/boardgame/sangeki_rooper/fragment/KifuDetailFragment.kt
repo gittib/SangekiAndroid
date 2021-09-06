@@ -255,7 +255,12 @@ class KifuDetailFragment : BaseFragment() {
                         v.incident_criminal_select.let { sel ->
                             sel.text = incident.criminal ?: getString(R.string.unknown_chara)
                             sel.setOnClickListener {
-                                val criminalList = viewModel.gameRelation?.npcs?.map { it.name }?.toMutableList()
+                                val criminalList = if (Util.isGunzo(incident.name)) mutableListOf(
+                                        "神社の群像",
+                                        "病院の群像",
+                                        "都市の群像",
+                                        "学校の群像"
+                                ) else viewModel.gameRelation?.npcs?.map { it.name }?.toMutableList()
                                 criminalList?.add(0, getString(R.string.unknown_chara))
                                 CardSelectDialogFragment.newInstance(getString(R.string.choose_criminal), criminalList).setOnSelectListener { criminal ->
                                     sel.text = criminal
