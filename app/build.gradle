@@ -13,8 +13,8 @@ android {
         applicationId "work.boardgame.sangeki_rooper"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 5
-        versionName "1.0.3"
+        versionCode 7
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
