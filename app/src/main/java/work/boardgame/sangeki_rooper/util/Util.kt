@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -65,17 +66,21 @@ object Util {
 
     fun getScenarioList(context: Context):List<TragedyScenarioModel> {
         Logger.methodStart(TAG)
-        val prefs = prefs(context)
-        val str = prefs.getString(Define.SharedPreferencesKey.SCENARIOS, null) ?: run {
-            Logger.d(TAG, "downloaded scenario data is null. load asset.")
+        val defaultJson by lazy {
             val assetManager = context.resources.assets
             val inputStream = assetManager.open("initial_scenario_list.json")
             val bufferedReader = BufferedReader(InputStreamReader(inputStream))
             bufferedReader.readText()
         }
-        return str.let {
-            val type = object:TypeToken<List<TragedyScenarioModel>>(){}.type
-            Gson().fromJson(it, type)
+
+        val prefs = prefs(context)
+        val str = prefs.getString(Define.SharedPreferencesKey.SCENARIOS, null) ?: defaultJson
+        val type = object:TypeToken<List<TragedyScenarioModel>>(){}.type
+        return try {
+            Gson().fromJson(str, type)
+        } catch (e: JsonParseException) {
+            Logger.w(TAG, Throwable(e))
+            Gson().fromJson(defaultJson, type)
         }
     }
 

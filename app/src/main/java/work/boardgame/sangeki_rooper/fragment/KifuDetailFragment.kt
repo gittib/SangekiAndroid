@@ -251,6 +251,7 @@ class KifuDetailFragment : BaseFragment() {
                         v.tag = incidentTag
                         v.incident_day.text = String.format(getString(R.string.day_label), incident.day)
                         v.incident_name.text = incident.name
+                        // TODO 偽装事件とか用に事件の備考を表示したい
 
                         v.incident_criminal_select.let { sel ->
                             sel.text = incident.criminal ?: getString(R.string.unknown_chara)
