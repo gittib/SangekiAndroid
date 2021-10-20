@@ -7,6 +7,8 @@ import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,35 +82,22 @@ class ScenarioListFragment : BaseFragment() {
                         }
                     }
                     R.id.update_list -> {
-                        Util.getRxRestInterface(activity)
-                                .getScenarioList()
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(object: SingleObserver<List<TragedyScenarioModel>> {
-                                    override fun onSuccess(t: List<TragedyScenarioModel>) {
-                                        prefs.edit()
-                                                .putString(Define.SharedPreferencesKey.SCENARIOS, Gson().toJson(t))
-                                                .putLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, Calendar.getInstance().timeInMillis)
-                                                .apply()
-
-                                        AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                                                .setMessage("脚本リストを最新化しました。")
-                                                .setOnDismissListener {
-                                                    rv.scenario_list.adapter?.notifyDataSetChanged()
-                                                }
-                                                .show()
-                                    }
-
-                                    override fun onSubscribe(d: Disposable) {
-                                    }
-
-                                    override fun onError(e: Throwable) {
-                                        Logger.w(TAG, Throwable(e))
-                                        AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                                                .setMessage("脚本リストの最新化に失敗しました。\n少し時間をあけて、再度お試しください。")
-                                                .show()
-                                    }
-                                })
+                        val lastUpdated = prefs.getLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, -1)
+                        val now = Calendar.getInstance().timeInMillis
+                        if (now - lastUpdated < 3600 * 1000) {
+                            AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                                .setMessage("脚本リストはすでに最新です。")
+                                .setPositiveButton(android.R.string.ok, null)
+                                .show()
+                        } else {
+                            AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                                .setMessage("脚本リストを最新化しますか？")
+                                .setPositiveButton(R.string.ok) { _, _ ->
+                                    updateScenarioList()
+                                }
+                                .setNegativeButton(R.string.cancel, null)
+                                .show()
+                        }
                     }
                 }
                 rv.scenario_list_layout.closeDrawer(GravityCompat.END)
@@ -138,6 +127,42 @@ class ScenarioListFragment : BaseFragment() {
                 d
             })
         rootView?.scenario_list?.adapter?.notifyDataSetChanged()
+    }
+
+    private fun updateScenarioList() {
+        Logger.methodStart(TAG)
+        activity.showProgress()
+        Util.getRxRestInterface(activity)
+            .getScenarioList()
+            .doFinally { Handler(Looper.getMainLooper()).post { activity.dismissProgress() } }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object: SingleObserver<List<TragedyScenarioModel>> {
+                override fun onSuccess(t: List<TragedyScenarioModel>) {
+                    prefs.edit()
+                        .putString(Define.SharedPreferencesKey.SCENARIOS, Gson().toJson(t))
+                        .putLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, Calendar.getInstance().timeInMillis)
+                        .apply()
+
+                    AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                        .setMessage("脚本リストを最新化しました。")
+                        .setPositiveButton(android.R.string.ok, null)
+                        .setOnDismissListener {
+                            reloadScenarioList()
+                        }
+                        .show()
+                }
+
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onError(e: Throwable) {
+                    Logger.w(TAG, Throwable(e))
+                    AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                        .setMessage("脚本リストの最新化に失敗しました。\n少し時間をあけて、再度お試しください。")
+                        .show()
+                }
+            })
     }
 
     private object ViewType {

@@ -48,6 +48,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        app:menu="@menu/kifu_detail_nav"
+        app:menu="@menu/scenario_list_nav"
         />
 </androidx.drawerlayout.widget.DrawerLayout>
