@@ -20,6 +20,14 @@
     <color name="transparent_black">#80000000</color>
 
     <!-- 使用するカラー定義。カラーコード指定禁止 -->
+    <color name="colorPrimary">@color/purple_500</color>
+    <color name="colorPrimaryVariant">@color/purple_700</color>
+    <color name="colorOnPrimary">@color/white</color>
+    <color name="colorSecondary">@color/teal_200</color>
+    <color name="colorSecondaryVariant">@color/teal_700</color>
+    <color name="colorOnSecondary">@color/black</color>
+    <color name="baseAppTextColor">@color/basic_text_color</color>
+
     <color name="splash_bg">@color/black</color>
     <color name="link">@color/teal_700</color>
     <color name="border">@color/dark_gray</color>
