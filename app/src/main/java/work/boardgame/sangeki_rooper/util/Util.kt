@@ -288,6 +288,8 @@ object Util {
         "移動縦" -> R.drawable.a_writer_cards_08
         "移動横" -> R.drawable.a_writer_cards_09
         "移動斜め" -> R.drawable.a_writer_cards_10
+        "友好+1" -> R.drawable.a_writer_cards_yuko1
+        "絶望+1" -> R.drawable.a_writer_cards_zetubo1
         else -> R.drawable.a_writer_cards_0b
     }
     @DrawableRes
@@ -301,6 +303,8 @@ object Util {
             "移動縦" -> R.drawable.a_heroa_cards_06
             "移動横" -> R.drawable.a_heroa_cards_07
             "移動禁止" -> R.drawable.a_heroa_cards_08
+            "不安+2" -> R.drawable.a_heroa_cards_fuan2
+            "希望+1" -> R.drawable.a_heroa_cards_kibou1
             else -> R.drawable.a_heroa_cards_0b
         }
         2 -> when(cardName) {
