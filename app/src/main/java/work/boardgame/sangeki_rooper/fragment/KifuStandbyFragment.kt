@@ -154,7 +154,8 @@ class KifuStandbyFragment : BaseFragment() {
             getString(R.string.summary_name_mz),
             getString(R.string.summary_name_mcx),
             getString(R.string.summary_name_hsa),
-            getString(R.string.summary_name_wm)
+            getString(R.string.summary_name_ahr),
+            getString(R.string.summary_name_ll)
         )
     }
 

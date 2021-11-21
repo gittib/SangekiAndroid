@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.fragment.*
+import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 import java.lang.IllegalArgumentException
 
@@ -25,6 +26,8 @@ class ContainerActivity : BaseActivity() {
         const val FRAGMENT_NAME = "FRAGMENT_NAME"
         const val FRAGMENT_DATA = "FRAGMENT_DATA"
     }
+
+    private var isFragmentCreating:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Logger.methodStart(TAG)
@@ -54,6 +57,9 @@ class ContainerActivity : BaseActivity() {
 
     fun startFragment(fragmentName: String?, data:Any? = null) {
         Logger.methodStart(TAG)
+        if (isFragmentCreating) return
+        isFragmentCreating = true
+        Handler(mainLooper).postDelayed({ isFragmentCreating = false }, Define.CHATTERING_WAIT)
         supportFragmentManager.beginTransaction().let { ft ->
             ft.addToBackStack(null)
             val f = getFragment(fragmentName, data)
@@ -75,6 +81,7 @@ class ContainerActivity : BaseActivity() {
                 KifuStandbyFragment::class.qualifiedName -> KifuStandbyFragment.newInstance()
                 SummaryDetailFragment::class.qualifiedName -> SummaryDetailFragment.newInstance(data as String?)
                 KifuDetailFragment::class.qualifiedName -> KifuDetailFragment.newInstance(data as Long)
+                KifuPreviewFragment::class.qualifiedName -> KifuPreviewFragment.newInstance(data as Long)
                 else -> throw IllegalArgumentException("invalid fragment name: $fragmentName")
             }
         } catch (e: ClassCastException) {

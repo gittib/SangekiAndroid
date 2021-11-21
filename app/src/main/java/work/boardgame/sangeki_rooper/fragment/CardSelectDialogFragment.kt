@@ -88,27 +88,31 @@ class CardSelectDialogFragment : BaseDialogFragment() {
         Logger.methodStart(TAG)
         return if (isAction) {
             if (isWriter) listOf(
-                "",
-                "不安+1",
-                "不安-1",
-                "不安禁止",
-                "友好禁止",
-                "暗躍+1",
-                "暗躍+2",
-                "移動縦",
-                "移動横",
-                "移動斜め"
+                    "",
+                    "不安+1",
+                    "不安-1",
+                    "不安禁止",
+                    "友好禁止",
+                    "暗躍+1",
+                    "暗躍+2",
+                    "移動縦",
+                    "移動横",
+                    "移動斜め",
+                    "友好+1",
+                    "絶望+1"
             )
             else listOf(
-                "",
-                "不安+1",
-                "不安-1",
-                "友好+1",
-                "友好+2",
-                "暗躍禁止",
-                "移動縦",
-                "移動横",
-                "移動禁止"
+                    "",
+                    "不安+1",
+                    "不安-1",
+                    "友好+1",
+                    "友好+2",
+                    "暗躍禁止",
+                    "移動縦",
+                    "移動横",
+                    "移動禁止",
+                    "不安+2",
+                    "希望+1"
             )
         } else {
             arguments?.getString(BundleKey.CHARACTER_LIST)?.let {

@@ -63,7 +63,13 @@ class KifuDetailFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         Logger.methodStart(TAG)
-        rootView = inflater.inflate(R.layout.kifu_detail_fragment, container, false).also { rv ->
+        return inflater.inflate(R.layout.kifu_detail_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Logger.methodStart(TAG)
+        super.onViewCreated(view, savedInstanceState)
+        rootView = view.also { rv ->
             rv.kifu_detail_nav.setNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.show_summary -> {
@@ -76,8 +82,13 @@ class KifuDetailFragment : BaseFragment() {
                         rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
                     }
                     R.id.show_kifu_preview -> {
-                        Toast.makeText(activity, "工事中です。。。", Toast.LENGTH_LONG).show()
-                        //TODO("棋譜プレビューフラグメントをひょうじ")
+                        // TODO("棋譜プレビュー画面開発中")
+                        Toast.makeText(activity, "工事中です…", Toast.LENGTH_LONG).show()
+//                        rootView?.let { updateDetectiveInfo(it) }
+//                        Handler(Looper.getMainLooper()).postDelayed({
+//                            viewModel.gameId?.let { activity.startFragment(KifuPreviewFragment::class.qualifiedName, it) }
+//                        }, Define.CHATTERING_WAIT)
+//                        rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
                     }
                     R.id.delete_kifu -> {
                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
@@ -121,7 +132,6 @@ class KifuDetailFragment : BaseFragment() {
             }
         }
         applyViewData()
-        return rootView
     }
 
     override fun onAttach(context: Context) {
