@@ -100,6 +100,8 @@ object Util {
         "MC", "MCX" -> 3
         "HSA" -> 4
         "WM" -> 5
+        "AHR" -> 6
+        "LL" -> 7
         "UM" -> 10
         else -> 99
     }
@@ -111,6 +113,8 @@ object Util {
         "HSA" -> context?.getString(R.string.summary_name_hsa)
         "WM" -> context?.getString(R.string.summary_name_wm)
         "UM" -> context?.getString(R.string.summary_name_um)
+        "AHR" -> context?.getString(R.string.summary_name_ahr)
+        "LL" -> context?.getString(R.string.summary_name_ll)
         else -> "謎の惨劇セット"
     }
     fun tragedySetNameAbbr(context: Context, tragedySetName: String?) = when (tragedySetName) {
@@ -121,6 +125,8 @@ object Util {
         context.getString(R.string.summary_name_hsa) -> "HSA"
         context.getString(R.string.summary_name_wm) -> "WM"
         context.getString(R.string.summary_name_um) -> "UM"
+        context.getString(R.string.summary_name_ahr) -> "AHR"
+        context.getString(R.string.summary_name_ll) -> "LL"
         else -> throw IllegalArgumentException("invalid tragedy set name: $tragedySetName")
     }
 
@@ -133,6 +139,8 @@ object Util {
             context.getString(R.string.summary_name_mcx) -> r.getStringArray(R.array.incident_list_mcx)
             context.getString(R.string.summary_name_hsa) -> r.getStringArray(R.array.incident_list_hsa)
             context.getString(R.string.summary_name_wm) -> r.getStringArray(R.array.incident_list_wm)
+            context.getString(R.string.summary_name_ahr) -> r.getStringArray(R.array.incident_list_ahr)
+            context.getString(R.string.summary_name_ll) -> r.getStringArray(R.array.incident_list_ll)
             context.getString(R.string.summary_name_um) -> r.getStringArray(R.array.incident_list_um)
             else -> {
                 Logger.w(TAG, Throwable("invalid set name: $tragedySetName"))
@@ -362,6 +370,19 @@ object Util {
         "悪魔との契約" -> "リーダーであるプレイヤーは任意のカード1つかボード1つを選ぶ。そこから暗躍カウンターを2つ取り除く。\nその後、脚本家はリーダーが選んだのとは別の、任意のカード1つかボード1つを選び、そこに暗躍カウンターを1つ置く。\nこの事件は犯人の不安臨界を1少ないものとして発生するかを判定する。"
         "告発" -> "犯人の役職を知り、Exゲージを1増加させる。"
         "模倣犯" -> "公開シートに書かれた模倣犯以外の事件1つを宣言し、その事件効果を解決する。リーダーが行う決定があれば、それは通常通りリーダーが行う。\nこの事件が発生するか判定する時、不安カウンターの代わりに暗躍カウンターの個数を参照する。"
+        "実行者" -> "脚本家は主人公を１人選択する。その主人公はキャラクターを１人選択する。そのキャラクターを死亡させる。"
+        "豹変" -> "犯人の初期エリアに暗躍カウンターが２つ以上置かれている場合、主人公は死亡する。そうでない場合、そのボードに暗躍カウンターを２つ置く。"
+        "遺言" -> "犯人は死亡する。次のループ開始時に主人公は「希望+1」を得る。"
+        "希望の光" -> "リーダーはキャラクター１人を選択する。そのキャラクターに希望カウンターを１つ置く。\nこの事件が発生するか判定する時、本来のカウンターの代わりに友好カウンターの個数を参照する。"
+        "絶望の闇" -> "任意のキャラクター１人に絶望カウンターを１つ置く。"
+        "衝動殺人" -> "可能ならば犯人と同一エリアにいる犯人以外のキャラクター１人を死亡させる。\nこの事件は犯人の不安臨界を１少ないものとして発生するかを判定する。"
+        "次元変貌" -> "世界移動を行う。\nこの事件が発生するか判定するとき、カウンターの個数によらず犯人が生存していれば必ず発生する。"
+        "次元歪曲" -> "世界移動を行ってもよい。\n任意のキャラクター１人に不安カウンターを２つ置き、別の任意のキャラクターに友好カウンターを２つ置く。"
+        "次元断層" -> "世界移動を行ってもよい。\n犯人にカウンターが３種類以上置かれている場合主人公は死亡する。"
+        "忘れ物" -> "犯人と同一エリアにいる任意のキャラクター１人に暗躍カウンターを１つ置く。その後、犯人を任意のボードに移動させる。"
+        "空想事件" -> "衝動殺人、次元歪曲、忘れ物のいずれかを選び、その事件として解決する。\nこの事件が発生するか判定する時、本来のカウンターの代わりに暗躍カウンターの個数を参照する。"
+        "特異点" -> "表世界である場合、世界移動を行い、このゲームでこの事件が初めて発生するなら主人公は死亡する。\n裏世界であり、犯人の初期エリアに暗躍カウンターがある場合、犯人は死亡する。"
+        "狭間の陽光" -> "リーダーはキャラクターを１人選択する。そのキャラクターに希望カウンターを１つ置く。"
         else -> "サマリーに存在しない事件名なので、何も起こりません。たぶんね。"
     }
 

@@ -72,6 +72,32 @@
         <item>発見</item>
         <item>遂行者</item>
     </string-array>
+    <string-array name="incident_list_ahr">
+        <item>衝動殺人</item>
+        <item>次元変貌</item>
+        <item>次元歪曲</item>
+        <item>次元断層</item>
+        <item>忘れ物</item>
+        <item>空想事件</item>
+        <item>病院の事件</item>
+        <item>遺言</item>
+        <item>特異点</item>
+        <item>狭間の陽光</item>
+        <item>絶望の闇</item>
+    </string-array>
+    <string-array name="incident_list_ll">
+        <item>殺人事件</item>
+        <item>不安拡大</item>
+        <item>行方不明</item>
+        <item>病院の事件</item>
+        <item>実行者</item>
+        <item>豹変</item>
+        <item>遺言</item>
+        <item>告白</item>
+        <item>流布</item>
+        <item>希望の光</item>
+        <item>絶望の闇</item>
+    </string-array>
     <string-array name="incident_list_um">
         <item>連続殺人</item>
         <item>不安拡大</item>

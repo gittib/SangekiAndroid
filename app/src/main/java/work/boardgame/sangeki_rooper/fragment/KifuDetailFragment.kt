@@ -82,11 +82,13 @@ class KifuDetailFragment : BaseFragment() {
                         rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
                     }
                     R.id.show_kifu_preview -> {
-                        rootView?.let { updateDetectiveInfo(it) }
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            viewModel.gameId?.let { activity.startFragment(KifuPreviewFragment::class.qualifiedName, it) }
-                        }, Define.CHATTERING_WAIT)
-                        rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
+                        // TODO("棋譜プレビュー画面開発中")
+                        Toast.makeText(activity, "工事中です…", Toast.LENGTH_LONG).show()
+//                        rootView?.let { updateDetectiveInfo(it) }
+//                        Handler(Looper.getMainLooper()).postDelayed({
+//                            viewModel.gameId?.let { activity.startFragment(KifuPreviewFragment::class.qualifiedName, it) }
+//                        }, Define.CHATTERING_WAIT)
+//                        rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
                     }
                     R.id.delete_kifu -> {
                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
