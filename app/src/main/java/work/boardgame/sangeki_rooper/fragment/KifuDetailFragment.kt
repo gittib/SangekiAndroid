@@ -31,6 +31,7 @@ import kotlinx.coroutines.withContext
 import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.activity.ContainerActivity
+import work.boardgame.sangeki_rooper.database.Day
 import work.boardgame.sangeki_rooper.database.Npc
 import work.boardgame.sangeki_rooper.database.dao.GameDao
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
@@ -79,6 +80,15 @@ class KifuDetailFragment : BaseFragment() {
                             Logger.d(TAG, "abbr = $abbr")
                             it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_DATA, abbr)
                         })
+                        rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
+                    }
+                    R.id.scroll_to_character_list -> {
+                        rv.kifu_detail_scroll.smoothScrollTo(0, rv.character_list_title.y.toInt())
+                        rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
+                    }
+                    R.id.scroll_to_today -> {
+                        val y = (rv.kifu_list.parent as View).y - 20f + (getLastDetectiveDay()?.y ?: 0f)
+                        rv.kifu_detail_scroll.smoothScrollTo(0, y.toInt())
                         rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
                     }
                     R.id.show_kifu_preview -> {
@@ -588,6 +598,33 @@ class KifuDetailFragment : BaseFragment() {
             }
         }
         updateCharacterList()
+    }
+
+    private fun getLastDetectiveDay(): View? {
+        Logger.methodStart(TAG)
+        val rel = viewModel.gameRelation ?: return null
+
+        fun Day.getIndex(dayOfLoop: Int) = this.loop * dayOfLoop + this.day
+
+        val targets: List<String> = rel.npcs.map { it.name }.toMutableList().also {
+            it.add("神社")
+            it.add("病院")
+            it.add("都市")
+            it.add("学校")
+        }
+        val maxDayByDay = rel.days.filter { it.note?.isNotEmpty() == true }.maxBy { it.getIndex(rel.game.day) }
+        val maxDayByKifu = rel.kifus.filter { it.target in targets }.mapNotNull { kifu ->
+            rel.days.find { it.id == kifu.dayId }
+        }.maxBy { it.getIndex(rel.game.day) }
+        val maxDayIndex = maxDayByDay?.getIndex(rel.game.day) ?: 0
+        val maxKifuDayIndex = maxDayByKifu?.getIndex(rel.game.day) ?: 0
+        val maxDay = if (maxDayIndex > maxKifuDayIndex) maxDayByDay else maxDayByKifu
+        val maxDayTag = maxDay?.let {
+            val loop = it.loop
+            val day = it.day
+            "kifu_per_day-$loop-$day"
+        }
+        return rootView?.findViewWithTag(maxDayTag)
     }
 
     private fun updateDetectiveInfo(rv: View) {
