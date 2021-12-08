@@ -67,10 +67,10 @@ object Util {
     fun getScenarioList(context: Context):List<TragedyScenarioModel> {
         Logger.methodStart(TAG)
         val defaultJson by lazy {
-            val assetManager = context.resources.assets
-            val inputStream = assetManager.open("initial_scenario_list.json")
-            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-            bufferedReader.readText()
+            context.resources.assets.open("initial_scenario_list.json").use { inputStream ->
+                val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+                bufferedReader.readText()
+            }
         }
 
         val prefs = prefs(context)
@@ -86,9 +86,10 @@ object Util {
 
     fun getRuleMasterData(context: Context): List<RuleMasterDataModel> {
         val assetManager = context.resources.assets
-        val inputStream = assetManager.open("rule_master.json")
-        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-        val sJson = bufferedReader.readText()
+        val sJson = assetManager.open("rule_master.json").use { inputStream ->
+            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            bufferedReader.readText()
+        }
         val type = object: TypeToken<List<RuleMasterDataModel>>(){}.type
         return Gson().fromJson<List<RuleMasterDataModel>>(sJson, type)
     }
@@ -159,6 +160,7 @@ object Util {
         }
         return if (reverse) {
             when (charaName.replace(Regex("[A-E]$"), "")) {
+                "" -> R.drawable.extra_back
                 "巫女" -> R.drawable.character_04_0
                 "異世界人" -> R.drawable.character_12_0
                 "黒猫" -> R.drawable.character_26_0
@@ -197,6 +199,7 @@ object Util {
             }
         } else {
             when (charaName.replace(Regex("[A-E]$"), "")) {
+                "" -> R.drawable.extra_back
                 "巫女" -> R.drawable.character_04_1
                 "異世界人" -> R.drawable.character_12_1
                 "黒猫" -> R.drawable.character_26_1

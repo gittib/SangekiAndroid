@@ -32,6 +32,8 @@ class TragedyScenarioModel (
         "HSA" -> Color.parseColor("#000088")
         "WM" -> Color.parseColor("#008800")
         //"UM" -> Color.parseColor("#")
+        "LL" -> Color.parseColor("#B2B8B8")
+        "AH", "AHR" -> Color.parseColor("#DAB300")
         else -> Color.parseColor("#AAAAAA")
     }
     fun ruleY() = rule.getOrNull(0)
@@ -56,7 +58,7 @@ class TragedyScenarioModel (
         6 -> "困難"
         7 -> "惨劇"
         8 -> "悪夢"
-        else -> ""
+        else -> "特殊"
     }
     fun difficultyStar():String {
         var s = ""
@@ -77,7 +79,14 @@ class TragedyScenarioModel (
             "カルティスト",
             "ウィッチ",
             "ゼッタイシャ",
-            "パラノイア" -> true
+            "パラノイア",
+            "ジョーカー" -> true
+            else -> false
+        }
+
+        fun isKairaiYuukouMushi() = when (role) {
+            "マリオネット",
+            "ナーサリーライム" -> true
             else -> false
         }
 
@@ -86,6 +95,7 @@ class TragedyScenarioModel (
             "ウィッチ",
             "ゼッタイシャ",
             "パラノイア",
+            "ジョーカー",
             "キラー",
             "クロマク",
             "ファクター",
@@ -96,6 +106,8 @@ class TragedyScenarioModel (
             "ナイトメア",
             "ディープワン",
             "フェイスレス",
+            "マリオネット",
+            "ナーサリーライム",
             "イレイザー",
             "アベンジャー" -> true
             else -> false
@@ -110,6 +122,10 @@ class TragedyScenarioModel (
             "ミカケダオシ",
             "ヒトハシラ",
             "フェイスレス",
+            "カタリベ",
+            "プレインシフター",
+            "ウォッチャー",
+            "ジョーカー",
             "イレイザー",
             "パイドパイパー" -> true
             else -> false
@@ -126,7 +142,8 @@ class TragedyScenarioModel (
                 "幻想",
                 "妹",
                 "教祖",
-                "ご神木", "御神木"
+                "ご神木", "御神木",
+                "上位存在"
                 -> Define.SangekiBoard.SHRINE
 
                 "病院", "hospital",
@@ -146,7 +163,8 @@ class TragedyScenarioModel (
                 "大物",
                 "マスコミ",
                 "鑑識官",
-                "コピーキャット"
+                "コピーキャット",
+                "アルバイト", "アルバイト？", "アルバイト?"
                 -> Define.SangekiBoard.CITY
 
                 "学校", "school",
@@ -164,7 +182,8 @@ class TragedyScenarioModel (
                     else Define.SangekiBoard.OTHER
                 }
                 "転校生",
-                "手先"
+                "手先",
+                "従者"
                 -> Define.SangekiBoard.OTHER
 
                 else -> Define.SangekiBoard.OTHER
