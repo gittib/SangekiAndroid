@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.fragment_chara_select_dialog.view.*
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.databinding.FragmentCharaSelectDialogBinding
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 
@@ -76,12 +76,12 @@ class CardSelectDialogFragment : BaseDialogFragment() {
         Logger.methodStart(TAG)
         val inflater = LayoutInflater.from(activity)
         val rootView = activity.window.decorView.findViewById(android.R.id.content) as ViewGroup
-        return inflater.inflate(R.layout.fragment_chara_select_dialog, rootView, false).also { rv ->
-            rv.character_list.let { v ->
+        return FragmentCharaSelectDialogBinding.inflate(inflater, rootView, false).also { rv ->
+            rv.characterList.let { v ->
                 v.layoutManager = GridLayoutManager(activity, 3)
                 v.adapter = CharaListAdapter()
             }
-        }
+        }.root
     }
 
     private fun initCardList(): List<String> {

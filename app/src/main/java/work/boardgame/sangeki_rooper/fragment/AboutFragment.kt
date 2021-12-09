@@ -11,9 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.about_fragment.view.*
 import work.boardgame.sangeki_rooper.BuildConfig
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.databinding.AboutFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.AboutViewModel
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
@@ -26,27 +26,35 @@ class AboutFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: AboutViewModel
-    private var rootView: View? = null
+
+    private var _binding: AboutFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         Logger.methodStart(TAG)
-        rootView = inflater.inflate(R.layout.about_fragment, container, false).also { rv ->
-            rv.cc_by_sa.setOnClickListener {
+        _binding = AboutFragmentBinding.inflate(inflater, container, false).also { rv ->
+            rv.ccBySa.setOnClickListener {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Define.SangekiRooperUrl.CREATIVE_COMMONS)))
             }
-            rv.created_by_baka_fire.let { v ->
+            rv.createdByBakaFire.let { v ->
                 v.text = HtmlCompat.fromHtml(getString(R.string.copy_light), HtmlCompat.FROM_HTML_MODE_COMPACT)
                 v.movementMethod = LinkMovementMethod.getInstance()
             }
-            rv.app_version_history_label.let { v ->
+            rv.appVersionHistoryLabel.let { v ->
                 v.paintFlags = v.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-                v.setOnClickListener { rv.app_version_history.visibility = View.VISIBLE }
+                v.setOnClickListener { rv.appVersionHistory.visibility = View.VISIBLE }
             }
-            rv.app_version_history.text = resources.getStringArray(R.array.update_history).joinToString("\n\n")
-            rv.app_version.text = String.format("アプリバージョン： %s", BuildConfig.VERSION_NAME)
+            rv.appVersionHistory.text = resources.getStringArray(R.array.update_history).joinToString("\n\n")
+            rv.appVersion.text = String.format("アプリバージョン： %s", BuildConfig.VERSION_NAME)
         }
-        return rootView
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        Logger.methodStart(TAG)
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onAttach(context: Context) {

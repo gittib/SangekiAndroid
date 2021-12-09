@@ -33,5 +33,9 @@
             Another Horizon Revised と Last Liar 公開に伴い、棋譜画面等の各機能を対応しました。\n
             サマリーPDFと追加キャラクターのカードについては、コモンズ公開後に正式対応します。
         </item>
+        <item>1.1.1\n
+            棋譜画面にて、メニューからキャラクター一覧と最新の棋譜へスクロールする機能を追加しました。\n
+            Another Horizon Revised と Last Liar について、脚本リストで未対応箇所を修正しました。
+        </item>
     </string-array>
 </resources>

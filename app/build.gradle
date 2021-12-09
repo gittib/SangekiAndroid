@@ -13,8 +13,8 @@ android {
         applicationId "work.boardgame.sangeki_rooper"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 8
-        versionName "1.1.0"
+        versionCode 9
+        versionName "1.1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,6 +36,11 @@ android {
             keyAlias properties.getProperty('release.alias')
             keyPassword properties.getProperty('release.keyPassword')
         }
+    }
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
     }
 
     lintOptions {
