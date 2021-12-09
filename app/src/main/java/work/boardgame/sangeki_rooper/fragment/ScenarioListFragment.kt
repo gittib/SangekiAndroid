@@ -22,7 +22,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.databinding.AdapterItemFooterBinding
 import work.boardgame.sangeki_rooper.databinding.AdapterItemScenarioBinding
+import work.boardgame.sangeki_rooper.databinding.AdapterItemScenarioHeaderBinding
 import work.boardgame.sangeki_rooper.databinding.ScenarioListFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioListViewModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
@@ -222,16 +224,16 @@ class ScenarioListFragment : BaseFragment() {
             val inflater = LayoutInflater.from(activity)
             return when (viewType) {
                 ViewType.HEADER -> {
-                    val v = inflater.inflate(R.layout.adapter_item_scenario_header, parent, false)
-                    object: RecyclerView.ViewHolder(v){}
+                    val v = AdapterItemScenarioHeaderBinding.inflate(inflater, parent, false)
+                    object: RecyclerView.ViewHolder(v.root){}
                 }
                 ViewType.SCENARIO -> {
-                    val v = inflater.inflate(R.layout.adapter_item_scenario, parent, false)
-                    ScenarioViewHolder(v)
+                    val v = AdapterItemScenarioBinding.inflate(inflater, parent, false)
+                    ScenarioViewHolder(v.root)
                 }
                 ViewType.FOOTER -> {
-                    val v = inflater.inflate(R.layout.adapter_item_footer, parent, false)
-                    object: RecyclerView.ViewHolder(v){}
+                    val v = AdapterItemFooterBinding.inflate(inflater, parent, false)
+                    object: RecyclerView.ViewHolder(v.root){}
                 }
                 else -> throw IllegalArgumentException("invalid view type: $viewType")
             }
@@ -239,9 +241,9 @@ class ScenarioListFragment : BaseFragment() {
 
         override fun getItemCount(): Int = viewModel.scenarioList.size + 2
 
-        override fun getItemViewType(position: Int): Int = when {
-            position == 0 -> ViewType.HEADER
-            position > viewModel.scenarioList.size -> ViewType.FOOTER
+        override fun getItemViewType(position: Int): Int = when (position) {
+            0 -> ViewType.HEADER
+            itemCount-1 -> ViewType.FOOTER
             else -> ViewType.SCENARIO
         }
 
