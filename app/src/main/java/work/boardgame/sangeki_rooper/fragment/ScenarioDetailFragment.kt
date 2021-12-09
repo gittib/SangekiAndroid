@@ -16,14 +16,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.grid_item_chara_role_row.view.*
-import kotlinx.android.synthetic.main.grid_item_incident_day.view.*
-import kotlinx.android.synthetic.main.grid_item_incident_name.view.*
-import kotlinx.android.synthetic.main.grid_item_long_text_row.view.*
-import kotlinx.android.synthetic.main.inc_difficulty_row.view.*
-import kotlinx.android.synthetic.main.linear_item_template_standby.view.*
-import kotlinx.android.synthetic.main.scenario_detail_fragment.view.*
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.databinding.*
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
@@ -43,7 +37,8 @@ class ScenarioDetailFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: ScenarioDetailViewModel
-    private var rootView: View? = null
+    private var _binding: ScenarioDetailFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -54,29 +49,29 @@ class ScenarioDetailFragment : BaseFragment() {
         }
         Logger.d(TAG, "scenario = " + item.toJson())
 
-        rootView = inflater.inflate(R.layout.scenario_detail_fragment, container, false).also { rv ->
-            rv.setOnClickListener { Logger.v(TAG, "クリックイベントバブリング対策") }
+        _binding = ScenarioDetailFragmentBinding.inflate(inflater, container, false).also { rv ->
+            rv.root.setOnClickListener { Logger.v(TAG, "クリックイベントバブリング対策") }
 
             val res = resources
 
-            rv.public_sheet_value_set.text = item.tragedySetName(context)
-            rv.public_sheet_value_loop.text = String.format("%sループ", item.loop())
-            rv.public_sheet_value_day.text = String.format("%d日", item.day)
-            rv.public_sheet_special_value.text = item.specialRule()
+            rv.publicSheetValueSet.text = item.tragedySetName(context)
+            rv.publicSheetValueLoop.text = String.format("%sループ", item.loop())
+            rv.publicSheetValueDay.text = String.format("%d日", item.day)
+            rv.publicSheetSpecialValue.text = item.specialRule()
 
             for (i in 1..item.day) {
-                rv.incident_list.addView(inflater.inflate(R.layout.grid_item_incident_day, rv.incident_list, false).also { v ->
-                    v.layoutParams = (v.layoutParams as GridLayout.LayoutParams).also { lp ->
+                rv.incidentList.addView(GridItemIncidentDayBinding.inflate(inflater, rv.incidentList, false).also { v ->
+                    v.root.layoutParams = (v.root.layoutParams as GridLayout.LayoutParams).also { lp ->
                         lp.columnSpec = GridLayout.spec(0)
                         lp.rowSpec = GridLayout.spec(i)
                     }
-                    v.day_count.text = String.format("%d", i)
-                })
+                    v.dayCount.text = String.format("%d", i)
+                }.root)
 
-                rv.incident_list.addView(inflater.inflate(R.layout.grid_item_incident_name, rv.incident_list, false).also { v ->
+                rv.incidentList.addView(GridItemIncidentNameBinding.inflate(inflater, rv.incidentList, false).also { v ->
                     item.incidentList.find { it.day == i }?.let { incidentData ->
-                        v.incident_name.text = incidentData.publicName()
-                        v.incident_name.setOnLongClickListener {
+                        v.incidentName.text = incidentData.publicName()
+                        v.incidentName.setOnLongClickListener {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                     .setTitle(incidentData.publicName())
                                     .setMessage(Util.incidentExplain(incidentData.publicName()))
@@ -85,33 +80,33 @@ class ScenarioDetailFragment : BaseFragment() {
                             true
                         }
                     }
-                    v.layoutParams = (v.layoutParams as GridLayout.LayoutParams).also { lp ->
+                    v.root.layoutParams = (v.root.layoutParams as GridLayout.LayoutParams).also { lp ->
                         lp.columnSpec = GridLayout.spec(1)
                         lp.rowSpec = GridLayout.spec(i)
                     }
-                })
+                }.root)
             }
 
-            rv.scenario_title.text = item.title
-            rv.detail_difficulty_name.text = item.difficultyName()
-            rv.detail_difficulty_star.text = item.difficultyStar()
-            rv.rule_y.text = item.ruleY()
-            rv.rule_x1.text = item.ruleX1()
+            rv.scenarioTitle.text = item.title
+            rv.incDifficultyRow.detailDifficultyName.text = item.difficultyName()
+            rv.incDifficultyRow.detailDifficultyStar.text = item.difficultyStar()
+            rv.ruleY.text = item.ruleY()
+            rv.ruleX1.text = item.ruleX1()
             item.ruleX2()?.let {
-                rv.rule_x2_label.visibility = View.VISIBLE
-                rv.rule_x2.visibility = View.VISIBLE
-                rv.rule_x2.text = it
+                rv.ruleX2Label.visibility = View.VISIBLE
+                rv.ruleX2.visibility = View.VISIBLE
+                rv.ruleX2.text = it
             } ?: run {
-                rv.rule_x2_label.visibility = View.GONE
-                rv.rule_x2.visibility = View.GONE
+                rv.ruleX2Label.visibility = View.GONE
+                rv.ruleX2.visibility = View.GONE
             }
 
-            rv.character_count.text = String.format("(%d人)", item.characterList.size)
-            rv.character_role_list.let { v ->
+            rv.characterCount.text = String.format("(%d人)", item.characterList.size)
+            rv.characterRoleList.let { v ->
                 var row = 1
                 item.characterList.forEach { ch ->
-                    v.addView(inflater.inflate(R.layout.grid_item_long_text_row, v, false).also { tv ->
-                        tv.layoutParams = GridLayout.LayoutParams().also { lp ->
+                    v.addView(GridItemLongTextRowBinding.inflate(inflater, v, false).also { tv ->
+                        tv.root.layoutParams = GridLayout.LayoutParams().also { lp ->
                             val weight = TypedValue().also {
                                 res.getValue(R.dimen.chara_role_col_weight_name, it, true) }
                             lp.columnSpec = GridLayout.spec(0, GridLayout.FILL, weight.float)
@@ -119,12 +114,12 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.width = 0
                         }
                         if (row % 2 == 0) {
-                            context?.let { tv.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
+                            context?.let { tv.root.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
-                        tv.long_text.text = ch.name
-                    })
-                    v.addView(inflater.inflate(R.layout.grid_item_chara_role_row, v, false).also { iv ->
-                        iv.layoutParams = GridLayout.LayoutParams().also { lp ->
+                        tv.longText.text = ch.name
+                    }.root)
+                    v.addView(GridItemCharaRoleRowBinding.inflate(inflater, v, false).also { iv ->
+                        iv.root.layoutParams = GridLayout.LayoutParams().also { lp ->
                             val weight = TypedValue().also {
                                 res.getValue(R.dimen.chara_role_col_weight_role, it, true) }
                             lp.columnSpec = GridLayout.spec(1, GridLayout.FILL, weight.float)
@@ -132,19 +127,19 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.width = 0
                         }
                         if (row % 2 == 0) {
-                            context?.let { iv.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
+                            context?.let { iv.root.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
                         iv.zettaiYuukouMushi.text = if (ch.isZettaiYuukouMushi()) "◆" else "◇"
                         iv.yuukouMushi.setImageDrawable(ResourcesCompat.getDrawable(res,
                                 if (ch.isYuukouMushi()) R.drawable.broken_heart else R.drawable.lovely_heart,
                                 context?.theme))
                         iv.fushi.text = if (ch.isFushi()) "★" else "☆"
-                        iv.role_name.let { tv ->
+                        iv.roleName.let { tv ->
                             tv.text = ch.role()
                             tv.typeface = if (ch.role() == "パーソン") Typeface.DEFAULT
                             else Typeface.DEFAULT_BOLD
                         }
-                    })
+                    }.root)
                     v.addView(TextView(context).also { tv ->
                         tv.layoutParams = GridLayout.LayoutParams().also { lp ->
                             val weight = TypedValue().also {
@@ -162,7 +157,7 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
 
-            rv.incident_criminal_list.let { lv ->
+            rv.incidentCriminalList.let { lv ->
                 var row = 1
                 item.incidentList.forEach { ch ->
                     lv.addView(TextView(context).also { v ->
@@ -184,8 +179,8 @@ class ScenarioDetailFragment : BaseFragment() {
                         }
                         v.text = ch.day.toString()
                     })
-                    lv.addView(inflater.inflate(R.layout.grid_item_long_text_row, lv, false).also { v ->
-                        v.layoutParams = GridLayout.LayoutParams().also { lp ->
+                    lv.addView(GridItemLongTextRowBinding.inflate(inflater, lv, false).also { v ->
+                        v.root.layoutParams = GridLayout.LayoutParams().also { lp ->
                             val weight = TypedValue().also {
                                 res.getValue(R.dimen.incident_col_weight_name, it, true) }
                             lp.columnSpec = GridLayout.spec(1, GridLayout.FILL, weight.float)
@@ -193,17 +188,17 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.width = 0
                         }
                         if (row % 2 == 0) {
-                            context?.let { v.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
+                            context?.let { v.root.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
-                        v.long_text.also { tv ->
+                        v.longText.also { tv ->
                             tv.text = ch.name
                             tv.layoutParams = tv.layoutParams.also { lp ->
                                 lp.width = 0
                             }
                         }
-                    })
-                    lv.addView(inflater.inflate(R.layout.grid_item_long_text_row, lv, false).also { v ->
-                        v.layoutParams = GridLayout.LayoutParams().also { lp ->
+                    }.root)
+                    lv.addView(GridItemLongTextRowBinding.inflate(inflater, lv, false).also { v ->
+                        v.root.layoutParams = GridLayout.LayoutParams().also { lp ->
                             val weight = TypedValue().also {
                                 res.getValue(R.dimen.incident_col_weight_criminal, it, true) }
                             lp.columnSpec = GridLayout.spec(2, GridLayout.FILL, weight.float)
@@ -211,10 +206,10 @@ class ScenarioDetailFragment : BaseFragment() {
                             lp.width = 0
                         }
                         if (row % 2 == 0) {
-                            context?.let { v.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
+                            context?.let { v.root.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
-                        v.long_text.text = ch.criminal
-                    })
+                        v.longText.text = ch.criminal
+                    }.root)
                     lv.addView(TextView(context).also { v ->
                         v.layoutParams = GridLayout.LayoutParams().also { lp ->
                             val weight = TypedValue().also {
@@ -233,7 +228,7 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
 
-            rv.scenario_notice_text.let { v ->
+            rv.scenarioNoticeText.let { v ->
                 if (item.advice.notice?.isNotEmpty() == true) {
                     v.visibility = View.VISIBLE
                     v.text = item.advice.notice
@@ -241,13 +236,13 @@ class ScenarioDetailFragment : BaseFragment() {
                     v.visibility = View.GONE
                 }
             }
-            rv.scenario_summary_text.text = item.advice.summary
-            rv.guide_for_writer_text.text = item.advice.detail
+            rv.scenarioSummaryText.text = item.advice.summary
+            rv.guideForWriterText.text = item.advice.detail
 
             // 置き方テンプレの表示
             if (item.templateInfo?.isNotEmpty() == true) {
-                rv.template_for_writer_title.visibility = View.VISIBLE
-                rv.template_for_writer_text.let { lv ->
+                rv.templateForWriterTitle.visibility = View.VISIBLE
+                rv.templateForWriterText.let { lv ->
                     lv.visibility = View.VISIBLE
                     item.templateInfo.forEach { li ->
                         lv.addView(TextView(context).also { v ->
@@ -261,9 +256,9 @@ class ScenarioDetailFragment : BaseFragment() {
                             v.text = li.loop
                         })
                         if (li.standby?.isNotEmpty() == true) {
-                            lv.addView(inflater.inflate(R.layout.linear_item_template_standby, lv, false).also { v ->
-                                v.loop_standby.text = li.standby
-                            })
+                            lv.addView(LinearItemTemplateStandbyBinding.inflate(inflater, lv, false).also { v ->
+                                v.loopStandby.text = li.standby
+                            }.root)
                         }
                         li.perDay.forEach { da ->
                             if (da.day > 0) {
@@ -291,17 +286,17 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
 
-            rv.show_private.setOnClickListener {
-                rv.private_wrapper.let { w ->
+            rv.showPrivate.setOnClickListener {
+                rv.privateWrapper.let { w ->
                     if (w.visibility == View.VISIBLE) {
                         w.visibility = View.GONE
-                        rv.show_private.text = getString(R.string.show_private_sheet)
+                        rv.showPrivate.text = getString(R.string.show_private_sheet)
                     } else {
                         AlertDialog.Builder(context, R.style.Theme_SangekiAndroid_DialogBase)
                             .setMessage(R.string.confirm_to_show_private)
                             .setPositiveButton(R.string.ok) { _, _ ->
                                 w.visibility = View.VISIBLE
-                                rv.show_private.text = getString(R.string.hide_private_sheet)
+                                rv.showPrivate.text = getString(R.string.hide_private_sheet)
                             }
                             .setNegativeButton(R.string.cancel, null)
                             .show()
@@ -309,7 +304,13 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
         }
-        return rootView
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        Logger.methodStart(TAG)
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onAttach(context: Context) {

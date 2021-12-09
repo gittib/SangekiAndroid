@@ -139,6 +139,7 @@
                         android:background="@color/underline"/>
 
                     <include
+                        android:id="@+id/inc_difficulty_row"
                         layout="@layout/inc_difficulty_row"/>
 
                     <GridLayout

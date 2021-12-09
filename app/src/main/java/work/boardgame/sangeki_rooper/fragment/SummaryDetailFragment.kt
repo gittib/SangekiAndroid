@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.summary_detail_fragment.view.*
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.databinding.SummaryDetailFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.SummaryDetailViewModel
 import work.boardgame.sangeki_rooper.util.Logger
 
@@ -29,30 +29,31 @@ class SummaryDetailFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: SummaryDetailViewModel
-    private var rootView: View? = null
+    private var _binding: SummaryDetailFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Logger.methodStart(TAG)
 
         savedInstanceState?.getParcelable<SummaryDetailViewModel>(TAG)?.let {
             viewModel = it
         }
 
-        rootView = inflater.inflate(R.layout.summary_detail_fragment, container, false).also { rv ->
-            rv.pdf_viewer.fromAsset(viewModel.pdfAssetPath ?: "summary/btx.pdf").load()
+        _binding = SummaryDetailFragmentBinding.inflate(inflater, container, false).also { rv ->
+            rv.pdfViewer.fromAsset(viewModel.pdfAssetPath ?: "summary/btx.pdf").load()
 
-            rv.menu_button.setOnClickListener {
-                if (rv.summary_drawer_layout.isDrawerOpen(GravityCompat.END)) {
-                    rv.summary_drawer_layout.closeDrawer(GravityCompat.END)
+            rv.menuButton.setOnClickListener {
+                if (rv.summaryDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    rv.summaryDrawerLayout.closeDrawer(GravityCompat.END)
                 } else {
-                    rv.summary_drawer_layout.openDrawer(GravityCompat.END)
+                    rv.summaryDrawerLayout.openDrawer(GravityCompat.END)
                 }
             }
 
-            rv.summary_nav.setNavigationItemSelectedListener {item ->
+            rv.summaryNav.setNavigationItemSelectedListener {item ->
                 val fileName = when (item.itemId) {
                     R.id.summary_nav_item_fs -> "summary/fs.pdf"
                     R.id.summary_nav_item_btx -> "summary/btx.pdf"
@@ -64,14 +65,20 @@ class SummaryDetailFragment : BaseFragment() {
                 }
                 fileName?.let {
                     viewModel.pdfAssetPath = it
-                    rv.pdf_viewer.fromAsset(it).load()
+                    rv.pdfViewer.fromAsset(it).load()
                 }
-                rv.summary_drawer_layout.closeDrawer(GravityCompat.END)
+                rv.summaryDrawerLayout.closeDrawer(GravityCompat.END)
 
                 true
             }
         }
-        return rootView
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        Logger.methodStart(TAG)
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
