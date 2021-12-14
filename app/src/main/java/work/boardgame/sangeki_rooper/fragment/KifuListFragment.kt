@@ -12,15 +12,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.adapter_item_kifu.view.*
-import kotlinx.android.synthetic.main.adapter_item_kifu_header.view.*
-import kotlinx.android.synthetic.main.kifu_list_fragment.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.activity.ContainerActivity
+import work.boardgame.sangeki_rooper.databinding.AdapterItemFooterBinding
+import work.boardgame.sangeki_rooper.databinding.AdapterItemKifuBinding
+import work.boardgame.sangeki_rooper.databinding.AdapterItemKifuHeaderBinding
+import work.boardgame.sangeki_rooper.databinding.KifuListFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuListViewModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.format
@@ -35,23 +36,30 @@ class KifuListFragment : BaseFragment(),
     }
 
     private lateinit var viewModel: KifuListViewModel
-    private var rootView: View? = null
+    private var _binding: KifuListFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Logger.methodStart(TAG)
-        rootView = inflater.inflate(R.layout.kifu_list_fragment, container, false).also { rv ->
-            rv.kifu_list.let {
+        _binding = KifuListFragmentBinding.inflate(inflater, container, false).also { rv ->
+            rv.kifuList.let {
                 it.layoutManager = LinearLayoutManager(context)
                 it.adapter = KifuListAdapter()
             }
-            rv.create_new_kifu.setOnClickListener {
+            rv.createNewKifu.setOnClickListener {
                 activity.startFragment(KifuStandbyFragment::class.qualifiedName)
             }
         }
-        return rootView
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        Logger.methodStart(TAG)
+        _binding = null
+        super.onDestroyView()
     }
 
     override fun onAttach(context: Context) {
@@ -66,7 +74,7 @@ class KifuListFragment : BaseFragment(),
             val dao = MyApplication.db.gameDao()
             viewModel.games = dao.loadAllGame().toMutableList()
             withContext(Dispatchers.Main) {
-                rootView?.kifu_list?.adapter?.notifyDataSetChanged()
+                binding.kifuList.adapter?.notifyDataSetChanged()
             }
         }
     }
@@ -79,8 +87,8 @@ class KifuListFragment : BaseFragment(),
     private inner class KifuListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         inner class HeaderViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             fun onBind() {
-                itemView.let { rv ->
-                    rv.start_new_game_button.setOnClickListener {
+                AdapterItemKifuHeaderBinding.bind(itemView).let { rv ->
+                    rv.startNewGameButton.setOnClickListener {
                         activity.startFragment(KifuStandbyFragment::class.qualifiedName)
                     }
                 }
@@ -89,18 +97,18 @@ class KifuListFragment : BaseFragment(),
         inner class KifuViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             fun onBind(position: Int) {
                 val game = viewModel.games[position-1]
-                itemView.let { rv ->
-                    rv.kifu_summary.text = String.format("%s\n%sループ %d日", game.setName, game.loop, game.day)
-                    rv.create_date.text = game.createdAt.format()
+                AdapterItemKifuBinding.bind(itemView).let { rv ->
+                    rv.kifuSummary.text = String.format("%s\n%sループ %d日", game.setName, game.loop, game.day)
+                    rv.createDate.text = game.createdAt.format()
 
-                    rv.setOnClickListener {
+                    rv.root.setOnClickListener {
                         activity.showProgress()
                         activity.startFragment(KifuDetailFragment::class.qualifiedName, game.id)
                         Handler(Looper.getMainLooper()).postDelayed({
                             activity.dismissProgress()
                         }, 1000)
                     }
-                    rv.setOnLongClickListener {
+                    rv.root.setOnLongClickListener {
                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                             .setTitle(R.string.kifu_delete_confirm_dialog_title)
                             .setMessage(String.format(getString(R.string.kifu_delete_confirm_dialog_message),
@@ -111,7 +119,7 @@ class KifuListFragment : BaseFragment(),
                                     withContext(Dispatchers.Main) {
                                         val index = viewModel.games.indexOfFirst { it.id == game.id }
                                         viewModel.games.removeAt(index)
-                                        rootView?.kifu_list?.adapter?.notifyItemRemoved(index+1)
+                                        binding.kifuList.adapter?.notifyItemRemoved(index+1)
 
                                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                             .setMessage(R.string.kifu_delete_complete_dialog_message)
@@ -132,16 +140,16 @@ class KifuListFragment : BaseFragment(),
             val inflater = LayoutInflater.from(context)
             return when (viewType) {
                 ViewType.HEADER -> {
-                    val v = inflater.inflate(R.layout.adapter_item_kifu_header, parent, false)
-                    HeaderViewHolder(v)
+                    val v = AdapterItemKifuHeaderBinding.inflate(inflater, parent, false)
+                    HeaderViewHolder(v.root)
                 }
                 ViewType.KIFU -> {
-                    val v = inflater.inflate(R.layout.adapter_item_kifu, parent, false)
-                    KifuViewHolder(v)
+                    val v = AdapterItemKifuBinding.inflate(inflater, parent, false)
+                    KifuViewHolder(v.root)
                 }
                 ViewType.FOOTER -> {
-                    val v = inflater.inflate(R.layout.adapter_item_footer, parent, false)
-                    object : RecyclerView.ViewHolder(v){}
+                    val v = AdapterItemFooterBinding.inflate(inflater, parent, false)
+                    object : RecyclerView.ViewHolder(v.root){}
                 }
                 else -> throw IllegalArgumentException("invalid view type: $viewType")
             }

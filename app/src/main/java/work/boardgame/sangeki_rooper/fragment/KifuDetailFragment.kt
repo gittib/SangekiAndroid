@@ -17,22 +17,16 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.adapter_item_incident_detective.view.*
-import kotlinx.android.synthetic.main.grid_item_chara_detect_note.view.*
-import kotlinx.android.synthetic.main.grid_item_chara_role_detect_mark.view.*
-import kotlinx.android.synthetic.main.grid_item_role_title.view.*
-import kotlinx.android.synthetic.main.inc_action_card.view.*
-import kotlinx.android.synthetic.main.kifu_detail_fragment.view.*
-import kotlinx.android.synthetic.main.linear_item_kifu_loop_title.view.*
-import kotlinx.android.synthetic.main.linear_item_kifu_per_day.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import work.boardgame.sangeki_rooper.MyApplication
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.activity.ContainerActivity
+import work.boardgame.sangeki_rooper.database.Day
 import work.boardgame.sangeki_rooper.database.Npc
 import work.boardgame.sangeki_rooper.database.dao.GameDao
+import work.boardgame.sangeki_rooper.databinding.*
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
 import work.boardgame.sangeki_rooper.util.*
@@ -53,7 +47,8 @@ class KifuDetailFragment : BaseFragment() {
         const val GAME_ID = "GAME_ID"
     }
 
-    private var rootView: View? = null
+    private var _binding: KifuDetailFragmentBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewModel: KifuDetailViewModel
     private val ruleMaster by lazy { DetectiveInfoModel.getRuleMaster(activity) }
     private val inflater:LayoutInflater by lazy { LayoutInflater.from(activity) }
@@ -61,16 +56,17 @@ class KifuDetailFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Logger.methodStart(TAG)
-        return inflater.inflate(R.layout.kifu_detail_fragment, container, false)
+        _binding = KifuDetailFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.methodStart(TAG)
         super.onViewCreated(view, savedInstanceState)
-        rootView = view.also { rv ->
-            rv.kifu_detail_nav.setNavigationItemSelectedListener { item ->
+        binding.let { rv ->
+            rv.kifuDetailNav.setNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.show_summary -> {
                         startActivity(Intent(activity, ContainerActivity::class.java).also {
@@ -79,7 +75,16 @@ class KifuDetailFragment : BaseFragment() {
                             Logger.d(TAG, "abbr = $abbr")
                             it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_DATA, abbr)
                         })
-                        rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
+                        rv.kifuDetailLayout.closeDrawer(GravityCompat.END)
+                    }
+                    R.id.scroll_to_character_list -> {
+                        rv.kifuDetailScroll.smoothScrollTo(0, rv.characterListTitle.y.toInt())
+                        rv.kifuDetailLayout.closeDrawer(GravityCompat.END)
+                    }
+                    R.id.scroll_to_today -> {
+                        val y = (rv.kifuList.parent as View).y - 20f + (getLastDetectiveDay()?.y ?: 0f)
+                        rv.kifuDetailScroll.smoothScrollTo(0, y.toInt())
+                        rv.kifuDetailLayout.closeDrawer(GravityCompat.END)
                     }
                     R.id.show_kifu_preview -> {
                         // TODO("棋譜プレビュー画面開発中")
@@ -106,23 +111,23 @@ class KifuDetailFragment : BaseFragment() {
                 }
                 true
             }
-            rv.show_kifu_detail_menu.setOnClickListener { rv.kifu_detail_layout.openDrawer(GravityCompat.END) }
+            rv.showKifuDetailMenu.setOnClickListener { rv.kifuDetailLayout.openDrawer(GravityCompat.END) }
 
-            rv.character_list_title.setOnClickListener {
+            rv.characterListTitle.setOnClickListener {
                 AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                         .setMessage(R.string.kifu_character_list_explain_dialog_message)
                         .setPositiveButton(R.string.ok, null)
                         .show()
             }
 
-            rv.incident_list_title.setOnClickListener {
+            rv.incidentListTitle.setOnClickListener {
                 AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                         .setMessage(R.string.kifu_incident_list_explain_dialog_message)
                         .setPositiveButton(R.string.ok, null)
                         .show()
             }
 
-            rv.add_character.setOnClickListener {
+            rv.addCharacter.setOnClickListener {
                 CardSelectDialogFragment.newInstance(getString(R.string.dialog_title_choose_add_character))
                         .setOnSelectListener { charaName ->
                             Logger.d(TAG, "$charaName をえらんだ！！！")
@@ -157,7 +162,7 @@ class KifuDetailFragment : BaseFragment() {
     override fun onPause() {
         Logger.methodStart(TAG)
         super.onPause()
-        rootView?.let { updateDetectiveInfo(it) }
+        updateDetectiveInfo(binding)
     }
 
     override fun onDetach() {
@@ -185,7 +190,7 @@ class KifuDetailFragment : BaseFragment() {
 
     private fun applyViewData() {
         val rel = viewModel.gameRelation ?: return
-        val rv = rootView ?: return
+        val rv = _binding ?: return
 
         Logger.methodStart(TAG)
 
@@ -194,11 +199,11 @@ class KifuDetailFragment : BaseFragment() {
 
         val handler = Handler(Looper.getMainLooper())
 
-        rv.game_start_time.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
+        rv.gameStartTime.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
 
-        rv.set_loop_day.text = String.format(getString(R.string.set_loop_day_text), rel.game.setName, rel.game.loop, rel.game.day)
+        rv.setLoopDay.text = String.format(getString(R.string.set_loop_day_text), rel.game.setName, rel.game.loop, rel.game.day)
         if (rel.game.specialRule?.isNotEmpty() == true) {
-            rv.kifu_detail_special_rule.text = rel.game.specialRule
+            rv.kifuDetailSpecialRule.text = rel.game.specialRule
         }
 
         val layoutParams = ViewGroup.MarginLayoutParams(0, 0).also { lp ->
@@ -210,7 +215,7 @@ class KifuDetailFragment : BaseFragment() {
 
         val abbr = Util.tragedySetNameAbbr(activity, rel.game.setName)
         val master = ruleMaster.first { it.setName == abbr }
-        rv.ruleY_list.let { lv ->
+        rv.ruleYList.let { lv ->
             lv.removeAllViews()
             master.rules.filter { it.isRuleY }.forEach { rule ->
                 lv.addView(CheckBox(activity).also {
@@ -221,7 +226,7 @@ class KifuDetailFragment : BaseFragment() {
                 })
             }
         }
-        rv.ruleX1_list.let { lv ->
+        rv.ruleX1List.let { lv ->
             lv.removeAllViews()
             master.rules.filter { !it.isRuleY }.forEach { rule ->
                 lv.addView(CheckBox(activity).also {
@@ -234,9 +239,9 @@ class KifuDetailFragment : BaseFragment() {
         }
         if (rel.game.setName == getString(R.string.summary_name_fs)) {
             rv.ruleX2.visibility = View.GONE
-            rv.ruleX2_list.visibility = View.GONE
+            rv.ruleX2List.visibility = View.GONE
         } else {
-            rv.ruleX2_list.let { lv ->
+            rv.ruleX2List.let { lv ->
                 lv.removeAllViews()
                 master.rules.filter { !it.isRuleY }.forEach { rule ->
                     lv.addView(CheckBox(activity).also {
@@ -254,16 +259,16 @@ class KifuDetailFragment : BaseFragment() {
             activity.dismissProgress()
 
             try {
-                val lv = rv.incident_list
+                val lv = rv.incidentList
                 rel.incidents.forEach { incident ->
                     val incidentTag = "incident-criminal-" + incident.id
-                    lv.findViewWithTag<ViewGroup>(incidentTag) ?: inflater.inflate(R.layout.adapter_item_incident_detective, lv, false).also { v ->
-                        v.tag = incidentTag
-                        v.incident_day.text = String.format(getString(R.string.day_label), incident.day)
-                        v.incident_name.text = incident.name
+                    lv.findViewWithTag<ViewGroup>(incidentTag) ?: AdapterItemIncidentDetectiveBinding.inflate(inflater, lv, false).also { v ->
+                        v.root.tag = incidentTag
+                        v.incidentDay.text = String.format(getString(R.string.day_label), incident.day)
+                        v.incidentName.text = incident.name
                         // TODO 偽装事件とか用に事件の備考を表示したい
 
-                        v.incident_criminal_select.let { sel ->
+                        v.incidentCriminalSelect.let { sel ->
                             sel.text = incident.criminal ?: getString(R.string.unknown_chara)
                             sel.setOnClickListener {
                                 val criminalList = if (Util.isGunzo(incident.name)) mutableListOf(
@@ -283,7 +288,7 @@ class KifuDetailFragment : BaseFragment() {
                             }
                         }
 
-                        v.setOnLongClickListener {
+                        v.root.setOnLongClickListener {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                 .setTitle(incident.name)
                                 .setMessage(Util.incidentExplain(incident.name ?: ""))
@@ -292,7 +297,7 @@ class KifuDetailFragment : BaseFragment() {
                             true
                         }
 
-                        lv.addView(v)
+                        lv.addView(v.root)
                     }
                 }
             } catch (e: IllegalStateException) {
@@ -311,7 +316,7 @@ class KifuDetailFragment : BaseFragment() {
 
     private fun updateCharacterList() {
         val rel = viewModel.gameRelation ?: return
-        val lv = rootView?.character_list ?: return
+        val lv = _binding?.characterList ?: return
         Logger.methodStart(TAG)
 
         try {
@@ -332,33 +337,33 @@ class KifuDetailFragment : BaseFragment() {
 
                 roles.forEachIndexed { index, role ->
                     val roleTitleTag = "role-title-$index"
-                    lv.findViewWithTag<ViewGroup>(roleTitleTag) ?: inflater.inflate(R.layout.grid_item_role_title, lv, false).also {
-                        it.tag = roleTitleTag
-                        it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(index+1)).also { lp ->
+                    lv.findViewWithTag<ViewGroup>(roleTitleTag) ?: GridItemRoleTitleBinding.inflate(inflater, lv, false).also {
+                        it.root.tag = roleTitleTag
+                        it.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(index+1)).also { lp ->
                             lp.width = GridLayout.LayoutParams.WRAP_CONTENT
                             lp.height = GridLayout.LayoutParams.WRAP_CONTENT
                         }
-                        it.background_role_name.text = longestRole
-                        it.role_name.text = role.replace("ー", "|").toCharArray().joinToString("\n")
-                        lv.addView(it)
+                        it.backgroundRoleName.text = longestRole
+                        it.roleName.text = role.replace("ー", "|").toCharArray().joinToString("\n")
+                        lv.addView(it.root)
                     }
                 }
                 val noteTitleTag = "note-title-tag"
-                lv.findViewWithTag<ViewGroup>(noteTitleTag) ?: inflater.inflate(R.layout.grid_item_role_title, lv, false).also {
-                    it.tag = noteTitleTag
-                    it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(roles.size+1)).also { lp ->
+                lv.findViewWithTag<ViewGroup>(noteTitleTag) ?: GridItemRoleTitleBinding.inflate(inflater, lv, false).also {
+                    it.root.tag = noteTitleTag
+                    it.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(roles.size+1)).also { lp ->
                         lp.width = resources.getDimensionPixelSize(R.dimen.role_list_chara_note_width)
                         lp.height = GridLayout.LayoutParams.WRAP_CONTENT
                     }
-                    it.background_role_name.text = longestRole
-                    it.role_name.let { tv ->
+                    it.backgroundRoleName.text = longestRole
+                    it.roleName.let { tv ->
                         tv.layoutParams = tv.layoutParams.also { lp ->
                             (lp as FrameLayout.LayoutParams).gravity = Gravity.CENTER_VERTICAL or Gravity.LEFT
                         }
                         tv.text = getString(R.string.note)
                         tv.textAlignment = TextView.TEXT_ALIGNMENT_TEXT_START
                     }
-                    lv.addView(it)
+                    lv.addView(it.root)
                 }
             }
 
@@ -370,7 +375,7 @@ class KifuDetailFragment : BaseFragment() {
     }
     private fun inflateCharacterRow(chara: Npc, row: Int) {
         Logger.methodStart(TAG)
-        val lv = rootView?.character_list ?: return
+        val lv = binding.characterList
 
         val characterRoleTag = getCharacterRowTag(chara.name)
         lv.findViewWithTag<View>(characterRoleTag)?.let { return }
@@ -395,39 +400,39 @@ class KifuDetailFragment : BaseFragment() {
             }
         })
         viewModel.rolesOfRule.forEachIndexed { index, role ->
-            lv.addView(inflater.inflate(R.layout.grid_item_chara_role_detect_mark, lv, false).also { v ->
-                v.tag = characterRoleTag
-                v.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+1)).also { lp ->
+            lv.addView(GridItemCharaRoleDetectMarkBinding.inflate(inflater, lv, false).also { v ->
+                v.root.tag = characterRoleTag
+                v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+1)).also { lp ->
                     lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                     lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                 }
-                Picasso.with(activity).load(Util.standDrawable(chara.name)).into(v.background_chara_image)
-                v.role_mark.text = chara.roleDetectiveList[role]
-                v.setOnClickListener {
-                    it.role_mark.text = when (it.role_mark.text) {
+                Picasso.with(activity).load(Util.standDrawable(chara.name)).into(v.backgroundCharaImage)
+                v.roleMark.text = chara.roleDetectiveList[role]
+                v.root.setOnClickListener {
+                    v.roleMark.text = when (v.roleMark.text) {
                         "", null -> "〇"
                         "〇" -> "☓"
                         "☓" -> "？"
                         else -> ""
                     }
-                    chara.roleDetectiveList[role] = it.role_mark.text.toString()
+                    chara.roleDetectiveList[role] = v.roleMark.text.toString()
                 }
-            })
+            }.root)
         }
-        lv.addView(inflater.inflate(R.layout.grid_item_chara_detect_note, lv, false).also {
-            it.tag = characterRoleTag
-            it.input_edit.let { et ->
+        lv.addView(GridItemCharaDetectNoteBinding.inflate(inflater, lv, false).also {
+            it.root.tag = characterRoleTag
+            it.inputEdit.let { et ->
                 et.hint = String.format(getString(R.string.memo_for_character), chara.name)
                 et.setText(chara.note)
                 et.doAfterTextChanged { chara.note = et.text.toString() }
             }
-        })
+        }.root)
     }
     private fun getCharacterRowTag(charaName: String) = "character-role-$charaName"
 
     private fun updateKifuList(inflater: LayoutInflater) {
         val rel = viewModel.gameRelation ?: return
-        val lv = rootView?.kifu_list ?: return
+        val lv = _binding?.kifuList ?: return
         Logger.methodStart(TAG)
 
         val handler = Handler(Looper.getMainLooper())
@@ -437,10 +442,10 @@ class KifuDetailFragment : BaseFragment() {
             handler.postDelayed({
                 try {
                     val loopTag = "kifu_per_day-$loop"
-                    lv.findViewWithTag<ViewGroup>(loopTag) ?: inflater.inflate(R.layout.linear_item_kifu_loop_title, lv, false).also {
-                        it.tag = loopTag
-                        it.loop_title.text = String.format(getString(R.string.loop_label), loop)
-                        lv.addView(it)
+                    lv.findViewWithTag<ViewGroup>(loopTag) ?: LinearItemKifuLoopTitleBinding.inflate(inflater, lv, false).also {
+                        it.root.tag = loopTag
+                        it.loopTitle.text = String.format(getString(R.string.loop_label), loop)
+                        lv.addView(it.root)
                     }
                 } catch (e: IllegalStateException) {
                     if (getActivity() != null) throw e
@@ -458,12 +463,14 @@ class KifuDetailFragment : BaseFragment() {
                         val writerCards = kifus.filter { it.fromWriter }.sortedBy { it.id }
                         val heroCards = kifus.filter { !it.fromWriter }.sortedBy { it.id }
 
-                        val v = lv.findViewWithTag<ViewGroup>(loopDayTag) ?: inflater.inflate(R.layout.linear_item_kifu_per_day, lv, false).also { v ->
-                            v.tag = loopDayTag
+                        val v = lv.findViewWithTag<ViewGroup>(loopDayTag)?.let {
+                            LinearItemKifuPerDayBinding.bind(it)
+                        } ?: LinearItemKifuPerDayBinding.inflate(inflater, lv, false).also { v ->
+                            v.root.tag = loopDayTag
 
-                            if (loop % 2 == 0) v.setBackgroundResource(R.drawable.bg_solid_alt_stroke_black)
+                            if (loop % 2 == 0) v.root.setBackgroundResource(R.drawable.bg_solid_alt_stroke_black)
 
-                            v.loop_day_title.text = String.format(getString(R.string.loop_day_unit_title), loop, day)
+                            v.loopDayTitle.text = String.format(getString(R.string.loop_day_unit_title), loop, day)
 
                             setActionCardClickEvent(loop, day, true, 0, v.writer1)
                             setActionCardClickEvent(loop, day, true, 1, v.writer2)
@@ -471,38 +478,38 @@ class KifuDetailFragment : BaseFragment() {
                             setActionCardClickEvent(loop, day, false, 0, v.hero1)
                             setActionCardClickEvent(loop, day, false, 1, v.hero2)
                             setActionCardClickEvent(loop, day, false, 2, v.hero3)
-                            lv.addView(v)
+                            lv.addView(v.root)
                         }
 
-                        v.loop_day_note.let { tv ->
+                        v.loopDayNote.let { tv ->
                             tv.setText(dayRecord?.note)
                             tv.doAfterTextChanged { dayRecord?.note = tv.text.toString() }
                         }
 
                         writerCards.getOrNull(0)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer1.chara_card)
-                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer1.action_card)
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer1.charaCard)
+                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer1.actionCard)
                         }
                         writerCards.getOrNull(1)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer2.chara_card)
-                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer2.action_card)
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer2.charaCard)
+                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer2.actionCard)
                         }
                         writerCards.getOrNull(2)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer3.chara_card)
-                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer3.action_card)
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer3.charaCard)
+                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer3.actionCard)
                         }
 
                         heroCards.getOrNull(0)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero1.chara_card)
-                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero1.action_card)
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero1.charaCard)
+                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero1.actionCard)
                         }
                         heroCards.getOrNull(1)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero2.chara_card)
-                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero2.action_card)
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero2.charaCard)
+                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero2.actionCard)
                         }
                         heroCards.getOrNull(2)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero3.chara_card)
-                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero3.action_card)
+                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero3.charaCard)
+                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero3.actionCard)
                         }
                     } catch (e: IllegalStateException) {
                         if (getActivity() != null) throw e
@@ -512,8 +519,8 @@ class KifuDetailFragment : BaseFragment() {
             }
         }
     }
-    private fun setActionCardClickEvent(loop:Int, day:Int, isWriter:Boolean, index:Int, view:View) {
-        view.setOnClickListener {
+    private fun setActionCardClickEvent(loop:Int, day:Int, isWriter:Boolean, index:Int, view:IncActionCardBinding) {
+        view.root.setOnClickListener {
             val charas:List<String>? = viewModel.gameRelation?.npcs?.map { it.name }?.toMutableList()?.also {
                 it.add(0, "")
                 it.add("神社")
@@ -527,9 +534,9 @@ class KifuDetailFragment : BaseFragment() {
                     CardSelectDialogFragment.newInstance(getString(R.string.dialog_title_choose_action), isWriter)
                         .setOnSelectListener { card ->
                             Logger.d(TAG, "$target へ $card を")
-                            Picasso.with(activity).load(Util.cardDrawable(target)).into(view.chara_card)
+                            Picasso.with(activity).load(Util.cardDrawable(target)).into(view.charaCard)
                             val imgRes = if (isWriter) Util.writerCardDrawable(card) else Util.heroCardDrawable(card)
-                            Picasso.with(activity).load(imgRes).into(view.action_card)
+                            Picasso.with(activity).load(imgRes).into(view.actionCard)
 
                             // 棋譜レコードの更新
                             val kifus = viewModel.gameRelation!!.kifus.filter { it.dayId == d!!.id && it.fromWriter == isWriter }
@@ -590,19 +597,46 @@ class KifuDetailFragment : BaseFragment() {
         updateCharacterList()
     }
 
-    private fun updateDetectiveInfo(rv: View) {
+    private fun getLastDetectiveDay(): View? {
+        Logger.methodStart(TAG)
+        val rel = viewModel.gameRelation ?: return null
+
+        fun Day.getIndex(dayOfLoop: Int) = this.loop * dayOfLoop + this.day
+
+        val targets: List<String> = rel.npcs.map { it.name }.toMutableList().also {
+            it.add("神社")
+            it.add("病院")
+            it.add("都市")
+            it.add("学校")
+        }
+        val maxDayByDay = rel.days.filter { it.note?.isNotEmpty() == true }.maxBy { it.getIndex(rel.game.day) }
+        val maxDayByKifu = rel.kifus.filter { it.target in targets }.mapNotNull { kifu ->
+            rel.days.find { it.id == kifu.dayId }
+        }.maxBy { it.getIndex(rel.game.day) }
+        val maxDayIndex = maxDayByDay?.getIndex(rel.game.day) ?: 0
+        val maxKifuDayIndex = maxDayByKifu?.getIndex(rel.game.day) ?: 0
+        val maxDay = if (maxDayIndex > maxKifuDayIndex) maxDayByDay else maxDayByKifu
+        val maxDayTag = maxDay?.let {
+            val loop = it.loop
+            val day = it.day
+            "kifu_per_day-$loop-$day"
+        }
+        return binding.kifuList.findViewWithTag(maxDayTag)
+    }
+
+    private fun updateDetectiveInfo(rv: KifuDetailFragmentBinding) {
         Logger.methodStart(TAG)
         val detect = viewModel.gameRelation?.game?.detectiveInfo ?: return
         detect.ruleY.clear()
         detect.ruleX1.clear()
         detect.ruleX2.clear()
-        rv.ruleY_list.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
+        rv.ruleYList.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
             detect.ruleY.add(it.tag as String)
         }
-        rv.ruleX1_list.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
+        rv.ruleX1List.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
             detect.ruleX1.add(it.tag as String)
         }
-        rv.ruleX2_list.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
+        rv.ruleX2List.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
             detect.ruleX2.add(it.tag as String)
         }
         viewModel.viewModelScope.launch(Dispatchers.IO) {

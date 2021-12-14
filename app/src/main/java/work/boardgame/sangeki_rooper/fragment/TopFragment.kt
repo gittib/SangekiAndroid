@@ -7,9 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.top_fragment.view.*
-import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.activity.ContainerActivity
+import work.boardgame.sangeki_rooper.databinding.TopFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.TopViewModel
 import work.boardgame.sangeki_rooper.util.Logger
 
@@ -21,39 +20,40 @@ class TopFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: TopViewModel
-    private var rootView: View? = null
+    private var _binding: TopFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Logger.methodStart(TAG)
-        rootView = inflater.inflate(R.layout.top_fragment, container, false).also { rv ->
-            rv.kifu_title.setOnClickListener {
+        _binding = TopFragmentBinding.inflate(inflater, container, false).also { rv ->
+            rv.kifuTitle.setOnClickListener {
                 activity.startFragment(KifuListFragment::class.qualifiedName)
             }
-            rv.kifu_image.setOnClickListener { rv.kifu_title.performClick() }
-            rv.kifu_note.setOnClickListener { rv.kifu_title.performClick() }
+            rv.kifuImage.setOnClickListener { rv.kifuTitle.performClick() }
+            rv.kifuNote.setOnClickListener { rv.kifuTitle.performClick() }
 
-            rv.summary_title.setOnClickListener {
+            rv.summaryTitle.setOnClickListener {
                 activity.startActivity(Intent(activity, ContainerActivity::class.java).also {
                     it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment::class.qualifiedName)
                 })
             }
-            rv.summary_image.setOnClickListener { rv.summary_title.performClick() }
-            rv.summary_note.setOnClickListener { rv.summary_title.performClick() }
+            rv.summaryImage.setOnClickListener { rv.summaryTitle.performClick() }
+            rv.summaryNote.setOnClickListener { rv.summaryTitle.performClick() }
 
-            rv.scenario_list_title.setOnClickListener {
+            rv.scenarioListTitle.setOnClickListener {
                 activity.startFragment(ScenarioListFragment::class.qualifiedName)
             }
-            rv.scenario_list_image.setOnClickListener { rv.scenario_list_title.performClick() }
-            rv.scenario_list_note.setOnClickListener { rv.scenario_list_title.performClick() }
+            rv.scenarioListImage.setOnClickListener { rv.scenarioListTitle.performClick() }
+            rv.scenarioListNote.setOnClickListener { rv.scenarioListTitle.performClick() }
 
-            rv.footer_text.setOnClickListener {
+            rv.footerText.setOnClickListener {
                 activity.startFragment(AboutFragment::class.qualifiedName)
             }
         }
-        return rootView
+        return binding.root
     }
 
     override fun onAttach(context: Context) {

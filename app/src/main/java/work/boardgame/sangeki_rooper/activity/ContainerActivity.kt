@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.databinding.ActivityContainerBinding
 import work.boardgame.sangeki_rooper.fragment.*
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
@@ -28,11 +29,13 @@ class ContainerActivity : BaseActivity() {
     }
 
     private var isFragmentCreating:Boolean = false
+    private lateinit var binding: ActivityContainerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Logger.methodStart(TAG)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_container)
+        binding = ActivityContainerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().let { ft ->

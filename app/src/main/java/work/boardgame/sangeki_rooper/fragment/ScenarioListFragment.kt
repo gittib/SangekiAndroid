@@ -21,9 +21,11 @@ import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.adapter_item_scenario.view.*
-import kotlinx.android.synthetic.main.scenario_list_fragment.view.*
 import work.boardgame.sangeki_rooper.R
+import work.boardgame.sangeki_rooper.databinding.AdapterItemFooterBinding
+import work.boardgame.sangeki_rooper.databinding.AdapterItemScenarioBinding
+import work.boardgame.sangeki_rooper.databinding.AdapterItemScenarioHeaderBinding
+import work.boardgame.sangeki_rooper.databinding.ScenarioListFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioListViewModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
@@ -40,25 +42,26 @@ class ScenarioListFragment : BaseFragment() {
     }
 
     private lateinit var viewModel: ScenarioListViewModel
-    private var rootView: View? = null
+    private var _binding: ScenarioListFragmentBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Logger.methodStart(TAG)
-        rootView = inflater.inflate(R.layout.scenario_list_fragment, container, false).also { rv ->
-            rv.scenario_list.let {
+        _binding = ScenarioListFragmentBinding.inflate(inflater, container, false).also { rv ->
+            rv.scenarioList.let {
                 it.layoutManager = LinearLayoutManager(activity)
                 it.adapter = ScenarioListAdapter()
             }
-            rv.show_scenario_nav.setOnClickListener {
-                rv.scenario_list_layout.let { v ->
+            rv.showScenarioNav.setOnClickListener {
+                rv.scenarioListLayout.let { v ->
                     if (v.isDrawerOpen(GravityCompat.END)) v.closeDrawer(GravityCompat.END)
                     else v.openDrawer(GravityCompat.END)
                 }
             }
-            rv.scenario_list_nav.setNavigationItemSelectedListener {item ->
+            rv.scenarioListNav.setNavigationItemSelectedListener {item ->
                 when (item.itemId) {
                     R.id.show_title -> {
                         if (viewModel.showTitle) {
@@ -66,7 +69,7 @@ class ScenarioListFragment : BaseFragment() {
                                     .setMessage("脚本タイトルを非表示にしますか？")
                                     .setPositiveButton(R.string.ok) { _, _ ->
                                         viewModel.showTitle = false
-                                        rv.scenario_list.adapter?.notifyDataSetChanged()
+                                        rv.scenarioList.adapter?.notifyDataSetChanged()
                                     }
                                     .setNegativeButton(R.string.cancel, null)
                                     .show()
@@ -75,7 +78,7 @@ class ScenarioListFragment : BaseFragment() {
                                     .setMessage("脚本タイトルを表示してもよろしいですか？\n（※ネタバレになる可能性があります）")
                                     .setPositiveButton(R.string.ok) { _, _ ->
                                         viewModel.showTitle = true
-                                        rv.scenario_list.adapter?.notifyDataSetChanged()
+                                        rv.scenarioList.adapter?.notifyDataSetChanged()
                                     }
                                     .setNegativeButton(R.string.cancel, null)
                                     .show()
@@ -100,13 +103,19 @@ class ScenarioListFragment : BaseFragment() {
                         }
                     }
                 }
-                rv.scenario_list_layout.closeDrawer(GravityCompat.END)
+                rv.scenarioListLayout.closeDrawer(GravityCompat.END)
 
                 true
             }
         }
 
-        return rootView
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        Logger.methodStart(TAG)
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onAttach(context: Context) {
@@ -126,7 +135,7 @@ class ScenarioListFragment : BaseFragment() {
                 if (d == 0) d = if (o1.id < o2.id) -1 else 1
                 d
             })
-        rootView?.scenario_list?.adapter?.notifyDataSetChanged()
+        _binding?.scenarioList?.adapter?.notifyDataSetChanged()
     }
 
     private fun updateScenarioList() {
@@ -174,15 +183,15 @@ class ScenarioListFragment : BaseFragment() {
         inner class ScenarioViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             fun onBind(position: Int) {
                 val item = viewModel.scenarioList[position-1]
-                itemView.let { rv ->
-                    rv.scenario_id.text = String.format("[%s]", item.id)
-                    rv.recommended_scenario.visibility = when (item.recommended) {
+                AdapterItemScenarioBinding.bind(itemView).let { rv ->
+                    rv.scenarioId.text = String.format("[%s]", item.id)
+                    rv.recommendedScenario.visibility = when (item.recommended) {
                         true -> View.VISIBLE
                         else -> View.GONE
                     }
-                    rv.tragedy_set.let { v ->
+                    rv.tragedySet.let { v ->
                         v.text = item.set
-                        val d = v?.background
+                        val d = v.background
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             d?.colorFilter = BlendModeColorFilter(item.tragedySetColor(), BlendMode.SRC_IN)
                         } else {
@@ -190,21 +199,21 @@ class ScenarioListFragment : BaseFragment() {
                             d?.setTintMode(PorterDuff.Mode.SRC_IN)
                         }
                     }
-                    rv.scenario_title.let { v ->
+                    rv.scenarioTitle.let { v ->
                         v.text = item.title
                         v.visibility = when (viewModel.showTitle) {
                             true -> View.VISIBLE
                             else -> View.GONE
                         }
                     }
-                    rv.difficulty_name.text = item.difficultyName()
+                    rv.difficultyName.text = item.difficultyName()
                     rv.difficulty.text = item.difficultyStar()
                     rv.loop.text = item.loop()
                     rv.day.text = item.day.toString()
-                    rv.scenario_title.text = item.title
+                    rv.scenarioTitle.text = item.title
                     rv.writer.text = String.format(getString(R.string.writer_introduction), item.writer)
 
-                    rv.setOnClickListener {
+                    rv.root.setOnClickListener {
                         activity.startFragment(ScenarioDetailFragment::class.qualifiedName, item.id)
                     }
                 }
@@ -215,16 +224,16 @@ class ScenarioListFragment : BaseFragment() {
             val inflater = LayoutInflater.from(activity)
             return when (viewType) {
                 ViewType.HEADER -> {
-                    val v = inflater.inflate(R.layout.adapter_item_scenario_header, parent, false)
-                    object: RecyclerView.ViewHolder(v){}
+                    val v = AdapterItemScenarioHeaderBinding.inflate(inflater, parent, false)
+                    object: RecyclerView.ViewHolder(v.root){}
                 }
                 ViewType.SCENARIO -> {
-                    val v = inflater.inflate(R.layout.adapter_item_scenario, parent, false)
-                    ScenarioViewHolder(v)
+                    val v = AdapterItemScenarioBinding.inflate(inflater, parent, false)
+                    ScenarioViewHolder(v.root)
                 }
                 ViewType.FOOTER -> {
-                    val v = inflater.inflate(R.layout.adapter_item_footer, parent, false)
-                    object: RecyclerView.ViewHolder(v){}
+                    val v = AdapterItemFooterBinding.inflate(inflater, parent, false)
+                    object: RecyclerView.ViewHolder(v.root){}
                 }
                 else -> throw IllegalArgumentException("invalid view type: $viewType")
             }
@@ -232,9 +241,9 @@ class ScenarioListFragment : BaseFragment() {
 
         override fun getItemCount(): Int = viewModel.scenarioList.size + 2
 
-        override fun getItemViewType(position: Int): Int = when {
-            position == 0 -> ViewType.HEADER
-            position > viewModel.scenarioList.size -> ViewType.FOOTER
+        override fun getItemViewType(position: Int): Int = when (position) {
+            0 -> ViewType.HEADER
+            itemCount-1 -> ViewType.FOOTER
             else -> ViewType.SCENARIO
         }
 

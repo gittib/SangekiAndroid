@@ -89,6 +89,8 @@
     <string name="dialog_title_choose_add_character">追加キャラクターを選択</string>
     <string name="app_version_history">アプリ更新履歴</string>
     <string name="show_summary">サマリー確認</string>
+    <string name="scroll_to_character_list">キャラクター一覧へスクロール</string>
+    <string name="scroll_to_today">最新の棋譜へスクロール</string>
     <string name="kifu_preview">棋譜プレビュー</string>
     <string name="delete_kifu">棋譜削除</string>
     <string name="choose_criminal">犯人を選んで下さい</string>
