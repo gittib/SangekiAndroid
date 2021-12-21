@@ -61,6 +61,8 @@ class SummaryDetailFragment : BaseFragment() {
                     R.id.summary_nav_item_mcx -> "summary/mcx.pdf"
                     R.id.summary_nav_item_hsa -> "summary/hsa.pdf"
                     R.id.summary_nav_item_wm -> "summary/wm.pdf"
+                    R.id.summary_nav_item_ll -> "summary/ll.pdf"
+                    R.id.summary_nav_item_ahr -> "summary/ahr.pdf"
                     else -> null
                 }
                 fileName?.let {
@@ -99,6 +101,8 @@ class SummaryDetailFragment : BaseFragment() {
             "MCX" -> "summary/mcx.pdf"
             "HSA" -> "summary/hsa.pdf"
             "WM" -> "summary/wm.pdf"
+            "LL" -> "summary/ll.pdf"
+            "AHR" -> "summary/ahr.pdf"
             else -> null
         }
     }
