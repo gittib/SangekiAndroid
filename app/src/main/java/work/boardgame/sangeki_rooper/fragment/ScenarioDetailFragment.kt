@@ -74,7 +74,7 @@ class ScenarioDetailFragment : BaseFragment() {
                         v.incidentName.setOnLongClickListener {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                     .setTitle(incidentData.publicName())
-                                    .setMessage(Util.incidentExplain(incidentData.publicName()))
+                                    .setMessage(Util.incidentExplain(activity, incidentData.publicName()))
                                     .setPositiveButton(R.string.ok, null)
                                     .show()
                             true

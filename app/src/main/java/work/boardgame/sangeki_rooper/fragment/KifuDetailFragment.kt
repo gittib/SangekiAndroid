@@ -291,7 +291,7 @@ class KifuDetailFragment : BaseFragment() {
                         v.root.setOnLongClickListener {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                 .setTitle(incident.name)
-                                .setMessage(Util.incidentExplain(incident.name ?: ""))
+                                .setMessage(Util.incidentExplain(activity, incident.name ?: ""))
                                 .setPositiveButton(R.string.ok, null)
                                 .show()
                             true

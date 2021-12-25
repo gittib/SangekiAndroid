@@ -38,5 +38,8 @@
             棋譜画面にて、メニューからキャラクター一覧と最新の棋譜へスクロールする機能を追加しました。\n
             Another Horizon Revised と Last Liar について、脚本リストで未対応だった箇所を修正しました。
         </item>
+        <item>1.1.2\n
+            惨劇セットサマリー画面にて、Another Horizon Revised と Last Liar のサマリーを追加しました。
+        </item>
     </string-array>
 </resources>
