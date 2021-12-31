@@ -150,7 +150,6 @@ object Util {
         }.toMutableList()
     }
 
-    // TODO 上位存在、従者、アルバイトのカード画像差し替え
     @DrawableRes
     fun cardDrawable(charaName: String, reverse:Boolean = false): Int {
         when (charaName) {
@@ -169,7 +168,7 @@ object Util {
                 "妹" -> R.drawable.character_31_0
                 "教祖" -> R.drawable.character_29_0
                 "ご神木", "御神木" -> R.drawable.character_30_0
-                "上位存在" -> R.drawable.card_joui
+                "上位存在" -> R.drawable.character_35_0
                 "入院患者", "患者" -> R.drawable.character_09_0
                 "医者" -> R.drawable.character_08_0
                 "ナース" -> R.drawable.character_17_0
@@ -184,9 +183,9 @@ object Util {
                 "マスコミ" -> R.drawable.character_15_0
                 "鑑識官" -> R.drawable.character_21_0
                 "コピーキャット", "C.C." -> R.drawable.character_28_0
-                "従者" -> R.drawable.card_juusha
-                "アルバイト" -> R.drawable.card_baito
-                "アルバイト？" -> R.drawable.card_baito
+                "従者" -> R.drawable.character_34_0
+                "アルバイト" -> R.drawable.character_32_0
+                "アルバイト？" -> R.drawable.character_33_0
                 "男子学生" -> R.drawable.character_01_0
                 "女子学生" -> R.drawable.character_02_0
                 "お嬢様" -> R.drawable.character_03_0
@@ -212,7 +211,7 @@ object Util {
                 "妹" -> R.drawable.character_31_1
                 "教祖" -> R.drawable.character_29_1
                 "ご神木", "御神木" -> R.drawable.character_30_1
-                "上位存在" -> R.drawable.card_joui
+                "上位存在" -> R.drawable.character_35_1
                 "入院患者", "患者" -> R.drawable.character_09_1
                 "医者" -> R.drawable.character_08_1
                 "ナース" -> R.drawable.character_17_1
@@ -227,9 +226,9 @@ object Util {
                 "マスコミ" -> R.drawable.character_15_1
                 "鑑識官" -> R.drawable.character_21_1
                 "コピーキャット", "C.C." -> R.drawable.character_28_1
-                "従者" -> R.drawable.card_juusha
-                "アルバイト" -> R.drawable.card_baito
-                "アルバイト？" -> R.drawable.card_baito
+                "従者" -> R.drawable.character_34_1
+                "アルバイト" -> R.drawable.character_32_1
+                "アルバイト？" -> R.drawable.character_33_1
                 "男子学生" -> R.drawable.character_01_1
                 "女子学生" -> R.drawable.character_02_1
                 "お嬢様" -> R.drawable.character_03_1
@@ -248,7 +247,6 @@ object Util {
         }
     }
 
-    // TODO 上位存在、従者、アルバイトのカード画像差し替え
     @DrawableRes
     fun standDrawable(charaName: String): Int {
         return when (charaName.replace(Regex("[A-E]$"), "")) {
@@ -259,7 +257,7 @@ object Util {
             "妹" -> R.drawable.chara_stand_31
             "教祖" -> R.drawable.chara_stand_29
             "ご神木", "御神木" -> R.drawable.chara_stand_30
-            "上位存在" -> R.drawable.card_joui
+            "上位存在" -> R.drawable.chara_stand_35
             "入院患者", "患者" -> R.drawable.chara_stand_09
             "医者" -> R.drawable.chara_stand_08
             "ナース" -> R.drawable.chara_stand_17
@@ -274,9 +272,9 @@ object Util {
             "マスコミ" -> R.drawable.chara_stand_15
             "鑑識官" -> R.drawable.chara_stand_21
             "コピーキャット", "C.C." -> R.drawable.chara_stand_28
-            "従者" -> R.drawable.card_juusha
-            "アルバイト" -> R.drawable.card_baito
-            "アルバイト？" -> R.drawable.card_baito
+            "従者" -> R.drawable.chara_stand_34
+            "アルバイト" -> R.drawable.chara_stand_32
+            "アルバイト？" -> R.drawable.chara_stand_33
             "男子学生" -> R.drawable.chara_stand_01
             "女子学生" -> R.drawable.chara_stand_02
             "お嬢様" -> R.drawable.chara_stand_03

@@ -143,6 +143,7 @@ class CardSelectDialogFragment : BaseDialogFragment() {
                 "コピーキャット",
                 "従者",
                 "アルバイト",
+                "アルバイト？",
                 "男子学生",
                 "女子学生",
                 "お嬢様",
