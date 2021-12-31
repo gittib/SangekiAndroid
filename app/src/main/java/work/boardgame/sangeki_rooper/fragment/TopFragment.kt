@@ -56,6 +56,12 @@ class TopFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        Logger.methodStart(TAG)
+        _binding = null
+        super.onDestroyView()
+    }
+
     override fun onAttach(context: Context) {
         Logger.methodStart(TAG)
         super.onAttach(context)
