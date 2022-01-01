@@ -62,6 +62,12 @@ class KifuDetailFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        Logger.methodStart(TAG)
+        _binding = null
+        super.onDestroyView()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.methodStart(TAG)
         super.onViewCreated(view, savedInstanceState)
