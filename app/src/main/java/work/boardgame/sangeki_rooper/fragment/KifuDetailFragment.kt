@@ -30,7 +30,6 @@ import work.boardgame.sangeki_rooper.databinding.*
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
 import work.boardgame.sangeki_rooper.util.*
-import java.lang.IllegalStateException
 
 class KifuDetailFragment : BaseFragment() {
     companion object {
@@ -345,7 +344,7 @@ class KifuDetailFragment : BaseFragment() {
                     val roleTitleTag = "role-title-$index"
                     lv.findViewWithTag<ViewGroup>(roleTitleTag) ?: GridItemRoleTitleBinding.inflate(inflater, lv, false).also {
                         it.root.tag = roleTitleTag
-                        it.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(index+1)).also { lp ->
+                        it.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(index+2)).also { lp ->
                             lp.width = GridLayout.LayoutParams.WRAP_CONTENT
                             lp.height = GridLayout.LayoutParams.WRAP_CONTENT
                         }
@@ -357,7 +356,7 @@ class KifuDetailFragment : BaseFragment() {
                 val noteTitleTag = "note-title-tag"
                 lv.findViewWithTag<ViewGroup>(noteTitleTag) ?: GridItemRoleTitleBinding.inflate(inflater, lv, false).also {
                     it.root.tag = noteTitleTag
-                    it.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(roles.size+1)).also { lp ->
+                    it.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(0), GridLayout.spec(roles.size+2)).also { lp ->
                         lp.width = resources.getDimensionPixelSize(R.dimen.role_list_chara_note_width)
                         lp.height = GridLayout.LayoutParams.WRAP_CONTENT
                     }
@@ -383,6 +382,17 @@ class KifuDetailFragment : BaseFragment() {
         Logger.methodStart(TAG)
         val lv = binding.characterList
 
+        val rel = viewModel.gameRelation ?: return
+        val abbr = Util.tragedySetNameAbbr(activity, rel.game.setName)
+        val master = ruleMaster.first { it.setName == abbr }
+        val roleList = arrayListOf<String>().also { l ->
+            l.add(getString(R.string.unknown_role))
+            l.add("パーソン")
+            master.allRoles().forEach { l.add(it) }
+        }
+        val longestRole = roleList.maxBy { it.length } ?: ""
+        val maxRoleList = arrayListOf(longestRole)
+
         val characterRoleTag = getCharacterRowTag(chara.name)
         lv.findViewWithTag<View>(characterRoleTag)?.let { return }
 
@@ -405,10 +415,23 @@ class KifuDetailFragment : BaseFragment() {
                 true
             }
         })
+        lv.addView(GridItemCharacterRoleSelectBinding.inflate(inflater, lv, false).also { v ->
+            v.roleSelect.let {
+                val adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, roleList)
+                it.adapter = adapter
+                it.setSelection(adapter.getPosition(chara.role ?: getString(R.string.unknown_role)))
+            }
+            v.maxLengthRoleName.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, maxRoleList)
+            v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(1)).also { lp ->
+                lp.width = ViewGroup.LayoutParams.WRAP_CONTENT
+                lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
+                lp.topMargin = 0
+            }
+        }.root)
         viewModel.rolesOfRule.forEachIndexed { index, role ->
             lv.addView(GridItemCharaRoleDetectMarkBinding.inflate(inflater, lv, false).also { v ->
                 v.root.tag = characterRoleTag
-                v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+1)).also { lp ->
+                v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+2)).also { lp ->
                     lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                     lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                 }
