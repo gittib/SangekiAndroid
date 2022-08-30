@@ -388,7 +388,7 @@ class KifuDetailFragment : BaseFragment() {
         val roleList = arrayListOf<String>().also { l ->
             l.add(getString(R.string.unknown_role))
             l.add("パーソン")
-            master.allRoles().forEach { l.add(it) }
+            master.allRoles().distinct().forEach { l.add(it) }
         }
         val longestRole = roleList.maxBy { it.length } ?: ""
         val maxRoleList = arrayListOf(longestRole)
