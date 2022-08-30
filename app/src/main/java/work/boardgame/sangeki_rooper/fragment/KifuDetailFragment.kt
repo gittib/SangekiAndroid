@@ -420,6 +420,13 @@ class KifuDetailFragment : BaseFragment() {
                 val adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, roleList)
                 it.adapter = adapter
                 it.setSelection(adapter.getPosition(chara.role ?: getString(R.string.unknown_role)))
+                it.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        chara.role = roleList[position]
+                    }
+                }
             }
             v.maxLengthRoleName.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, maxRoleList)
             v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(1)).also { lp ->
