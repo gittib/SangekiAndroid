@@ -4,6 +4,7 @@ object Define {
     object SangekiRooperUrl {
         const val TOP = "http://bakafire.main.jp/rooper/sr_top.htm"
         const val CREATIVE_COMMONS = "http://creativecommons.org/licenses/by-sa/2.1/jp/"
+        const val PRIVACY_POLICY = "http://www.boardgame.work/sangeki/privacy.php"
     }
 
     object SharedPreferencesKey {

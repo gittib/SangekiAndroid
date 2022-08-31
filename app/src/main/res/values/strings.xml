@@ -89,6 +89,7 @@
     <string name="dialog_title_choose_target">対象を選んで下さい</string>
     <string name="dialog_title_choose_add_character">追加キャラクターを選択</string>
     <string name="app_version_history">アプリ更新履歴</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
     <string name="show_summary">サマリー確認</string>
     <string name="scroll_to_character_list">キャラクター一覧へスクロール</string>
     <string name="scroll_to_today">最新の棋譜へスクロール</string>
