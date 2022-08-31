@@ -4,11 +4,14 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_stroke_black">
 
+    <!-- 裏側にinvisibleな要素を置いてスペーサーにする -->
     <Spinner
         android:id="@+id/max_length_role_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible" />
+
+
     <Spinner
         android:id="@+id/role_select"
         android:layout_width="wrap_content"

@@ -382,16 +382,14 @@ class KifuDetailFragment : BaseFragment() {
         Logger.methodStart(TAG)
         val lv = binding.characterList
 
-        val rel = viewModel.gameRelation ?: return
-        val abbr = Util.tragedySetNameAbbr(activity, rel.game.setName)
-        val master = ruleMaster.first { it.setName == abbr }
         val roleList = arrayListOf<String>().also { l ->
             l.add(getString(R.string.unknown_role))
             l.add("パーソン")
-            master.allRoles().distinct().forEach { l.add(it) }
+            viewModel.rolesOfRule.forEach { l.add(it) }
         }
-        val longestRole = roleList.maxBy { it.length } ?: ""
-        val maxRoleList = arrayListOf(longestRole)
+        val maxLengthRoleAdapter =
+            ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item,
+                arrayListOf(roleList.maxBy { it.length }!!))
 
         val characterRoleTag = getCharacterRowTag(chara.name)
         lv.findViewWithTag<View>(characterRoleTag)?.let { return }
@@ -428,7 +426,7 @@ class KifuDetailFragment : BaseFragment() {
                     }
                 }
             }
-            v.maxLengthRoleName.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, maxRoleList)
+            v.maxLengthRoleName.adapter = maxLengthRoleAdapter
             v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(1)).also { lp ->
                 lp.width = ViewGroup.LayoutParams.WRAP_CONTENT
                 lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
