@@ -65,6 +65,14 @@
                 android:visibility="gone" />
 
             <TextView
+                android:id="@+id/privacy_policy_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:textColor="@color/link"
+                android:text="@string/privacy_policy" />
+
+            <TextView
                 android:id="@+id/app_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

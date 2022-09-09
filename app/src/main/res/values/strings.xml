@@ -75,6 +75,7 @@
     <string name="kifu_incident_list_explain_dialog_message">事件名をロングタップすると、事件効果を確認できます。\n\nとなりの？？？？をタップすると、犯人を選択することができます。</string>
     <string name="add_character">キャラクター追加</string>
     <string name="unknown_chara">？？？？？？？？</string>
+    <string name="unknown_role">？？？？？？？？</string>
     <string name="character_is_already_added">既に追加済みのキャラクターです。</string>
     <string name="memo_for_character">%sに関するメモ</string>
     <string name="action_cards">行動カード情報</string>
@@ -88,6 +89,7 @@
     <string name="dialog_title_choose_target">対象を選んで下さい</string>
     <string name="dialog_title_choose_add_character">追加キャラクターを選択</string>
     <string name="app_version_history">アプリ更新履歴</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
     <string name="show_summary">サマリー確認</string>
     <string name="scroll_to_character_list">キャラクター一覧へスクロール</string>
     <string name="scroll_to_today">最新の棋譜へスクロール</string>

@@ -46,6 +46,12 @@ class AboutFragment : BaseFragment() {
                 v.setOnClickListener { rv.appVersionHistory.visibility = View.VISIBLE }
             }
             rv.appVersionHistory.text = resources.getStringArray(R.array.update_history).joinToString("\n\n")
+            rv.privacyPolicyLabel.let { v ->
+                v.paintFlags = v.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                v.setOnClickListener {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Define.SangekiRooperUrl.PRIVACY_POLICY)))
+                }
+            }
             rv.appVersion.text = String.format("アプリバージョン： %s", BuildConfig.VERSION_NAME)
         }
         return binding.root
