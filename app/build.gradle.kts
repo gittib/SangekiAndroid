@@ -136,5 +136,5 @@ dependencies {
     // RoomDatabase ここまで ////////////////////////////////////////////////////////////////////////
 
     // PDFビューワ
-    implementation("com.github.barteksc:android-pdf-viewer:3.2.0-beta.1")
+    implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
 }
