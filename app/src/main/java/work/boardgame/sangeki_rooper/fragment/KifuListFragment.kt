@@ -65,7 +65,7 @@ class KifuListFragment : BaseFragment(),
     override fun onAttach(context: Context) {
         Logger.methodStart(TAG)
         super.onAttach(context)
-        viewModel = ViewModelProvider(this).get(KifuListViewModel::class.java)
+        viewModel = ViewModelProvider(this)[KifuListViewModel::class.java]
     }
 
     override fun onForeground() {

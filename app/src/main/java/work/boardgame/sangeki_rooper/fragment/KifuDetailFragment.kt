@@ -46,8 +46,7 @@ class KifuDetailFragment : BaseFragment() {
         const val GAME_ID = "GAME_ID"
     }
 
-    private var _binding: KifuDetailFragmentBinding? = null
-    private val binding get() = _binding!!
+    private var binding: KifuDetailFragmentBinding? = null
     private lateinit var viewModel: KifuDetailViewModel
     private val ruleMaster by lazy { DetectiveInfoModel.getRuleMaster(activity) }
     private val inflater:LayoutInflater by lazy { LayoutInflater.from(activity) }
@@ -57,20 +56,20 @@ class KifuDetailFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         Logger.methodStart(TAG)
-        _binding = KifuDetailFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+        binding = KifuDetailFragmentBinding.inflate(inflater, container, false)
+        return binding!!.root
     }
 
     override fun onDestroyView() {
         Logger.methodStart(TAG)
-        _binding = null
+        binding = null
         super.onDestroyView()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.methodStart(TAG)
         super.onViewCreated(view, savedInstanceState)
-        binding.let { rv ->
+        binding?.let { rv ->
             rv.kifuDetailNav.setNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.show_summary -> {
@@ -138,7 +137,7 @@ class KifuDetailFragment : BaseFragment() {
                             Logger.d(TAG, "$charaName をえらんだ！！！")
                             addCharacter(charaName)
                         }
-                        .show(fragmentManager!!, null)
+                        .show(parentFragmentManager, null)
             }
         }
         applyViewData()
@@ -148,7 +147,7 @@ class KifuDetailFragment : BaseFragment() {
         Logger.methodStart(TAG)
         super.onAttach(context)
         try {
-            viewModel = ViewModelProvider(this).get(KifuDetailViewModel::class.java)
+            viewModel = ViewModelProvider(this)[KifuDetailViewModel::class.java]
             viewModel.gameId = arguments?.getLong(BundleKey.GAME_ID)
                 ?: throw IllegalArgumentException("gameId is null")
             loadGameData()
@@ -195,7 +194,7 @@ class KifuDetailFragment : BaseFragment() {
 
     private fun applyViewData() {
         val rel = viewModel.gameRelation ?: return
-        val rv = _binding ?: return
+        val rv = binding ?: return
 
         Logger.methodStart(TAG)
 
@@ -289,7 +288,7 @@ class KifuDetailFragment : BaseFragment() {
                                         it.criminal = sel.text.toString()
                                     }
                                 }
-                                    .show(fragmentManager!!, null)
+                                    .show(parentFragmentManager, null)
                             }
                         }
 
@@ -321,7 +320,7 @@ class KifuDetailFragment : BaseFragment() {
 
     private fun updateCharacterList() {
         val rel = viewModel.gameRelation ?: return
-        val lv = _binding?.characterList ?: return
+        val lv = binding?.characterList ?: return
         Logger.methodStart(TAG)
 
         try {
@@ -335,7 +334,7 @@ class KifuDetailFragment : BaseFragment() {
                 viewModel.rolesOfRule = roles
 
                 val longestRole by lazy {
-                    @Suppress("DEPRECATION") roles.maxBy { it.length }?.also {
+                    roles.maxByOrNull { it.length }?.also {
                         Logger.d(TAG, "longest role = $it")
                     }?.replace("ー", "|")?.toCharArray()?.joinToString("\n")
                 }
@@ -380,7 +379,7 @@ class KifuDetailFragment : BaseFragment() {
     }
     private fun inflateCharacterRow(chara: Npc, row: Int) {
         Logger.methodStart(TAG)
-        val lv = binding.characterList
+        val lv = binding?.characterList
 
         val roleList = arrayListOf<String>().also { l ->
             l.add(getString(R.string.unknown_role))
@@ -389,12 +388,12 @@ class KifuDetailFragment : BaseFragment() {
         }
         val maxLengthRoleAdapter =
             ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item,
-                arrayListOf(roleList.maxBy { it.length }!!))
+                arrayListOf(roleList.maxBy { it.length }))
 
         val characterRoleTag = getCharacterRowTag(chara.name)
-        lv.findViewWithTag<View>(characterRoleTag)?.let { return }
+        lv?.findViewWithTag<View>(characterRoleTag)?.let { return }
 
-        lv.addView(TextView(activity).also {
+        lv?.addView(TextView(activity).also {
             it.tag = characterRoleTag
             it.text = chara.name
             it.setBackgroundResource(R.drawable.bg_stroke_black)
@@ -413,7 +412,7 @@ class KifuDetailFragment : BaseFragment() {
                 true
             }
         })
-        lv.addView(GridItemCharacterRoleSelectBinding.inflate(inflater, lv, false).also { v ->
+        lv?.addView(GridItemCharacterRoleSelectBinding.inflate(inflater, lv, false).also { v ->
             v.roleSelect.let {
                 val adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, roleList)
                 it.adapter = adapter
@@ -434,7 +433,7 @@ class KifuDetailFragment : BaseFragment() {
             }
         }.root)
         viewModel.rolesOfRule.forEachIndexed { index, role ->
-            lv.addView(GridItemCharaRoleDetectMarkBinding.inflate(inflater, lv, false).also { v ->
+            lv?.addView(GridItemCharaRoleDetectMarkBinding.inflate(inflater, lv, false).also { v ->
                 v.root.tag = characterRoleTag
                 v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+2)).also { lp ->
                     lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
@@ -453,7 +452,7 @@ class KifuDetailFragment : BaseFragment() {
                 }
             }.root)
         }
-        lv.addView(GridItemCharaDetectNoteBinding.inflate(inflater, lv, false).also {
+        lv?.addView(GridItemCharaDetectNoteBinding.inflate(inflater, lv, false).also {
             it.root.tag = characterRoleTag
             it.inputEdit.let { et ->
                 et.hint = String.format(getString(R.string.memo_for_character), chara.name)
@@ -466,7 +465,7 @@ class KifuDetailFragment : BaseFragment() {
 
     private fun updateKifuList(inflater: LayoutInflater) {
         val rel = viewModel.gameRelation ?: return
-        val lv = _binding?.kifuList ?: return
+        val lv = binding?.kifuList ?: return
         Logger.methodStart(TAG)
 
         val handler = Handler(Looper.getMainLooper())
@@ -587,9 +586,9 @@ class KifuDetailFragment : BaseFragment() {
                                 }
                             }
                         }
-                        .show(fragmentManager!!, null)
+                        .show(parentFragmentManager, null)
                 }
-                .show(fragmentManager!!, null)
+                .show(parentFragmentManager, null)
         }
     }
 
@@ -643,10 +642,10 @@ class KifuDetailFragment : BaseFragment() {
             it.add("都市")
             it.add("学校")
         }
-        val maxDayByDay = rel.days.filter { it.note?.isNotEmpty() == true }.maxBy { it.getIndex(rel.game.day) }
+        val maxDayByDay = rel.days.filter { it.note?.isNotEmpty() == true }.maxByOrNull { it.getIndex(rel.game.day) }
         val maxDayByKifu = rel.kifus.filter { it.target in targets }.mapNotNull { kifu ->
             rel.days.find { it.id == kifu.dayId }
-        }.maxBy { it.getIndex(rel.game.day) }
+        }.maxByOrNull { it.getIndex(rel.game.day) }
         val maxDayIndex = maxDayByDay?.getIndex(rel.game.day) ?: 0
         val maxKifuDayIndex = maxDayByKifu?.getIndex(rel.game.day) ?: 0
         val maxDay = if (maxDayIndex > maxKifuDayIndex) maxDayByDay else maxDayByKifu
@@ -655,11 +654,12 @@ class KifuDetailFragment : BaseFragment() {
             val day = it.day
             "kifu_per_day-$loop-$day"
         }
-        return binding.kifuList.findViewWithTag(maxDayTag)
+        return binding?.kifuList?.findViewWithTag(maxDayTag)
     }
 
-    private fun updateDetectiveInfo(rv: KifuDetailFragmentBinding) {
+    private fun updateDetectiveInfo(rv: KifuDetailFragmentBinding?) {
         Logger.methodStart(TAG)
+        rv ?: return
         val detect = viewModel.gameRelation?.game?.detectiveInfo ?: return
         detect.ruleY.clear()
         detect.ruleX1.clear()
