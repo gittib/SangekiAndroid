@@ -1,1 +1,915 @@
-[{"setName":"FS","rules":[{"ruleName":"殺人計画","isRuleY":true,"roles":["キーパーソン","クロマク","キラー"]},{"ruleName":"復讐者の灯火","isRuleY":true,"roles":["クロマク"]},{"ruleName":"守るべき場所","isRuleY":true,"roles":["キーパーソン","カルティスト"]},{"ruleName":"切り裂き魔の影","isRuleY":false,"roles":["ミスリーダー","シリアルキラー"]},{"ruleName":"不穏な噂","isRuleY":false,"roles":["ミスリーダー"]},{"ruleName":"最低の却本","isRuleY":false,"roles":["ミスリーダー","マイナス","マイナス","フレンド"]}]},{"setName":"BTX","rules":[{"ruleName":"殺人計画","isRuleY":true,"roles":["キーパーソン","クロマク","キラー"]},{"ruleName":"封印されしもの","isRuleY":true,"roles":["カルティスト","クロマク"]},{"ruleName":"僕と契約しようよ！","isRuleY":true,"roles":["キーパーソン"]},{"ruleName":"未来改変プラン","isRuleY":true,"roles":["タイムトラベラー","カルティスト"]},{"ruleName":"巨大時限爆弾Xの存在","isRuleY":true,"roles":["ウィッチ"]},{"ruleName":"友情サークル","isRuleY":false,"roles":["フレンド","フレンド","ミスリーダー"]},{"ruleName":"妄想拡大ウイルス","isRuleY":false,"roles":["ミスリーダー"]},{"ruleName":"因果の糸","isRuleY":false,"roles":[]},{"ruleName":"不穏な噂","isRuleY":false,"roles":["ミスリーダー"]},{"ruleName":"潜む殺人鬼","isRuleY":false,"roles":["フレンド","シリアルキラー"]},{"ruleName":"恋愛風景","isRuleY":false,"roles":["メインラバーズ","ラバーズ"]},{"ruleName":"不定因子χ","isRuleY":false,"roles":["ファクター"]}]},{"setName":"MZ","rules":[{"ruleName":"封印されしもの","isRuleY":true,"roles":["カルティスト","クロマク"]},{"ruleName":"シークレットレコード","isRuleY":true,"roles":["キーパーソン","クロマク","ミスリーダー"]},{"ruleName":"漢の戦い","isRuleY":true,"roles":["ニンジャ"]},{"ruleName":"忍び寄る魔手","isRuleY":true,"roles":["キーパーソン","ニンジャ","カルティスト"]},{"ruleName":"因果の絆","isRuleY":true,"roles":["シリアルキラー","フレンド","ミスリーダー"]},{"ruleName":"憎愛スパイラル","isRuleY":false,"roles":["フレンド","ゼッタイシャ"]},{"ruleName":"神のサイコロ","isRuleY":false,"roles":["ゼッタイシャ","シリアルキラー"]},{"ruleName":"不定因子χ怪","isRuleY":false,"roles":["ファクター"]},{"ruleName":"死のショウタイム","isRuleY":false,"roles":["マジシャン","イモータル"]},{"ruleName":"通わぬ心","isRuleY":false,"roles":["マジシャン","ミスリーダー"]},{"ruleName":"魔女のお茶会","isRuleY":false,"roles":["ミスリーダー","フレンド","ウィッチ","ウィッチ"]},{"ruleName":"滅亡を謳うもの","isRuleY":false,"roles":["プロフェシー"]}]},{"setName":"MCX","rules":[{"ruleName":"殺人計画","isRuleY":true,"roles":["キーパーソン","クロマク","キラー"]},{"ruleName":"組み重なり事件キルト","isRuleY":true,"roles":["ミスリーダー","フール"]},{"ruleName":"タイトロープ上の計画","isRuleY":true,"roles":["クロマク","キラー"]},{"ruleName":"黒の学園","isRuleY":true,"roles":["クロマク"]},{"ruleName":"ストリキニーネの雫","isRuleY":true,"roles":["キーパーソン","フール","ドリッパー"]},{"ruleName":"潜む殺人鬼","isRuleY":false,"roles":["フレンド","シリアルキラー"]},{"ruleName":"隔離病棟サイコ","isRuleY":false,"roles":["パラノイア","ミスリーダー","セラピスト"]},{"ruleName":"私は名探偵","isRuleY":false,"roles":["メイタンテイ","ミスリーダー","フレンド"]},{"ruleName":"愚者のダンス","isRuleY":false,"roles":["フール","フレンド"]},{"ruleName":"火薬の香り","isRuleY":false,"roles":["シリアルキラー"]},{"ruleName":"絶対の意思","isRuleY":false,"roles":["ゼッタイシャ"]},{"ruleName":"双子のトリック","isRuleY":false,"roles":["パラノイア","ツイン"]}]},{"setName":"HSA","rules":[{"ruleName":"高貴なる血族","isRuleY":true,"roles":["ヴァンパイア","キーパーソン"]},{"ruleName":"月夜の獣","isRuleY":true,"roles":["ウェアウルフ"]},{"ruleName":"夜霧の悪夢","isRuleY":true,"roles":["ナイトメア"]},{"ruleName":"墓所より出でし者","isRuleY":true,"roles":[]},{"ruleName":"呪われし地","isRuleY":true,"roles":["ミカケダオシ","ゴースト"]},{"ruleName":"一癖あるヤツラ","isRuleY":false,"roles":["ゴースト","シリアルキラー","メインラバーズ"]},{"ruleName":"恋愛風景","isRuleY":false,"roles":["メインラバーズ","ラバーズ"]},{"ruleName":"魔女の呪い","isRuleY":false,"roles":["ミスリーダー","ウィッチ"]},{"ruleName":"鍵たる少女","isRuleY":false,"roles":["キーパーソン"]},{"ruleName":"恐慌と妄執と","isRuleY":false,"roles":["シリアルキラー","ウィッチ","チキンハート"]},{"ruleName":"話を聞かない人々","isRuleY":false,"roles":["ミスリーダー","チキンハート","ミカケダオシ"]},{"ruleName":"怪物の暗躍","isRuleY":false,"roles":["ミスリーダー"]}]},{"setName":"WM","rules":[{"ruleName":"外なる神への大合唱","isRuleY":true,"roles":["キーパーソン","ヒトハシラ","イモータル"]},{"ruleName":"だごん様の御言葉","isRuleY":true,"roles":["キーパーソン","ディープワン","カルティスト"]},{"ruleName":"黄衣の王","isRuleY":true,"roles":["カルティスト","ヒトハシラ"]},{"ruleName":"巨大時限爆弾Yの存在","isRuleY":true,"roles":["ウィッチ","ディープワン"]},{"ruleName":"血塗られた儀式","isRuleY":true,"roles":["イモータル","ウィッチ"]},{"ruleName":"抗うものたち","isRuleY":false,"roles":["ミスリーダー","シリアルキラー","ウィザード"]},{"ruleName":"見てしまった人々","isRuleY":false,"roles":["ミスリーダー","モクゲキシャ"]},{"ruleName":"偉大なる種族","isRuleY":false,"roles":["タイムトラベラー","シリアルキラー"]},{"ruleName":"深き都の囁き","isRuleY":false,"roles":["ディープワン","パラノイア"]},{"ruleName":"無貌の神","isRuleY":false,"roles":["フェイスレス","ウィザード"]},{"ruleName":"狂った真実","isRuleY":false,"roles":["パラノイア"]},{"ruleName":"不穏な噂","isRuleY":false,"roles":["ミスリーダー"]}]},{"setName":"AHR","rules":[{"ruleName":"閉ざされた世界","isRuleY":true,"roles":["キーパーソン／ゼッタイシャ","マリオネット","カタリベ"]},{"ruleName":"御伽噺の殺人鬼","isRuleY":true,"roles":["キーパーソン","ナーサリーライム","クロマク"]},{"ruleName":"マザーグースミステリー","isRuleY":true,"roles":["マリオネット","カタリベ"]},{"ruleName":"次元併合プラン","isRuleY":true,"roles":["カタリベ","プレインシフター","フラグメント"]},{"ruleName":"虚ろいゆく世界","isRuleY":true,"roles":["ゼッタイシャ","マリオネット","クロマク"]},{"ruleName":"ジキルとハイド","isRuleY":false,"roles":["キーパーソン／クロマク","マリオネット"]},{"ruleName":"悪疫をもたらす者","isRuleY":false,"roles":["パイドパイパー／ゴシップ"]},{"ruleName":"操りの糸","isRuleY":false,"roles":["フラグメント","ゴシップ","パーソン／シリアルキラー"]},{"ruleName":"鏡の国のアリス","isRuleY":false,"roles":["ミスリーダー／シリアルキラー","アリス"]},{"ruleName":"世界線を越えて","isRuleY":false,"roles":["ミスリーダー"]},{"ruleName":"語られざるべき怪物","isRuleY":false,"roles":["ミスリーダー／ゼッタイシャ","ゴシップ"]},{"ruleName":"空想拡大ウイルス","isRuleY":false,"roles":["フラグメント","ミスリーダー","ゴシップ"]}]},{"setName":"LL","rules":[{"ruleName":"最終計画","isRuleY":true,"roles":["キーパーソン","クロマク","キラー"]},{"ruleName":"封印されし終末","isRuleY":true,"roles":["フラグメント","ファクター"]},{"ruleName":"叛逆の世界","isRuleY":true,"roles":["キーパーソン","フラグメント"]},{"ruleName":"悪魔の脚本","isRuleY":true,"roles":["シリアルキラー","ウォッチャー"]},{"ruleName":"巨大時限爆弾Zの存在","isRuleY":true,"roles":["クロマク","ウィッチ"]},{"ruleName":"本当のかいぶつ","isRuleY":false,"roles":["シークレット","ジョーカー","シリアルキラー"]},{"ruleName":"神話蒐集者","isRuleY":false,"roles":["シークレット","ジョーカー","インフルエンサー"]},{"ruleName":"私こそが名探偵","isRuleY":false,"roles":["シークレット","ジョーカー","ウォッチャー"]},{"ruleName":"世界線を越えて","isRuleY":false,"roles":["ミスリーダー"]},{"ruleName":"不定因子χ怪","isRuleY":false,"roles":["ファクター"]},{"ruleName":"SNSパラノイア","isRuleY":false,"roles":["シリアルキラー","インフルエンサー","ミスリーダー"]},{"ruleName":"嘘憑きの秘密","isRuleY":false,"roles":["ミスリーダー"]}]},{"setName":"UM","rules":[{"ruleName":"消された記憶","isRuleY":true,"roles":["キーパーソン","イレイザー"]},{"ruleName":"絶望のカウントダウン","isRuleY":true,"roles":["イレイザー","カルティスト","センドウシャ"]},{"ruleName":"守るべき場所","isRuleY":true,"roles":["キーパーソン","カルティスト"]},{"ruleName":"忘我の果て","isRuleY":true,"roles":["アベンジャー","セラピスト","シリアルキラー"]},{"ruleName":"復讐者の誓い","isRuleY":true,"roles":["アベンジャー","フレンド"]},{"ruleName":"問題児の苦悩","isRuleY":false,"roles":["フレンド","トラブルメイカー","ミスリーダー"]},{"ruleName":"潜む殺人鬼","isRuleY":false,"roles":["フレンド","シリアルキラー"]},{"ruleName":"開けてはならない扉","isRuleY":false,"roles":["トラブルメイカー"]},{"ruleName":"隔離病棟サイコ","isRuleY":false,"roles":["ミスリーダー","セラピスト","パラノイア"]},{"ruleName":"マスヒュプノスの合図","isRuleY":false,"roles":["センドウシャ"]},{"ruleName":"暴徒を鎮める者","isRuleY":false,"roles":["センドウシャ","スナイパー"]},{"ruleName":"戻らぬ子どもたち","isRuleY":false,"roles":["センドウシャ","パイドパイパー"]}]}]
+[
+  {
+    "setName": "FS",
+    "rules": [
+      {
+        "ruleName": "殺人計画",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "クロマク",
+          "キラー"
+        ]
+      },
+      {
+        "ruleName": "復讐者の灯火",
+        "isRuleY": true,
+        "roles": [
+          "クロマク"
+        ]
+      },
+      {
+        "ruleName": "守るべき場所",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "カルティスト"
+        ]
+      },
+      {
+        "ruleName": "切り裂き魔の影",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー",
+          "シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "不穏な噂",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "最低の却本",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー",
+          "マイナス",
+          "マイナス",
+          "フレンド"
+        ]
+      },
+      {
+        "ruleName": "世界線を越えて",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "BTX",
+    "rules": [
+      {
+        "ruleName": "殺人計画",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "クロマク",
+          "キラー"
+        ]
+      },
+      {
+        "ruleName": "封印されしもの",
+        "isRuleY": true,
+        "roles": [
+          "カルティスト",
+          "クロマク"
+        ]
+      },
+      {
+        "ruleName": "僕と契約しようよ！",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン"
+        ]
+      },
+      {
+        "ruleName": "未来改変プラン",
+        "isRuleY": true,
+        "roles": [
+          "タイムトラベラー",
+          "カルティスト"
+        ]
+      },
+      {
+        "ruleName": "巨大時限爆弾Xの存在",
+        "isRuleY": true,
+        "roles": [
+          "ウィッチ"
+        ]
+      },
+      {
+        "ruleName": "友情サークル",
+        "isRuleY": false,
+        "roles": [
+          "フレンド",
+          "フレンド",
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "妄想拡大ウイルス",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "因果の糸",
+        "isRuleY": false,
+        "roles": []
+      },
+      {
+        "ruleName": "不穏な噂",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "潜む殺人鬼",
+        "isRuleY": false,
+        "roles": [
+          "フレンド",
+          "シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "恋愛風景",
+        "isRuleY": false,
+        "roles": [
+          "メインラバーズ",
+          "ラバーズ"
+        ]
+      },
+      {
+        "ruleName": "不定因子χ",
+        "isRuleY": false,
+        "roles": [
+          "ファクター"
+        ]
+      },
+      {
+        "ruleName": "世界線を越えて",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "MZ",
+    "rules": [
+      {
+        "ruleName": "封印されしもの",
+        "isRuleY": true,
+        "roles": [
+          "カルティスト",
+          "クロマク"
+        ]
+      },
+      {
+        "ruleName": "シークレットレコード",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "クロマク",
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "漢の戦い",
+        "isRuleY": true,
+        "roles": [
+          "ニンジャ"
+        ]
+      },
+      {
+        "ruleName": "忍び寄る魔手",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "ニンジャ",
+          "カルティスト"
+        ]
+      },
+      {
+        "ruleName": "因果の絆",
+        "isRuleY": true,
+        "roles": [
+          "シリアルキラー",
+          "フレンド",
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "憎愛スパイラル",
+        "isRuleY": false,
+        "roles": [
+          "フレンド",
+          "ゼッタイシャ"
+        ]
+      },
+      {
+        "ruleName": "神のサイコロ",
+        "isRuleY": false,
+        "roles": [
+          "ゼッタイシャ",
+          "シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "不定因子χ怪",
+        "isRuleY": false,
+        "roles": [
+          "ファクター"
+        ]
+      },
+      {
+        "ruleName": "死のショウタイム",
+        "isRuleY": false,
+        "roles": [
+          "マジシャン",
+          "イモータル"
+        ]
+      },
+      {
+        "ruleName": "通わぬ心",
+        "isRuleY": false,
+        "roles": [
+          "マジシャン",
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "魔女のお茶会",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー",
+          "フレンド",
+          "ウィッチ",
+          "ウィッチ"
+        ]
+      },
+      {
+        "ruleName": "滅亡を謳うもの",
+        "isRuleY": false,
+        "roles": [
+          "プロフェシー"
+        ]
+      },
+      {
+        "ruleName": "世界線を越えて",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "MCX",
+    "rules": [
+      {
+        "ruleName": "殺人計画",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "クロマク",
+          "キラー"
+        ]
+      },
+      {
+        "ruleName": "組み重なり事件キルト",
+        "isRuleY": true,
+        "roles": [
+          "ミスリーダー",
+          "フール"
+        ]
+      },
+      {
+        "ruleName": "タイトロープ上の計画",
+        "isRuleY": true,
+        "roles": [
+          "クロマク",
+          "キラー"
+        ]
+      },
+      {
+        "ruleName": "黒の学園",
+        "isRuleY": true,
+        "roles": [
+          "クロマク"
+        ]
+      },
+      {
+        "ruleName": "ストリキニーネの雫",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "フール",
+          "ドリッパー"
+        ]
+      },
+      {
+        "ruleName": "潜む殺人鬼",
+        "isRuleY": false,
+        "roles": [
+          "フレンド",
+          "シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "隔離病棟サイコ",
+        "isRuleY": false,
+        "roles": [
+          "パラノイア",
+          "ミスリーダー",
+          "セラピスト"
+        ]
+      },
+      {
+        "ruleName": "私は名探偵",
+        "isRuleY": false,
+        "roles": [
+          "メイタンテイ",
+          "ミスリーダー",
+          "フレンド"
+        ]
+      },
+      {
+        "ruleName": "愚者のダンス",
+        "isRuleY": false,
+        "roles": [
+          "フール",
+          "フレンド"
+        ]
+      },
+      {
+        "ruleName": "火薬の香り",
+        "isRuleY": false,
+        "roles": [
+          "シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "絶対の意思",
+        "isRuleY": false,
+        "roles": [
+          "ゼッタイシャ"
+        ]
+      },
+      {
+        "ruleName": "双子のトリック",
+        "isRuleY": false,
+        "roles": [
+          "パラノイア",
+          "ツイン"
+        ]
+      },
+      {
+        "ruleName": "世界線を越えて",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "HSA",
+    "rules": [
+      {
+        "ruleName": "高貴なる血族",
+        "isRuleY": true,
+        "roles": [
+          "ヴァンパイア",
+          "キーパーソン"
+        ]
+      },
+      {
+        "ruleName": "月夜の獣",
+        "isRuleY": true,
+        "roles": [
+          "ウェアウルフ"
+        ]
+      },
+      {
+        "ruleName": "夜霧の悪夢",
+        "isRuleY": true,
+        "roles": [
+          "ナイトメア"
+        ]
+      },
+      {
+        "ruleName": "墓所より出でし者",
+        "isRuleY": true,
+        "roles": []
+      },
+      {
+        "ruleName": "呪われし地",
+        "isRuleY": true,
+        "roles": [
+          "ミカケダオシ",
+          "ゴースト"
+        ]
+      },
+      {
+        "ruleName": "一癖あるヤツラ",
+        "isRuleY": false,
+        "roles": [
+          "ゴースト",
+          "シリアルキラー",
+          "メインラバーズ"
+        ]
+      },
+      {
+        "ruleName": "恋愛風景",
+        "isRuleY": false,
+        "roles": [
+          "メインラバーズ",
+          "ラバーズ"
+        ]
+      },
+      {
+        "ruleName": "魔女の呪い",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー",
+          "ウィッチ"
+        ]
+      },
+      {
+        "ruleName": "鍵たる少女",
+        "isRuleY": false,
+        "roles": [
+          "キーパーソン"
+        ]
+      },
+      {
+        "ruleName": "恐慌と妄執と",
+        "isRuleY": false,
+        "roles": [
+          "シリアルキラー",
+          "ウィッチ",
+          "チキンハート"
+        ]
+      },
+      {
+        "ruleName": "話を聞かない人々",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー",
+          "チキンハート",
+          "ミカケダオシ"
+        ]
+      },
+      {
+        "ruleName": "怪物の暗躍",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "世界線を越えて",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "WM",
+    "rules": [
+      {
+        "ruleName": "外なる神への大合唱",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "ヒトハシラ",
+          "イモータル"
+        ]
+      },
+      {
+        "ruleName": "だごん様の御言葉",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "ディープワン",
+          "カルティスト"
+        ]
+      },
+      {
+        "ruleName": "黄衣の王",
+        "isRuleY": true,
+        "roles": [
+          "カルティスト",
+          "ヒトハシラ"
+        ]
+      },
+      {
+        "ruleName": "巨大時限爆弾Yの存在",
+        "isRuleY": true,
+        "roles": [
+          "ウィッチ",
+          "ディープワン"
+        ]
+      },
+      {
+        "ruleName": "血塗られた儀式",
+        "isRuleY": true,
+        "roles": [
+          "イモータル",
+          "ウィッチ"
+        ]
+      },
+      {
+        "ruleName": "抗うものたち",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー",
+          "シリアルキラー",
+          "ウィザード"
+        ]
+      },
+      {
+        "ruleName": "見てしまった人々",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー",
+          "モクゲキシャ"
+        ]
+      },
+      {
+        "ruleName": "偉大なる種族",
+        "isRuleY": false,
+        "roles": [
+          "タイムトラベラー",
+          "シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "深き都の囁き",
+        "isRuleY": false,
+        "roles": [
+          "ディープワン",
+          "パラノイア"
+        ]
+      },
+      {
+        "ruleName": "無貌の神",
+        "isRuleY": false,
+        "roles": [
+          "フェイスレス",
+          "ウィザード"
+        ]
+      },
+      {
+        "ruleName": "狂った真実",
+        "isRuleY": false,
+        "roles": [
+          "パラノイア"
+        ]
+      },
+      {
+        "ruleName": "不穏な噂",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "世界線を越えて",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "AHR",
+    "rules": [
+      {
+        "ruleName": "閉ざされた世界",
+        "isRuleY": true,
+        "roles": [
+          "ゼッタイシャ／キーパーソン",
+          "マリオネット",
+          "カタリベ"
+        ]
+      },
+      {
+        "ruleName": "御伽噺の殺人鬼",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "ナーサリーライム",
+          "クロマク"
+        ]
+      },
+      {
+        "ruleName": "マザーグースミステリー",
+        "isRuleY": true,
+        "roles": [
+          "マリオネット",
+          "カタリベ"
+        ]
+      },
+      {
+        "ruleName": "次元併合プラン",
+        "isRuleY": true,
+        "roles": [
+          "カタリベ",
+          "プレインシフター",
+          "フラグメント"
+        ]
+      },
+      {
+        "ruleName": "虚ろいゆく世界",
+        "isRuleY": true,
+        "roles": [
+          "ゼッタイシャ",
+          "マリオネット",
+          "クロマク"
+        ]
+      },
+      {
+        "ruleName": "ジキルとハイド",
+        "isRuleY": false,
+        "roles": [
+          "キーパーソン／クロマク",
+          "マリオネット"
+        ]
+      },
+      {
+        "ruleName": "悪疫をもたらす者",
+        "isRuleY": false,
+        "roles": [
+          "パイドパイパー／ゴシップ"
+        ]
+      },
+      {
+        "ruleName": "操りの糸",
+        "isRuleY": false,
+        "roles": [
+          "フラグメント",
+          "ゴシップ",
+          "パーソン／シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "鏡の国のアリス",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー／シリアルキラー",
+          "アリス"
+        ]
+      },
+      {
+        "ruleName": "世界線を越えて",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "語られざるべき怪物",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー／ゼッタイシャ",
+          "ゴシップ"
+        ]
+      },
+      {
+        "ruleName": "空想拡大ウイルス",
+        "isRuleY": false,
+        "roles": [
+          "フラグメント",
+          "ミスリーダー",
+          "ゴシップ"
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "LL",
+    "rules": [
+      {
+        "ruleName": "最終計画",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "クロマク",
+          "キラー"
+        ]
+      },
+      {
+        "ruleName": "封印されし終末",
+        "isRuleY": true,
+        "roles": [
+          "フラグメント",
+          "ファクター"
+        ]
+      },
+      {
+        "ruleName": "叛逆の世界",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "フラグメント"
+        ]
+      },
+      {
+        "ruleName": "悪魔の脚本",
+        "isRuleY": true,
+        "roles": [
+          "シリアルキラー",
+          "ウォッチャー"
+        ]
+      },
+      {
+        "ruleName": "巨大時限爆弾Zの存在",
+        "isRuleY": true,
+        "roles": [
+          "クロマク",
+          "ウィッチ"
+        ]
+      },
+      {
+        "ruleName": "本当のかいぶつ",
+        "isRuleY": false,
+        "roles": [
+          "シークレット",
+          "ジョーカー",
+          "シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "神話蒐集者",
+        "isRuleY": false,
+        "roles": [
+          "シークレット",
+          "ジョーカー",
+          "インフルエンサー"
+        ]
+      },
+      {
+        "ruleName": "私こそが名探偵",
+        "isRuleY": false,
+        "roles": [
+          "シークレット",
+          "ジョーカー",
+          "ウォッチャー"
+        ]
+      },
+      {
+        "ruleName": "世界線を越えて",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "不定因子χ怪",
+        "isRuleY": false,
+        "roles": [
+          "ファクター"
+        ]
+      },
+      {
+        "ruleName": "SNSパラノイア",
+        "isRuleY": false,
+        "roles": [
+          "シリアルキラー",
+          "インフルエンサー",
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "嘘憑きの秘密",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      }
+    ]
+  },
+  {
+    "setName": "UM",
+    "rules": [
+      {
+        "ruleName": "消された記憶",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "イレイザー"
+        ]
+      },
+      {
+        "ruleName": "絶望のカウントダウン",
+        "isRuleY": true,
+        "roles": [
+          "イレイザー",
+          "カルティスト",
+          "センドウシャ"
+        ]
+      },
+      {
+        "ruleName": "守るべき場所",
+        "isRuleY": true,
+        "roles": [
+          "キーパーソン",
+          "カルティスト"
+        ]
+      },
+      {
+        "ruleName": "忘我の果て",
+        "isRuleY": true,
+        "roles": [
+          "アベンジャー",
+          "セラピスト",
+          "シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "復讐者の誓い",
+        "isRuleY": true,
+        "roles": [
+          "アベンジャー",
+          "フレンド"
+        ]
+      },
+      {
+        "ruleName": "問題児の苦悩",
+        "isRuleY": false,
+        "roles": [
+          "フレンド",
+          "トラブルメイカー",
+          "ミスリーダー"
+        ]
+      },
+      {
+        "ruleName": "潜む殺人鬼",
+        "isRuleY": false,
+        "roles": [
+          "フレンド",
+          "シリアルキラー"
+        ]
+      },
+      {
+        "ruleName": "開けてはならない扉",
+        "isRuleY": false,
+        "roles": [
+          "トラブルメイカー"
+        ]
+      },
+      {
+        "ruleName": "隔離病棟サイコ",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー",
+          "セラピスト",
+          "パラノイア"
+        ]
+      },
+      {
+        "ruleName": "マスヒュプノスの合図",
+        "isRuleY": false,
+        "roles": [
+          "センドウシャ"
+        ]
+      },
+      {
+        "ruleName": "暴徒を鎮める者",
+        "isRuleY": false,
+        "roles": [
+          "センドウシャ",
+          "スナイパー"
+        ]
+      },
+      {
+        "ruleName": "戻らぬ子どもたち",
+        "isRuleY": false,
+        "roles": [
+          "センドウシャ",
+          "パイドパイパー"
+        ]
+      },
+      {
+        "ruleName": "世界線を越えて",
+        "isRuleY": false,
+        "roles": [
+          "ミスリーダー"
+        ]
+      }
+    ]
+  }
+]

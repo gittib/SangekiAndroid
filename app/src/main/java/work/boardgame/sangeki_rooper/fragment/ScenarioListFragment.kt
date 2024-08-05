@@ -69,7 +69,9 @@ class ScenarioListFragment : BaseFragment() {
                                     .setMessage("脚本タイトルを非表示にしますか？")
                                     .setPositiveButton(R.string.ok) { _, _ ->
                                         viewModel.showTitle = false
-                                        rv.scenarioList.adapter?.notifyDataSetChanged()
+                                        rv.scenarioList.adapter?.let {
+                                            it.notifyItemRangeChanged(0, it.itemCount)
+                                        }
                                     }
                                     .setNegativeButton(R.string.cancel, null)
                                     .show()
@@ -78,7 +80,9 @@ class ScenarioListFragment : BaseFragment() {
                                     .setMessage("脚本タイトルを表示してもよろしいですか？\n（※ネタバレになる可能性があります）")
                                     .setPositiveButton(R.string.ok) { _, _ ->
                                         viewModel.showTitle = true
-                                        rv.scenarioList.adapter?.notifyDataSetChanged()
+                                        rv.scenarioList.adapter?.let {
+                                            it.notifyItemRangeChanged(0, it.itemCount)
+                                        }
                                     }
                                     .setNegativeButton(R.string.cancel, null)
                                     .show()
@@ -128,13 +132,13 @@ class ScenarioListFragment : BaseFragment() {
     fun reloadScenarioList() {
         Logger.methodStart(TAG)
         viewModel.scenarioList = Util.getScenarioList(activity).filter { it.secret != true }
-            .sortedWith(Comparator { o1, o2 ->
-                var d:Int = o1.tragedySetIndex() - o2.tragedySetIndex()
+            .sortedWith { o1, o2 ->
+                var d: Int = o1.tragedySetIndex() - o2.tragedySetIndex()
                 if (d == 0) d = o1.id[1] - o2.id[1]
                 if (d == 0) d = o1.difficulty - o2.difficulty
                 if (d == 0) d = if (o1.id < o2.id) -1 else 1
                 d
-            })
+            }
         _binding?.scenarioList?.adapter?.notifyDataSetChanged()
     }
 
