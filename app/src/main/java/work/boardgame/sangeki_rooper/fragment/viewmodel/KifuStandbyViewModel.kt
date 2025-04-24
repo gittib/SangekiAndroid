@@ -1,5 +1,6 @@
 package work.boardgame.sangeki_rooper.fragment.viewmodel
 
+import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
@@ -17,7 +18,12 @@ class KifuStandbyViewModel() : ViewModel(), Parcelable {
         tragedySetName = parcel.readString()
         loopCount = parcel.readInt()
         dayCount = parcel.readInt()
-        parcel.readList(incidentNameList, MutableList::class.java.classLoader)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            parcel.readList(incidentNameList, MutableList::class.java.classLoader, String::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            parcel.readList(incidentNameList, MutableList::class.java.classLoader)
+        }
     }
     fun copyFromParcel(savedData: KifuStandbyViewModel) {
         tragedySetName = savedData.tragedySetName

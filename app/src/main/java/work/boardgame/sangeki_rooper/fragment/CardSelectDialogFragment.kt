@@ -153,7 +153,9 @@ class CardSelectDialogFragment : BaseDialogFragment() {
                 "女の子",
                 "神格",
                 "転校生",
-                "手先"
+                "手先",
+                "UP主",
+                "仙人",
             )
         }
     }
