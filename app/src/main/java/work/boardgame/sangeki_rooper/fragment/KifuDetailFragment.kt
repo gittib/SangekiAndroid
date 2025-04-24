@@ -4,20 +4,20 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.UiThread
 import androidx.core.view.GravityCompat
 import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import work.boardgame.sangeki_rooper.MyApplication
@@ -50,6 +50,7 @@ class KifuDetailFragment : BaseFragment() {
     private lateinit var viewModel: KifuDetailViewModel
     private val ruleMaster by lazy { DetectiveInfoModel.getRuleMaster(activity) }
     private val inflater:LayoutInflater by lazy { LayoutInflater.from(activity) }
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,16 +102,16 @@ class KifuDetailFragment : BaseFragment() {
                     }
                     R.id.delete_kifu -> {
                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                                .setTitle(R.string.kifu_delete_confirm_dialog_title)
-                                .setMessage(R.string.kifu_delete_this_confirm_dialog_message)
-                                .setPositiveButton(R.string.ok) { _, _ ->
-                                    viewModel.viewModelScope.launch(Dispatchers.IO) {
-                                        viewModel.gameRelation?.game?.let { MyApplication.db.gameDao().deleteGame(it) }
-                                        withContext(Dispatchers.Main) { activity.onBackPressed() }
-                                    }
+                            .setTitle(R.string.kifu_delete_confirm_dialog_title)
+                            .setMessage(R.string.kifu_delete_this_confirm_dialog_message)
+                            .setPositiveButton(R.string.ok) { _, _ ->
+                                scope.launch {
+                                    viewModel.gameRelation?.game?.let { MyApplication.db.gameDao().deleteGame(it) }
+                                    withContext(Dispatchers.Main) { activity.onBackPressed() }
                                 }
-                                .setNegativeButton(R.string.cancel, null)
-                                .show()
+                            }
+                            .setNegativeButton(R.string.cancel, null)
+                            .show()
                     }
                 }
                 true
@@ -119,28 +120,30 @@ class KifuDetailFragment : BaseFragment() {
 
             rv.characterListTitle.setOnClickListener {
                 AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                        .setMessage(R.string.kifu_character_list_explain_dialog_message)
-                        .setPositiveButton(R.string.ok, null)
-                        .show()
+                    .setMessage(R.string.kifu_character_list_explain_dialog_message)
+                    .setPositiveButton(R.string.ok, null)
+                    .show()
             }
 
             rv.incidentListTitle.setOnClickListener {
                 AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                        .setMessage(R.string.kifu_incident_list_explain_dialog_message)
-                        .setPositiveButton(R.string.ok, null)
-                        .show()
+                    .setMessage(R.string.kifu_incident_list_explain_dialog_message)
+                    .setPositiveButton(R.string.ok, null)
+                    .show()
             }
 
             rv.addCharacter.setOnClickListener {
                 CardSelectDialogFragment.newInstance(getString(R.string.dialog_title_choose_add_character))
-                        .setOnSelectListener { charaName ->
-                            Logger.d(TAG, "$charaName をえらんだ！！！")
-                            addCharacter(charaName)
-                        }
-                        .show(parentFragmentManager, null)
+                    .setOnSelectListener { charaName ->
+                        Logger.d(TAG, "$charaName をえらんだ！！！")
+                        addCharacter(charaName)
+                    }
+                    .show(parentFragmentManager, null)
             }
         }
-        applyViewData()
+        scope.launch {
+            applyViewData()
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -169,30 +172,27 @@ class KifuDetailFragment : BaseFragment() {
         updateDetectiveInfo(binding)
     }
 
-    override fun onDetach() {
-        Logger.methodStart(TAG)
-        repeat(100) { activity.dismissProgress() }
-        super.onDetach()
-    }
-
     private fun loadGameData() {
         Logger.methodStart(TAG)
 
-        activity.showProgress()
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.gameRelation = MyApplication.db.gameDao().loadGame(viewModel.gameId!!)
-            withContext(Dispatchers.Main) {
-                activity.dismissProgress()
-                if (viewModel.gameRelation == null) {
-                    Logger.w(TAG, "game is null")
-                    activity.onBackPressed()
+        scope.launch(Dispatchers.Main) {
+            activity.showProgress()
+            try {
+                withContext(Dispatchers.IO) {
+                    viewModel.gameRelation = MyApplication.db.gameDao().loadGame(viewModel.gameId!!)
                 }
-                applyViewData()
+            } finally {
+                activity.dismissProgress()
             }
+            if (viewModel.gameRelation == null) {
+                Logger.w(TAG, "game is null")
+                activity.onBackPressed()
+            }
+            applyViewData()
         }
     }
 
-    private fun applyViewData() {
+    private suspend fun applyViewData() {
         val rel = viewModel.gameRelation ?: return
         val rv = binding ?: return
 
@@ -201,68 +201,66 @@ class KifuDetailFragment : BaseFragment() {
         val detectiveInfo = rel.game.detectiveInfo ?: DetectiveInfoModel(activity, rel.game.setName)
         rel.game.detectiveInfo = detectiveInfo
 
-        val handler = Handler(Looper.getMainLooper())
+        withContext(Dispatchers.Main) {
+            rv.gameStartTime.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
 
-        rv.gameStartTime.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
-
-        rv.setLoopDay.text = String.format(getString(R.string.set_loop_day_text), rel.game.setName, rel.game.loop, rel.game.day)
-        if (rel.game.specialRule?.isNotEmpty() == true) {
-            rv.kifuDetailSpecialRule.text = rel.game.specialRule
-        }
-
-        val layoutParams = ViewGroup.MarginLayoutParams(0, 0).also { lp ->
-            val margin = 16
-            lp.width = ViewGroup.LayoutParams.WRAP_CONTENT
-            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
-            lp.setMargins(margin, margin, margin, margin)
-        }
-
-        val abbr = Util.tragedySetNameAbbr(activity, rel.game.setName)
-        val master = ruleMaster.first { it.setName == abbr }
-        rv.ruleYList.let { lv ->
-            lv.removeAllViews()
-            master.rules.filter { it.isRuleY }.forEach { rule ->
-                lv.addView(CheckBox(activity).also {
-                    it.tag = rule.ruleName
-                    it.text = rule.ruleName
-                    it.isChecked = detectiveInfo.ruleY.contains(rule.ruleName)
-                    it.layoutParams = layoutParams
-                })
+            rv.setLoopDay.text = String.format(getString(R.string.set_loop_day_text), rel.game.setName, rel.game.loop, rel.game.day)
+            if (rel.game.specialRule?.isNotEmpty() == true) {
+                rv.kifuDetailSpecialRule.text = rel.game.specialRule
             }
-        }
-        rv.ruleX1List.let { lv ->
-            lv.removeAllViews()
-            master.rules.filter { !it.isRuleY }.forEach { rule ->
-                lv.addView(CheckBox(activity).also {
-                    it.tag = rule.ruleName
-                    it.text = rule.ruleName
-                    it.isChecked = detectiveInfo.ruleX1.contains(rule.ruleName)
-                    it.layoutParams = layoutParams
-                })
+
+            val layoutParams = ViewGroup.MarginLayoutParams(0, 0).also { lp ->
+                val margin = 16
+                lp.width = ViewGroup.LayoutParams.WRAP_CONTENT
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                lp.setMargins(margin, margin, margin, margin)
             }
-        }
-        if (rel.game.setName == getString(R.string.summary_name_fs)) {
-            rv.ruleX2.visibility = View.GONE
-            rv.ruleX2List.visibility = View.GONE
-        } else {
-            rv.ruleX2List.let { lv ->
+
+            val abbr = Util.tragedySetNameAbbr(activity, rel.game.setName)
+            val master = ruleMaster.first { it.setName == abbr }
+            rv.ruleYList.let { lv ->
+                lv.removeAllViews()
+                master.rules.filter { it.isRuleY }.forEach { rule ->
+                    lv.addView(CheckBox(activity).also {
+                        it.tag = rule.ruleName
+                        it.text = rule.ruleName
+                        it.isChecked = detectiveInfo.ruleY.contains(rule.ruleName)
+                        it.layoutParams = layoutParams
+                    })
+                }
+            }
+            rv.ruleX1List.let { lv ->
                 lv.removeAllViews()
                 master.rules.filter { !it.isRuleY }.forEach { rule ->
                     lv.addView(CheckBox(activity).also {
                         it.tag = rule.ruleName
                         it.text = rule.ruleName
-                        it.isChecked = detectiveInfo.ruleX2.contains(rule.ruleName)
+                        it.isChecked = detectiveInfo.ruleX1.contains(rule.ruleName)
                         it.layoutParams = layoutParams
                     })
                 }
             }
-        }
+            if (rel.game.setName == getString(R.string.summary_name_fs)) {
+                rv.ruleX2.visibility = View.GONE
+                rv.ruleX2List.visibility = View.GONE
+            } else {
+                rv.ruleX2List.let { lv ->
+                    lv.removeAllViews()
+                    master.rules.filter { !it.isRuleY }.forEach { rule ->
+                        lv.addView(CheckBox(activity).also {
+                            it.tag = rule.ruleName
+                            it.text = rule.ruleName
+                            it.isChecked = detectiveInfo.ruleX2.contains(rule.ruleName)
+                            it.layoutParams = layoutParams
+                        })
+                    }
+                }
+            }
 
-        activity.showProgress()
-        handler.postDelayed({
-            activity.dismissProgress()
-
+            activity.showProgress()
             try {
+                withContext(Dispatchers.IO) { delay((Define.POLLING_INTERVAL)) }
+
                 val lv = rv.incidentList
                 rel.incidents.forEach { incident ->
                     val incidentTag = "incident-criminal-" + incident.id
@@ -276,10 +274,10 @@ class KifuDetailFragment : BaseFragment() {
                             sel.text = incident.criminal ?: getString(R.string.unknown_chara)
                             sel.setOnClickListener {
                                 val criminalList = if (Util.isGunzo(incident.name)) mutableListOf(
-                                        "神社の群像",
-                                        "病院の群像",
-                                        "都市の群像",
-                                        "学校の群像"
+                                    "神社の群像",
+                                    "病院の群像",
+                                    "都市の群像",
+                                    "学校の群像"
                                 ) else viewModel.gameRelation?.npcs?.map { it.name }?.toMutableList()
                                 criminalList?.add(0, getString(R.string.unknown_chara))
                                 CardSelectDialogFragment.newInstance(getString(R.string.choose_criminal), criminalList).setOnSelectListener { criminal ->
@@ -304,20 +302,16 @@ class KifuDetailFragment : BaseFragment() {
                         lv.addView(v.root)
                     }
                 }
-            } catch (e: IllegalStateException) {
-                if (getActivity() != null) throw e
+
+                updateCharacterList()
+                updateKifuList(inflater)
+            } finally {
+                activity.dismissProgress()
             }
-        }, Define.POLLING_INTERVAL)
-
-        activity.showProgress()
-        handler.postDelayed({
-            activity.dismissProgress()
-            updateCharacterList()
-        }, Define.POLLING_INTERVAL * 2)
-
-        updateKifuList(inflater)
+        }
     }
 
+    @UiThread
     private fun updateCharacterList() {
         val rel = viewModel.gameRelation ?: return
         val lv = binding?.characterList ?: return
@@ -377,6 +371,8 @@ class KifuDetailFragment : BaseFragment() {
             if (getActivity() != null) throw e
         }
     }
+
+    @UiThread
     private fun inflateCharacterRow(chara: Npc, row: Int) {
         Logger.methodStart(TAG)
         val lv = binding?.characterList
@@ -463,16 +459,14 @@ class KifuDetailFragment : BaseFragment() {
     }
     private fun getCharacterRowTag(charaName: String) = "character-role-$charaName"
 
-    private fun updateKifuList(inflater: LayoutInflater) {
+    private suspend fun updateKifuList(inflater: LayoutInflater) {
         val rel = viewModel.gameRelation ?: return
         val lv = binding?.kifuList ?: return
         Logger.methodStart(TAG)
 
-        val handler = Handler(Looper.getMainLooper())
-        var wait = Define.POLLING_INTERVAL
-
-        for (loop in 1..rel.game.loop) {
-            handler.postDelayed({
+        withContext(Dispatchers.Main) {
+            for (loop in 1..rel.game.loop) {
+                withContext(Dispatchers.IO) { delay(Define.POLLING_INTERVAL) }
                 try {
                     val loopTag = "kifu_per_day-$loop"
                     lv.findViewWithTag<ViewGroup>(loopTag) ?: LinearItemKifuLoopTitleBinding.inflate(inflater, lv, false).also {
@@ -483,11 +477,9 @@ class KifuDetailFragment : BaseFragment() {
                 } catch (e: IllegalStateException) {
                     if (getActivity() != null) throw e
                 }
-            }, wait)
-            wait += Define.POLLING_INTERVAL
 
-            for (day in 1..rel.game.day) {
-                handler.postDelayed({
+                for (day in 1..rel.game.day) {
+                    withContext(Dispatchers.IO) { delay(Define.POLLING_INTERVAL) }
                     try {
                         val loopDayTag = "kifu_per_day-$loop-$day"
 
@@ -547,8 +539,7 @@ class KifuDetailFragment : BaseFragment() {
                     } catch (e: IllegalStateException) {
                         if (getActivity() != null) throw e
                     }
-                }, wait)
-                wait += Define.POLLING_INTERVAL
+                }
             }
         }
     }
@@ -578,7 +569,7 @@ class KifuDetailFragment : BaseFragment() {
                                 it.card = card
                             } ?: run {
                                 // 棋譜レコードが無いので作成から
-                                viewModel.viewModelScope.launch(Dispatchers.IO) {
+                                scope.launch {
                                     val kifuId = MyApplication.db.gameDao().createKifu(GameDao.CreateKifuModel(
                                         viewModel.gameId!!, d!!.id, isWriter, target, card))
                                     val kifu = MyApplication.db.gameDao().loadKifu(kifuId)
@@ -603,7 +594,7 @@ class KifuDetailFragment : BaseFragment() {
                 .show()
             return
         }
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
+        scope.launch {
             val dao = MyApplication.db.gameDao()
             val npc = dao.createNpc(GameDao.CreateNpcModel(viewModel.gameId!!, charaName)).let {
                 dao.loadNpc(it)
@@ -623,7 +614,7 @@ class KifuDetailFragment : BaseFragment() {
             }
 
             rel.npcs.remove(chara)
-            viewModel.viewModelScope.launch(Dispatchers.IO) {
+            scope.launch {
                 MyApplication.db.gameDao().deleteNpc(chara)
             }
         }
@@ -673,7 +664,7 @@ class KifuDetailFragment : BaseFragment() {
         rv.ruleX2List.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
             detect.ruleX2.add(it.tag as String)
         }
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
+        scope.launch {
             viewModel.gameRelation?.let {
                 MyApplication.db.gameDao().saveGame(it)
                 Logger.d(TAG, "saved data = " + it.toJson(false))
