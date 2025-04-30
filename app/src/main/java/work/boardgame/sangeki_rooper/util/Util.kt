@@ -196,6 +196,8 @@ object Util {
                 "神格" -> R.drawable.character_13_0
                 "転校生" -> R.drawable.character_24_0
                 "手先" -> R.drawable.character_18_0
+                "仙人" -> R.drawable.sennin
+                "up主", "UP主" -> R.drawable.upnusi
                 else -> {
                     Logger.i(TAG, "unexpected chara name: $charaName")
                     R.drawable.extra_back
@@ -239,6 +241,8 @@ object Util {
                 "神格" -> R.drawable.character_13_1
                 "転校生" -> R.drawable.character_24_1
                 "手先" -> R.drawable.character_18_1
+                "仙人" -> R.drawable.sennin
+                "up主", "UP主" -> R.drawable.upnusi
                 else -> {
                     Logger.i(TAG, "unexpected chara name: $charaName")
                     R.drawable.extra_back

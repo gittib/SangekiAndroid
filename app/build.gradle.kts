@@ -3,19 +3,19 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
     namespace = "work.boardgame.sangeki_rooper"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "work.boardgame.sangeki_rooper"
         minSdk = 24
         targetSdk = 34
-        versionCode = 15
-        versionName = "1.3.0"
+        versionCode = 16
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -46,7 +46,6 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
         viewBinding = true
         buildConfig = true
     }
@@ -93,22 +92,21 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     testImplementation("junit:junit:4.+")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
     // Retrofit ////////////////////////////////////////////////////////////////////////////////////
     // picasso
     implementation("com.squareup.picasso:picasso:2.5.2")
     // gson
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.11.0")
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // retrofit2
@@ -132,7 +130,7 @@ dependencies {
 
     // RoomDatabase ////////////////////////////////////////////////////////////////////////////////
     implementation("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
     // RoomDatabase ここまで ////////////////////////////////////////////////////////////////////////
 
     // PDFビューワ
