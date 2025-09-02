@@ -14,7 +14,7 @@ android {
         applicationId = "work.boardgame.sangeki_rooper"
         minSdk = 24
         targetSdk = 35
-        versionCode = 18
+        versionCode = 19
         versionName = "1.4.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -63,7 +63,8 @@ android {
             versionNameSuffix = "-debug"
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
