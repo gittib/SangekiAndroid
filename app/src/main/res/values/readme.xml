@@ -57,5 +57,8 @@
         <item>1.4.0\n
             仙人、UP主について、画像を仮置きして寄附画面で選択できるようにしました。
         </item>
+        <item>1.4.3\n
+            Android 15 以降での表示を改善しました。
+        </item>
     </string-array>
 </resources>

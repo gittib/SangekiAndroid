@@ -53,6 +53,7 @@ class TopFragment : BaseFragment() {
                 activity.startFragment(AboutFragment::class.qualifiedName)
             }
         }
+        fitToEdgeToEdge(binding.contentsFrame, binding.footerText)
         return binding.root
     }
 
