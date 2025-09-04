@@ -141,6 +141,7 @@ class KifuStandbyFragment : BaseFragment() {
                 }
             }
         }
+        fitToEdgeToEdge(binding.root)
         return binding.root
     }
 

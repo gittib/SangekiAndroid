@@ -54,6 +54,9 @@ class AboutFragment : BaseFragment() {
             }
             rv.appVersion.text = String.format("アプリバージョン： %s", BuildConfig.VERSION_NAME)
         }
+
+        fitToEdgeToEdge(binding.root)
+
         return binding.root
     }
 

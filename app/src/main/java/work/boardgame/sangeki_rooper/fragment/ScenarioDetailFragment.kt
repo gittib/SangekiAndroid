@@ -304,6 +304,7 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
         }
+        fitToEdgeToEdge(binding.contentsFrame)
         return binding.root
     }
 

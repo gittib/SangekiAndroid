@@ -53,6 +53,7 @@ class KifuListFragment : BaseFragment(),
                 activity.startFragment(KifuStandbyFragment::class.qualifiedName)
             }
         }
+        fitToEdgeToEdge(binding.root)
         return binding.root
     }
 
