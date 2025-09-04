@@ -1,13 +1,15 @@
 package work.boardgame.sangeki_rooper.model
 
+import com.google.gson.annotations.SerializedName
+
 class RuleMasterDataModel (
-    val setName: String,
-    val rules: List<RuleInfo>
+    @SerializedName("setName") val setName: String,
+    @SerializedName("rules") val rules: List<RuleInfo>
 ) {
     class RuleInfo (
-        val ruleName: String,
-        val isRuleY: Boolean,
-        val roles: List<String>
+        @SerializedName("ruleName") val ruleName: String,
+        @SerializedName("isRuleY") val isRuleY: Boolean,
+        @SerializedName("roles") val roles: List<String>
     )
 
     fun allRoles():List<String> {

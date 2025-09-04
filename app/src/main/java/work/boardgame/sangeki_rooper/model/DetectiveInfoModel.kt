@@ -1,14 +1,15 @@
 package work.boardgame.sangeki_rooper.model
 
 import android.content.Context
+import com.google.gson.annotations.SerializedName
 import work.boardgame.sangeki_rooper.util.Util
 
 class DetectiveInfoModel (
     context: Context,
     tragedySetName: String,
-    val ruleY: MutableList<String> = mutableListOf(),
-    val ruleX1: MutableList<String> = mutableListOf(),
-    val ruleX2: MutableList<String> = mutableListOf()
+    @SerializedName("ruleY") val ruleY: MutableList<String> = mutableListOf(),
+    @SerializedName("ruleX1") val ruleX1: MutableList<String> = mutableListOf(),
+    @SerializedName("ruleX2") val ruleX2: MutableList<String> = mutableListOf()
 ) {
     companion object {
         private var ruleMaster: List<RuleMasterDataModel>? = null

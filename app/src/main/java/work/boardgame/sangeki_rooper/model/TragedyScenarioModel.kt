@@ -2,25 +2,27 @@ package work.boardgame.sangeki_rooper.model
 
 import android.content.Context
 import android.graphics.Color
+import com.google.gson.annotations.SerializedName
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Util
+import java.util.Locale
 
 class TragedyScenarioModel (
-    val id: String,
-    val title: String?,
-    val recommended: Boolean?,
-    val secret: Boolean?,
-    val writer: String?,
-    val set: String,
-    val difficulty: Int,
-    private val rule: List<String>,
-    private val special_rule: String?,
-    private val loop: Any,
-    val day: Int,
-    val characterList: List<CharacterData>,
-    val incidentList: List<IncidentData>,
-    val advice: AdviceInfo,
-    val templateInfo: List<TemplateInfo>?
+    @SerializedName("id") val id: String,
+    @SerializedName("title") val title: String?,
+    @SerializedName("recommended") val recommended: Boolean?,
+    @SerializedName("secret") val secret: Boolean?,
+    @SerializedName("writer") val writer: String?,
+    @SerializedName("set") val set: String,
+    @SerializedName("difficulty") val difficulty: Int,
+    @SerializedName("rule") private val rule: List<String>,
+    @SerializedName("special_rule") private val special_rule: String?,
+    @SerializedName("loop") private val loop: Any,
+    @SerializedName("day") val day: Int,
+    @SerializedName("characterList") val characterList: List<CharacterData>,
+    @SerializedName("incidentList") val incidentList: List<IncidentData>,
+    @SerializedName("advice") val advice: AdviceInfo,
+    @SerializedName("templateInfo") val templateInfo: List<TemplateInfo>?
 ) {
     fun tragedySetIndex() = Util.tragedySetIndex(set)
     fun tragedySetName(context: Context?) = Util.tragedySetName(context, set)
@@ -68,10 +70,10 @@ class TragedyScenarioModel (
 
     @Suppress("SpellCheckingInspection")
     class CharacterData (
-        val name: String,
-        private val role: String?,
-        private val initPos: String?,
-        val note: String?
+        @SerializedName("name") val name: String,
+        @SerializedName("role") private val role: String?,
+        @SerializedName("initPos") private val initPos: String?,
+        @SerializedName("note") val note: String?
     ) {
         fun role() = if (role?.trim()?.isNotEmpty() == true) role.trim() else "パーソン"
 
@@ -192,10 +194,10 @@ class TragedyScenarioModel (
     }
 
     class IncidentData (
-        val name: String,
-        val day: Int,
-        val criminal: String,
-        val note: String?
+        @SerializedName("name") val name: String,
+        @SerializedName("day") val day: Int,
+        @SerializedName("criminal") val criminal: String,
+        @SerializedName("note") val note: String?
     ) {
         fun publicName() = when (name) {
             "偽装事件" -> if (note?.isNotEmpty() == true) note else name
@@ -204,31 +206,31 @@ class TragedyScenarioModel (
     }
 
     class AdviceInfo (
-        val notice:String?,
-        val summary:String?,
-        val detail: String?,
-        val victoryConditions: List<VictoryCondition>?
+        @SerializedName("notice") val notice:String?,
+        @SerializedName("summary") val summary:String?,
+        @SerializedName("detail") val detail: String?,
+        @SerializedName("victoryConditions") val victoryConditions: List<VictoryCondition>?
     ) {
         class VictoryCondition (
-            val condition: String,
-            val way: List<String>
+            @SerializedName("condition") val condition: String,
+            @SerializedName("way") val way: List<String>
         )
     }
 
     class TemplateInfo (
-            val loop: String,
-            val standby: String?,
-            val perDay: List<TemplatePerDay>
+        @SerializedName("loop") val loop: String,
+        @SerializedName("standby") val standby: String?,
+        @SerializedName("perDay") val perDay: List<TemplatePerDay>
     ) {
         class TemplatePerDay (
-                val day: Int,
-                val pattern:List<SetCard>
+            @SerializedName("day") val day: Int,
+            @SerializedName("pattern") val pattern:List<SetCard>
         ) {
-            fun dayStr():String = if (day == 1) "初日" else String.format("%d日", day)
+            fun dayStr():String = if (day == 1) "初日" else String.format(Locale.JAPANESE, "%d日", day)
 
             class SetCard (
-                    val target: String,
-                    val card: String
+                @SerializedName("target") val target: String,
+                @SerializedName("card") val card: String
             )
         }
     }
