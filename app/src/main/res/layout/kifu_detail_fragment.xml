@@ -46,11 +46,14 @@
                 <TextView
                     style="@style/Css.KifuDetail.Title"
                     android:text="@string/special_rule"/>
-                <TextView
+                <EditText
                     android:id="@+id/kifu_detail_special_rule"
                     style="@style/Css.KifuDetail.SubTitle"
+                    android:layout_width="match_parent"
                     android:layout_marginTop="0dp"
-                    android:text="@string/nothing_special"/>
+                    android:autofillHints=""
+                    android:inputType="textMultiLine"
+                    android:hint="@string/nothing_special" />
 
                 <TextView
                     style="@style/Css.KifuDetail.Title"
