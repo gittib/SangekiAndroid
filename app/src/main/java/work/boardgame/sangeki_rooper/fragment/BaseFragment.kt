@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -17,7 +16,7 @@ abstract class BaseFragment: Fragment() {
 
     protected val prefs: SharedPreferences get() = activity.prefs
     protected lateinit var activity:ContainerActivity
-    protected val runningActivity get() = getActivity()?.let {
+    private val runningActivity get() = getActivity()?.let {
         if (it.isFinishing) null else it
     }
 

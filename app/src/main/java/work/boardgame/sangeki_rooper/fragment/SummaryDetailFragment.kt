@@ -74,6 +74,7 @@ class SummaryDetailFragment : BaseFragment() {
                 true
             }
         }
+        fitToEdgeToEdge(binding.contentsFrame, fixedFooter = binding.menuButtonWrapper)
         return binding.root
     }
 

@@ -9,9 +9,9 @@
     <item
         android:id="@+id/scroll_to_today"
         android:title="@string/scroll_to_today" />
-    <item
-        android:id="@+id/show_kifu_preview"
-        android:title="@string/kifu_preview" />
+<!--    <item-->
+<!--        android:id="@+id/show_kifu_preview"-->
+<!--        android:title="@string/kifu_preview" />-->
     <item
         android:id="@+id/delete_kifu"
         android:title="@string/delete_kifu" />

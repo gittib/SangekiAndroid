@@ -58,7 +58,7 @@ class KifuDetailFragment : BaseFragment() {
     ): View {
         Logger.methodStart(TAG)
         binding = KifuDetailFragmentBinding.inflate(inflater, container, false).also {
-            fitToEdgeToEdge(it.kifuDetailContent, fixedFooter = it.showKifuDetailMenu)
+            fitToEdgeToEdge(it.kifuDetailContent, fixedFooter = it.showKifuDetailMenuWrapper)
         }
         return binding!!.root
     }
@@ -93,15 +93,15 @@ class KifuDetailFragment : BaseFragment() {
                         rv.kifuDetailScroll.smoothScrollTo(0, y.toInt())
                         rv.kifuDetailLayout.closeDrawer(GravityCompat.END)
                     }
-                    R.id.show_kifu_preview -> {
-                        // TODO("棋譜プレビュー画面開発中")
-                        Toast.makeText(activity, "工事中です…", Toast.LENGTH_LONG).show()
+//                    R.id.show_kifu_preview -> {
+//                        // TODO("棋譜プレビュー画面開発中")
+//                        Toast.makeText(activity, "工事中です…", Toast.LENGTH_LONG).show()
 //                        rootView?.let { updateDetectiveInfo(it) }
 //                        Handler(Looper.getMainLooper()).postDelayed({
 //                            viewModel.gameId?.let { activity.startFragment(KifuPreviewFragment::class.qualifiedName, it) }
 //                        }, Define.CHATTERING_WAIT)
 //                        rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
-                    }
+//                    }
                     R.id.delete_kifu -> {
                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                             .setTitle(R.string.kifu_delete_confirm_dialog_title)
@@ -208,7 +208,7 @@ class KifuDetailFragment : BaseFragment() {
 
             rv.setLoopDay.text = String.format(getString(R.string.set_loop_day_text), rel.game.setName, rel.game.loop, rel.game.day)
             if (rel.game.specialRule?.isNotEmpty() == true) {
-                rv.kifuDetailSpecialRule.text = rel.game.specialRule
+                rv.kifuDetailSpecialRule.setText(rel.game.specialRule)
             }
 
             val layoutParams = ViewGroup.MarginLayoutParams(0, 0).also { lp ->
@@ -666,6 +666,7 @@ class KifuDetailFragment : BaseFragment() {
         rv.ruleX2List.children.filter { (it as? CheckBox)?.isChecked == true }.forEach {
             detect.ruleX2.add(it.tag as String)
         }
+        viewModel.gameRelation?.game?.specialRule = rv.kifuDetailSpecialRule.text.toString()
         scope.launch {
             viewModel.gameRelation?.let {
                 MyApplication.db.gameDao().saveGame(it)
