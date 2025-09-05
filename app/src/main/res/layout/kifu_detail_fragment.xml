@@ -136,15 +136,20 @@
             </LinearLayout>
         </ScrollView>
 
-        <ImageView
-            android:id="@+id/show_kifu_detail_menu"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="end|bottom"
-            android:scaleType="fitCenter"
+        <LinearLayout
+            android:id="@+id/show_kifu_detail_menu_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:src="@drawable/chara_stand_20"
-            />
+            android:layout_gravity="end|bottom">
+            <ImageView
+                android:id="@+id/show_kifu_detail_menu"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/chara_stand_20"
+                />
+        </LinearLayout>
     </FrameLayout>
 
     <com.google.android.material.navigation.NavigationView

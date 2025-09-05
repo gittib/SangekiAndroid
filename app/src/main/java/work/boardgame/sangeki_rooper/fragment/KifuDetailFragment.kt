@@ -58,7 +58,7 @@ class KifuDetailFragment : BaseFragment() {
     ): View {
         Logger.methodStart(TAG)
         binding = KifuDetailFragmentBinding.inflate(inflater, container, false).also {
-            fitToEdgeToEdge(it.kifuDetailContent, fixedFooter = it.showKifuDetailMenu)
+            fitToEdgeToEdge(it.kifuDetailContent, fixedFooter = it.showKifuDetailMenuWrapper)
         }
         return binding!!.root
     }

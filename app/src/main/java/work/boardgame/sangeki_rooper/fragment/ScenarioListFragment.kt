@@ -113,7 +113,7 @@ class ScenarioListFragment : BaseFragment() {
             }
         }
 
-        fitToEdgeToEdge(binding.title, binding.scenarioList)
+        fitToEdgeToEdge(binding.title, binding.scenarioList, fixedFooter = binding.showScenarioNavWrapper)
 
         return binding.root
     }
