@@ -50,7 +50,9 @@ class KifuDetailFragment : BaseFragment() {
     private lateinit var viewModel: KifuDetailViewModel
     private val ruleMaster by lazy { DetectiveInfoModel.getRuleMaster(activity) }
     private val inflater:LayoutInflater by lazy { LayoutInflater.from(activity) }
+    private val picasso by lazy { Picasso.Builder(activity).build() }
     private val scope = CoroutineScope(Dispatchers.IO)
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -437,7 +439,7 @@ class KifuDetailFragment : BaseFragment() {
                     lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                     lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
                 }
-                Picasso.with(activity).load(Util.standDrawable(chara.name)).into(v.backgroundCharaImage)
+                picasso.load(Util.standDrawable(chara.name)).into(v.backgroundCharaImage)
                 v.roleMark.text = chara.roleDetectiveList[role]
                 v.root.setOnClickListener {
                     v.roleMark.text = when (v.roleMark.text) {
@@ -514,29 +516,29 @@ class KifuDetailFragment : BaseFragment() {
                         }
 
                         writerCards.getOrNull(0)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer1.charaCard)
-                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer1.actionCard)
+                            picasso.load(Util.cardDrawable(it.target)).into(v.writer1.charaCard)
+                            picasso.load(Util.writerCardDrawable(it.card)).into(v.writer1.actionCard)
                         }
                         writerCards.getOrNull(1)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer2.charaCard)
-                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer2.actionCard)
+                            picasso.load(Util.cardDrawable(it.target)).into(v.writer2.charaCard)
+                            picasso.load(Util.writerCardDrawable(it.card)).into(v.writer2.actionCard)
                         }
                         writerCards.getOrNull(2)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.writer3.charaCard)
-                            Picasso.with(activity).load(Util.writerCardDrawable(it.card)).into(v.writer3.actionCard)
+                            picasso.load(Util.cardDrawable(it.target)).into(v.writer3.charaCard)
+                            picasso.load(Util.writerCardDrawable(it.card)).into(v.writer3.actionCard)
                         }
 
                         heroCards.getOrNull(0)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero1.charaCard)
-                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero1.actionCard)
+                            picasso.load(Util.cardDrawable(it.target)).into(v.hero1.charaCard)
+                            picasso.load(Util.heroCardDrawable(it.card)).into(v.hero1.actionCard)
                         }
                         heroCards.getOrNull(1)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero2.charaCard)
-                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero2.actionCard)
+                            picasso.load(Util.cardDrawable(it.target)).into(v.hero2.charaCard)
+                            picasso.load(Util.heroCardDrawable(it.card)).into(v.hero2.actionCard)
                         }
                         heroCards.getOrNull(2)?.let {
-                            Picasso.with(activity).load(Util.cardDrawable(it.target)).into(v.hero3.charaCard)
-                            Picasso.with(activity).load(Util.heroCardDrawable(it.card)).into(v.hero3.actionCard)
+                            picasso.load(Util.cardDrawable(it.target)).into(v.hero3.charaCard)
+                            picasso.load(Util.heroCardDrawable(it.card)).into(v.hero3.actionCard)
                         }
                     } catch (e: IllegalStateException) {
                         if (getActivity() != null) throw e
@@ -560,9 +562,9 @@ class KifuDetailFragment : BaseFragment() {
                     CardSelectDialogFragment.newInstance(getString(R.string.dialog_title_choose_action), isWriter)
                         .setOnSelectListener { card ->
                             Logger.d(TAG, "$target へ $card を")
-                            Picasso.with(activity).load(Util.cardDrawable(target)).into(view.charaCard)
+                            picasso.load(Util.cardDrawable(target)).into(view.charaCard)
                             val imgRes = if (isWriter) Util.writerCardDrawable(card) else Util.heroCardDrawable(card)
-                            Picasso.with(activity).load(imgRes).into(view.actionCard)
+                            picasso.load(imgRes).into(view.actionCard)
 
                             // 棋譜レコードの更新
                             val kifus = viewModel.gameRelation!!.kifus.filter { it.dayId == d!!.id && it.fromWriter == isWriter }

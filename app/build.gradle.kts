@@ -75,15 +75,12 @@ android {
     flavorDimensions.add("appli")
     productFlavors {
         create("sangeki") {
-            dimension = "appli"
+            dimension = rootProject.extra["sangekiDimension"] as String
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     packaging {
         resources {
@@ -94,27 +91,27 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
-    testImplementation("junit:junit:4.+")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 
     // Retrofit ////////////////////////////////////////////////////////////////////////////////////
     // picasso
-    implementation("com.squareup.picasso:picasso:2.5.2")
+    implementation("com.squareup.picasso:picasso:2.71828")
     // gson
-    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.google.code.gson:gson:2.13.2")
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // retrofit2
-    implementation("com.squareup.retrofit2:retrofit:2.3.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.3.0")
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
     // CallAdapter for RxJava
-    implementation("com.squareup.retrofit2:adapter-rxjava2:2.3.0")
+    implementation("com.squareup.retrofit2:adapter-rxjava2:3.0.0")
     // Explicitly install RxJava
     implementation("io.reactivex.rxjava2:rxjava:2.1.10")
     // for Android
@@ -125,13 +122,13 @@ dependencies {
     // inline-block的な、よしなに折り返すレイアウト
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     // 円形のImageView
-    implementation("de.hdodenhof:circleimageview:2.2.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
     // 角丸のImageView
     implementation("com.makeramen:roundedimageview:2.3.0")
 
     // RoomDatabase ////////////////////////////////////////////////////////////////////////////////
-    implementation("androidx.room:room-runtime:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-runtime:2.8.2")
+    ksp("androidx.room:room-compiler:2.8.2")
     // RoomDatabase ここまで ////////////////////////////////////////////////////////////////////////
 
     // PDFビューワ
