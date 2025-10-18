@@ -102,16 +102,16 @@ dependencies {
 
     // Retrofit ////////////////////////////////////////////////////////////////////////////////////
     // picasso
-    implementation("com.squareup.picasso:picasso:2.5.2")
+    implementation("com.squareup.picasso:picasso:2.71828")
     // gson
-    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.google.code.gson:gson:2.13.2")
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // retrofit2
-    implementation("com.squareup.retrofit2:retrofit:2.3.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.3.0")
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
     // CallAdapter for RxJava
-    implementation("com.squareup.retrofit2:adapter-rxjava2:2.3.0")
+    implementation("com.squareup.retrofit2:adapter-rxjava2:3.0.0")
     // Explicitly install RxJava
     implementation("io.reactivex.rxjava2:rxjava:2.1.10")
     // for Android
@@ -122,7 +122,7 @@ dependencies {
     // inline-block的な、よしなに折り返すレイアウト
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     // 円形のImageView
-    implementation("de.hdodenhof:circleimageview:2.2.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
     // 角丸のImageView
     implementation("com.makeramen:roundedimageview:2.3.0")
 
