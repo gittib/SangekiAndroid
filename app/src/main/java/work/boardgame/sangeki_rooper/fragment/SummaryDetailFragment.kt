@@ -1,6 +1,7 @@
 package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,9 +46,7 @@ class SummaryDetailFragment : BaseFragment() {
     ): View {
         Logger.methodStart(TAG)
 
-        savedInstanceState?.getParcelable<SummaryDetailViewModel>(TAG)?.let {
-            viewModel = it
-        }
+        initViewModel(savedInstanceState)
 
         _binding = SummaryDetailFragmentBinding.inflate(inflater, container, false).also { rv ->
             lifecycleScope.launch {
@@ -120,6 +119,19 @@ class SummaryDetailFragment : BaseFragment() {
             else -> null
         }
     }
+
+    private fun initViewModel(savedInstanceState: Bundle?) {
+        Logger.methodStart(TAG)
+
+        val parcelable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            savedInstanceState?.getParcelable(TAG, SummaryDetailViewModel::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            savedInstanceState?.getParcelable(TAG)
+        }
+        parcelable?.let { viewModel = it }
+    }
+
 
     private suspend fun getSummaryCache(assetPath: String): File? {
         Logger.methodStart(TAG)
