@@ -14,8 +14,8 @@ android {
         applicationId = "work.boardgame.sangeki_rooper"
         minSdk = 24
         targetSdk = 35
-        versionCode = 24
-        versionName = "1.5.0"
+        versionCode = 25
+        versionName = "1.5.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -83,6 +83,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -113,9 +116,9 @@ dependencies {
     // CallAdapter for RxJava
     implementation("com.squareup.retrofit2:adapter-rxjava2:3.0.0")
     // Explicitly install RxJava
-    implementation("io.reactivex.rxjava2:rxjava:2.1.10")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
     // for Android
-    implementation("io.reactivex.rxjava2:rxandroid:2.0.2")
+    implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     // Retrofit ここまで /////////////////////////////////////////////////////////////////////////////
 
 
@@ -127,10 +130,11 @@ dependencies {
     implementation("com.makeramen:roundedimageview:2.3.0")
 
     // RoomDatabase ////////////////////////////////////////////////////////////////////////////////
+
     implementation("androidx.room:room-runtime:2.8.2")
     ksp("androidx.room:room-compiler:2.8.2")
     // RoomDatabase ここまで ////////////////////////////////////////////////////////////////////////
 
     // PDFビューワ
-    implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
+    implementation("io.github.afreakyelf:Pdf-Viewer:2.4.0")
 }

@@ -1,16 +1,24 @@
 package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.SummaryDetailFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.SummaryDetailViewModel
 import work.boardgame.sangeki_rooper.util.Logger
+import java.io.File
+import java.io.FileOutputStream
 
 class SummaryDetailFragment : BaseFragment() {
     private val TAG = SummaryDetailFragment::class.simpleName
@@ -38,12 +46,14 @@ class SummaryDetailFragment : BaseFragment() {
     ): View {
         Logger.methodStart(TAG)
 
-        savedInstanceState?.getParcelable<SummaryDetailViewModel>(TAG)?.let {
-            viewModel = it
-        }
+        initViewModel(savedInstanceState)
 
         _binding = SummaryDetailFragmentBinding.inflate(inflater, container, false).also { rv ->
-            rv.pdfViewer.fromAsset(viewModel.pdfAssetPath ?: "summary/btx.pdf").load()
+            lifecycleScope.launch {
+                getSummaryCache(viewModel.pdfAssetPath ?: "summary/btx.pdf")?.let {
+                    rv.pdfViewer.initWithFile(it)
+                }
+            }
 
             rv.menuButton.setOnClickListener {
                 if (rv.summaryDrawerLayout.isDrawerOpen(GravityCompat.END)) {
@@ -54,7 +64,7 @@ class SummaryDetailFragment : BaseFragment() {
             }
 
             rv.summaryNav.setNavigationItemSelectedListener {item ->
-                val fileName = when (item.itemId) {
+                val assetPath = when (item.itemId) {
                     R.id.summary_nav_item_fs -> "summary/fs.pdf"
                     R.id.summary_nav_item_btx -> "summary/btx.pdf"
                     R.id.summary_nav_item_mz -> "summary/mz.pdf"
@@ -65,9 +75,11 @@ class SummaryDetailFragment : BaseFragment() {
                     R.id.summary_nav_item_ahr -> "summary/ahr.pdf"
                     else -> null
                 }
-                fileName?.let {
-                    viewModel.pdfAssetPath = it
-                    rv.pdfViewer.fromAsset(it).load()
+                assetPath?.let {
+                    viewModel.pdfAssetPath = assetPath
+                    lifecycleScope.launch {
+                        getSummaryCache(assetPath)?.let { rv.pdfViewer.initWithFile(it) }
+                    }
                 }
                 rv.summaryDrawerLayout.closeDrawer(GravityCompat.END)
 
@@ -105,6 +117,57 @@ class SummaryDetailFragment : BaseFragment() {
             "LL" -> "summary/ll.pdf"
             "AHR" -> "summary/ahr.pdf"
             else -> null
+        }
+    }
+
+    private fun initViewModel(savedInstanceState: Bundle?) {
+        Logger.methodStart(TAG)
+
+        val parcelable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            savedInstanceState?.getParcelable(TAG, SummaryDetailViewModel::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            savedInstanceState?.getParcelable(TAG)
+        }
+        parcelable?.let { viewModel = it }
+    }
+
+
+    private suspend fun getSummaryCache(assetPath: String): File? {
+        Logger.methodStart(TAG)
+        val cachePathPrefix = "asset-summary-pdf-"
+        val cacheFile = File(requireContext().cacheDir, "$cachePathPrefix$assetPath".replace("/", "-"))
+
+        if (cacheFile.exists()) {
+            return cacheFile.also { f ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    f.setLastModified(System.currentTimeMillis())
+                }
+            }
+        }
+
+        return withContext(Dispatchers.IO) {
+            val context = context ?: return@withContext null
+
+            // サマリーPDFのキャッシュが多すぎる場合は古いものを削除する
+            val cacheItemsLimit = 4
+            val files = context.cacheDir.listFiles { _, name -> name.startsWith(cachePathPrefix) }
+                ?.sortedBy { it.lastModified() } ?: listOf()
+            var needToDelete = files.size - cacheItemsLimit + 1
+            files.forEach {
+                if (needToDelete > 0) {
+                    it.delete()
+                    needToDelete--
+                }
+            }
+
+            // 対象のサマリーPDFのキャッシュファイルを作成して返す
+            context.assets.open(assetPath).use { input ->
+                FileOutputStream(cacheFile).use { output ->
+                    input.copyTo(output)
+                }
+            }
+            cacheFile.also { it.setLastModified(System.currentTimeMillis()) }
         }
     }
 }
