@@ -13,12 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.github.barteksc.pdfviewer.PDFView
+        <com.rajat.pdfviewer.PdfRendererView
             android:id="@+id/pdf_viewer"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/menu_button_wrapper"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            app:pdfView_showDivider="false"
             />
 
         <LinearLayout
