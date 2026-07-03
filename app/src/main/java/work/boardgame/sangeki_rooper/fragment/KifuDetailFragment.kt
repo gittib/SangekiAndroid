@@ -14,6 +14,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +52,7 @@ class KifuDetailFragment : BaseFragment() {
     private val ruleMaster by lazy { DetectiveInfoModel.getRuleMaster(activity) }
     private val inflater:LayoutInflater by lazy { LayoutInflater.from(activity) }
     private val picasso by lazy { Picasso.Builder(activity).build() }
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val daoScope = CoroutineScope(Dispatchers.IO)
 
 
     override fun onCreateView(
@@ -109,7 +110,7 @@ class KifuDetailFragment : BaseFragment() {
                             .setTitle(R.string.kifu_delete_confirm_dialog_title)
                             .setMessage(R.string.kifu_delete_this_confirm_dialog_message)
                             .setPositiveButton(R.string.ok) { _, _ ->
-                                scope.launch {
+                                daoScope.launch {
                                     viewModel.gameRelation?.game?.let { MyApplication.db.gameDao().deleteGame(it) }
                                     withContext(Dispatchers.Main) { activity.onBackPressed() }
                                 }
@@ -145,7 +146,7 @@ class KifuDetailFragment : BaseFragment() {
                     .show(parentFragmentManager, null)
             }
         }
-        scope.launch {
+        lifecycleScope.launch {
             applyViewData()
         }
     }
@@ -179,7 +180,7 @@ class KifuDetailFragment : BaseFragment() {
     private fun loadGameData() {
         Logger.methodStart(TAG)
 
-        scope.launch(Dispatchers.Main) {
+        lifecycleScope.launch {
             activity.showProgress()
             try {
                 withContext(Dispatchers.IO) {
@@ -205,7 +206,7 @@ class KifuDetailFragment : BaseFragment() {
         val detectiveInfo = rel.game.detectiveInfo ?: DetectiveInfoModel(activity, rel.game.setName)
         rel.game.detectiveInfo = detectiveInfo
 
-        withContext(Dispatchers.Main) {
+        withContext(Dispatchers.Main.immediate) {
             rv.gameStartTime.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
 
             rv.setLoopDay.text = String.format(getString(R.string.set_loop_day_text), rel.game.setName, rel.game.loop, rel.game.day)
@@ -573,7 +574,7 @@ class KifuDetailFragment : BaseFragment() {
                                 it.card = card
                             } ?: run {
                                 // 棋譜レコードが無いので作成から
-                                scope.launch {
+                                daoScope.launch {
                                     val kifuId = MyApplication.db.gameDao().createKifu(GameDao.CreateKifuModel(
                                         viewModel.gameId!!, d!!.id, isWriter, target, card))
                                     val kifu = MyApplication.db.gameDao().loadKifu(kifuId)
@@ -598,7 +599,7 @@ class KifuDetailFragment : BaseFragment() {
                 .show()
             return
         }
-        scope.launch {
+        daoScope.launch {
             val dao = MyApplication.db.gameDao()
             val npc = dao.createNpc(GameDao.CreateNpcModel(viewModel.gameId!!, charaName)).let {
                 dao.loadNpc(it)
@@ -618,7 +619,7 @@ class KifuDetailFragment : BaseFragment() {
             }
 
             rel.npcs.remove(chara)
-            scope.launch {
+            daoScope.launch {
                 MyApplication.db.gameDao().deleteNpc(chara)
             }
         }
@@ -669,7 +670,7 @@ class KifuDetailFragment : BaseFragment() {
             detect.ruleX2.add(it.tag as String)
         }
         viewModel.gameRelation?.game?.specialRule = rv.kifuDetailSpecialRule.text.toString()
-        scope.launch {
+        daoScope.launch {
             viewModel.gameRelation?.let {
                 MyApplication.db.gameDao().saveGame(it)
                 Logger.d(TAG, "saved data = " + it.toJson(false))
