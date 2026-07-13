@@ -208,6 +208,7 @@ class TragedyScenarioModel (
     class AdviceInfo (
         @SerializedName("notice") val notice:String?,
         @SerializedName("summary") val summary:String?,
+        @SerializedName("story") val story: String?,
         @SerializedName("detail") val detail: String?,
         @SerializedName("victoryConditions") val victoryConditions: List<VictoryCondition>?
     ) {
