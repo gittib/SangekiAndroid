@@ -147,7 +147,7 @@ class ScenarioListFragment : BaseFragment() {
     private fun updateScenarioList() {
         Logger.methodStart(TAG)
         activity.showProgress()
-        Util.getRxRestInterface(activity)
+        Util.getRxRestInterface(activity, baseUrlResId = R.string.old_api_url)
             .getScenarioList()
             .doFinally { Handler(Looper.getMainLooper()).post { activity.dismissProgress() } }
             .subscribeOn(Schedulers.io())
