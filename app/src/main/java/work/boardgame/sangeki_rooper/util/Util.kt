@@ -422,7 +422,7 @@ fun Any.toJson(pretty:Boolean = true): String {
     else Gson().toJson(this)
 }
 fun Calendar.format(format:String = "%04d/%02d/%02d %02d:%02d"): String {
-    return String.format(format,
+    return String.format(Locale.JAPANESE, format,
     this[Calendar.YEAR], this[Calendar.MONTH]+1, this[Calendar.DAY_OF_MONTH],
     this[Calendar.HOUR_OF_DAY], this[Calendar.MINUTE], this[Calendar.SECOND],
     this[Calendar.MILLISECOND]%1000)
