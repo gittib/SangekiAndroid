@@ -22,6 +22,8 @@
     <string name="scenario_list">脚本リスト</string>
     <string name="scenario_note">主にペンスキーが考えた脚本のリストです。一部寄稿いただいた脚本もあります。\n主人公として惨劇RoopeRを遊ぶ場合はネタバレになるため、見ないほうが良いです。</string>
 
+    <string name="created_scenario_list">みんなの脚本リスト</string>
+
     <string name="retry">リトライ</string>
     <string name="loop">ループ</string>
     <string name="day">日</string>

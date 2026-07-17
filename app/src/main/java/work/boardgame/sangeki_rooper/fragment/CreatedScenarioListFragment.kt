@@ -21,6 +21,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import retrofit2.HttpException
+import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.CreatedScenarioListFragmentBinding
 import work.boardgame.sangeki_rooper.model.CreatedScenarioCacheModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
@@ -63,6 +64,19 @@ class CreatedScenarioListFragment : BaseFragment() {
     ): View {
         Logger.methodStart(TAG)
         binding = CreatedScenarioListFragmentBinding.inflate(inflater, container, false).also { rv ->
+
+            rv.createdScenarioListNav.setNavigationItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.show_title -> {
+                        TODO("脚本タイトルの表示非表示切り替え")
+                    }
+                    R.id.update_list -> {
+                        TODO("キャッシュ削除して脚本データを取り直す。叩きすぎ防止の仕組みも入れたい")
+                    }
+                }
+                true
+            }
+
             rv.progressBar.visibility = when(viewModel.progressCount > 0) {
                 true -> View.VISIBLE
                 else -> View.GONE
@@ -81,6 +95,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                     val cachedAt = loadFromCache(context)?.let {
                         viewModel.scenarioList.clear()
                         viewModel.scenarioList.addAll(it.scenarios)
+                        binding?.scenarioList?.adapter?.notifyDataSetChanged()
                         dismissProgress()
                         it.cachedAt
                     } ?: -1L
@@ -147,16 +162,19 @@ class CreatedScenarioListFragment : BaseFragment() {
         }
     }
 
+    /**
+     * サーバーから脚本データを取得する
+     */
     private suspend fun fetchScenarios(context: Context): List<TragedyScenarioModel> {
         Logger.methodStart(TAG)
 
         var pageNo = 1
         val fetchedScenarios = mutableListOf<TragedyScenarioModel>()
+        val apiClient = Util.getRxRestInterface(context)
         while (true) {
             val scenarios = withTimeoutOrNull(Define.API_TIMEOUT) {
                 suspendCancellableCoroutine { court ->
-                    Util.getRxRestInterface(context)
-                        .getCreatedScenarioList(pageNo)
+                    apiClient.getCreatedScenarioList(pageNo)
                         .subscribe(object: SingleObserver<CreatedScenarioCacheModel> {
                             override fun onSubscribe(d: Disposable) {}
 

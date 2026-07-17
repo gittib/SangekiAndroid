@@ -2,8 +2,9 @@ package work.boardgame.sangeki_rooper.fragment
 
 import androidx.lifecycle.ViewModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
+import java.util.concurrent.CopyOnWriteArrayList
 
 class CreatedScenarioListViewModel : ViewModel() {
-    val scenarioList = mutableListOf<TragedyScenarioModel>()
+    val scenarioList = CopyOnWriteArrayList<TragedyScenarioModel>()
     var progressCount: Int = 0
 }
