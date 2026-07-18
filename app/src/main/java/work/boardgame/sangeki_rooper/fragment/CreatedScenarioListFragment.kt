@@ -93,7 +93,19 @@ class CreatedScenarioListFragment : BaseFragment() {
                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                             .setMessage("脚本リストを最新の状態に更新します。よろしいですか？")
                             .setPositiveButton(android.R.string.ok) { _, _ ->
-                                TODO("キャッシュ削除して脚本データを取り直す。叩きすぎ防止の仕組みも入れたい")
+                                // TODO: 連打されまくるのの防止いれる？
+                                viewModel.viewModelScope.launch(Dispatchers.Main.immediate) {
+                                    showProgress()
+                                    try {
+                                        val scenarios = fetchScenarios(activity)
+                                        viewModel.scenarioList.clear()
+                                        viewModel.scenarioList.addAll(scenarios)
+                                        binding?.scenarioList?.adapter?.notifyDataSetChanged()
+                                        saveToCache(activity, scenarios)
+                                    } finally {
+                                        dismissProgress()
+                                    }
+                                }
                             }
                             .setNegativeButton(android.R.string.cancel, null)
                             .show()
@@ -145,6 +157,9 @@ class CreatedScenarioListFragment : BaseFragment() {
                         Logger.d(TAG, scenarios.toJson())
                         viewModel.scenarioList.clear()
                         viewModel.scenarioList.addAll(scenarios)
+                        viewModel.viewModelScope.launch {
+                            binding?.scenarioList?.adapter?.notifyDataSetChanged()
+                        }
                         saveToCache(context, scenarios)
                     } else {
                         Logger.d(TAG, "キャッシュ有効期限内なので再取得は行わない")
@@ -207,40 +222,51 @@ class CreatedScenarioListFragment : BaseFragment() {
     private suspend fun fetchScenarios(context: Context): List<TragedyScenarioModel> {
         Logger.methodStart(TAG)
 
-        var pageNo = 1
-        val fetchedScenarios = mutableListOf<TragedyScenarioModel>()
-        val apiClient = Util.getRxRestInterface(context)
-        while (true) {
-            val scenarios = withTimeoutOrNull(Define.API_TIMEOUT.milliseconds) {
-                suspendCancellableCoroutine { court ->
-                    apiClient.getCreatedScenarioList(pageNo)
-                        .subscribe(object: SingleObserver<CreatedScenarioCacheModel> {
-                            override fun onSubscribe(d: Disposable) {}
+        return withContext(Dispatchers.IO) {
+            var pageNo = 1
+            val fetchedScenarios = mutableListOf<TragedyScenarioModel>()
+            val apiClient = Util.getRxRestInterface(context)
+            while (true) {
+                val scenarios = withTimeoutOrNull(Define.API_TIMEOUT.milliseconds) {
+                    suspendCancellableCoroutine { court ->
+                        apiClient.getCreatedScenarioList(pageNo)
+                            .subscribe(object: SingleObserver<CreatedScenarioCacheModel> {
+                                override fun onSubscribe(d: Disposable) {}
 
-                            override fun onError(e: Throwable) {
-                                Logger.w(TAG, Throwable(e))
-                                (e as? HttpException)?.let {
-                                    Logger.w(TAG, "code:" + e.code() + ", message:" + e.message())
+                                override fun onError(e: Throwable) {
+                                    Logger.w(TAG, Throwable(e))
+                                    (e as? HttpException)?.let {
+                                        Logger.w(TAG, "code:" + e.code() + ", message:" + e.message())
+                                    }
+                                    if (court.isActive) court.resume(null)
                                 }
-                                if (court.isActive) court.resume(null)
-                            }
 
-                            override fun onSuccess(t: CreatedScenarioCacheModel) {
-                                if (court.isActive) court.resume(t.scenarios)
-                            }
-                        })
-                }
-            } ?: listOf()
-            if (scenarios.isEmpty()) break
-            fetchedScenarios.addAll(scenarios)
+                                override fun onSuccess(t: CreatedScenarioCacheModel) {
+                                    if (court.isActive) court.resume(t.scenarios)
+                                }
+                            })
+                    }
+                } ?: listOf()
+                if (scenarios.isEmpty()) break
+                fetchedScenarios.addAll(scenarios)
 
-            delay(Define.API_INTERVAL.milliseconds)
-            pageNo++
+                delay(Define.API_INTERVAL.milliseconds)
+                pageNo++
+            }
+
+            // fetchedScenariosの並び替え
+            fetchedScenarios.sortWith { a, b ->
+                var d = a.tragedySetIndex() - b.tragedySetIndex()
+                if (d != 0) return@sortWith d
+
+                d = a.difficulty - b.difficulty
+                if (d != 0) return@sortWith d
+
+                (a.id.toIntOrNull() ?: 99999) - (b.id.toIntOrNull() ?: 99999)
+            }
+
+            fetchedScenarios
         }
-
-        // TODO: fetchedScenariosの並び替え
-
-        return fetchedScenarios
     }
 
     /**
