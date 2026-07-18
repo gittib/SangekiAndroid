@@ -44,7 +44,7 @@ class TopFragment : BaseFragment() {
             rv.summaryNote.setOnClickListener { rv.summaryTitle.performClick() }
 
             rv.scenarioListTitle.setOnClickListener {
-                activity.startFragment(ScenarioListFragment::class.qualifiedName)
+                activity.startFragment(CreatedScenarioListFragment::class.qualifiedName)
             }
             rv.scenarioListImage.setOnClickListener { rv.scenarioListTitle.performClick() }
             rv.scenarioListNote.setOnClickListener { rv.scenarioListTitle.performClick() }

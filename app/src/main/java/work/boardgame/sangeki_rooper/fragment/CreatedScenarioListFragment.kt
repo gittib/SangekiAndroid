@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -75,16 +77,32 @@ class CreatedScenarioListFragment : BaseFragment() {
                         TODO("脚本タイトルの表示非表示切り替え")
                     }
                     R.id.update_list -> {
-                        TODO("キャッシュ削除して脚本データを取り直す。叩きすぎ防止の仕組みも入れたい")
+                        rv.createdScenarioListLayout.closeDrawer(GravityCompat.END)
+                        AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                            .setMessage("脚本リストを最新の状態に更新します。よろしいですか？")
+                            .setPositiveButton(android.R.string.ok) { _, _ ->
+                                TODO("キャッシュ削除して脚本データを取り直す。叩きすぎ防止の仕組みも入れたい")
+                            }
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show()
+                    }
+                    R.id.go_to_old_list -> {
+                        activity.startFragment(ScenarioListFragment::class.qualifiedName)
+                        rv.createdScenarioListLayout.closeDrawer(GravityCompat.END)
                     }
                 }
                 true
+            }
+
+            rv.showScenarioNav.setOnClickListener {
+                rv.createdScenarioListLayout.openDrawer(GravityCompat.END)
             }
 
             rv.progressBar.visibility = when(viewModel.progressCount > 0) {
                 true -> View.VISIBLE
                 else -> View.GONE
             }
+            fitToEdgeToEdge(rv.title, rv.showScenarioNavWrapper)
         }
         return binding!!.root
     }

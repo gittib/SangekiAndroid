@@ -23,6 +23,7 @@
     <string name="scenario_note">主にペンスキーが考えた脚本のリストです。一部寄稿いただいた脚本もあります。\n主人公として惨劇RoopeRを遊ぶ場合はネタバレになるため、見ないほうが良いです。</string>
 
     <string name="created_scenario_list">みんなの脚本リスト</string>
+    <string name="created_scenario_list_note">惨劇RoopeR 脚本データベースに投稿された脚本をアプリでも表示できるようにしました。\n見られるだけなので編集したい場合はWebサイトの方からお願いします。</string>
 
     <string name="retry">リトライ</string>
     <string name="loop">ループ</string>
@@ -100,4 +101,5 @@
     <string name="choose_criminal">犯人を選んで下さい</string>
     <string name="show_scenario_title">脚本タイトルの表示/非表示</string>
     <string name="update_scenario_list">脚本リストを最新化</string>
+    <string name="go_to_old_list">旧い脚本リストへ</string>
 </resources>

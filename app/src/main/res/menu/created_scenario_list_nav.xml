@@ -6,4 +6,7 @@
     <item
         android:id="@+id/update_list"
         android:title="@string/update_scenario_list" />
+    <item
+        android:id="@+id/go_to_old_list"
+        android:title="@string/go_to_old_list" />
 </menu>
