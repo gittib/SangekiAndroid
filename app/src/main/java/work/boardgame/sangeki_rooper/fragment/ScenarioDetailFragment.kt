@@ -96,6 +96,8 @@ class ScenarioDetailFragment : BaseFragment() {
                 }.root)
             }
 
+            // TODO: 脚本の不備について表示
+
             rv.scenarioTitle.text = item.title
             rv.incDifficultyRow.detailDifficultyName.text = item.difficultyName()
             rv.incDifficultyRow.detailDifficultyStar.text = item.difficultyStar()
@@ -217,6 +219,7 @@ class ScenarioDetailFragment : BaseFragment() {
                         if (row % 2 == 0) {
                             context?.let { v.root.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
+                        // TODO: 群像事件の犯人を出せてない
                         v.longText.text = ch.criminal
                     }.root)
                     lv.addView(TextView(context).also { v ->
@@ -246,6 +249,7 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
             rv.scenarioSummaryText.text = item.advice.summary
+            // TODO: ストーリーの表示
             rv.guideForWriterText.text = item.advice.detail
 
             // 置き方テンプレの表示
