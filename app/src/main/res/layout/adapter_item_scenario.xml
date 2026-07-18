@@ -19,28 +19,47 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
-        <TextView
-            android:id="@+id/scenario_id"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/scenario_id_wrapper"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="[1001]"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/recommended_scenario"
-            app:layout_constraintBaseline_toBaselineOf="@id/scenario_id"
-            app:layout_constraintLeft_toRightOf="@id/scenario_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:textColor="@color/text_color_recommended"
-            android:textStyle="bold"
-            android:text="@string/recommended_scenario"/>
+            <TextView
+                android:id="@+id/scenario_id"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="[1001]"/>
+
+            <TextView
+                android:id="@+id/recommended_scenario"
+                app:layout_constraintBaseline_toBaselineOf="@id/scenario_id"
+                app:layout_constraintLeft_toRightOf="@id/scenario_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:textColor="@color/text_color_recommended"
+                android:textStyle="bold"
+                android:text="@string/recommended_scenario"/>
+
+            <TextView
+                android:id="@+id/writer"
+                app:layout_constraintBaseline_toBaselineOf="@id/scenario_id"
+                app:layout_constraintLeft_toRightOf="@id/recommended_scenario"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginLeft="8dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:textAlignment="textEnd"
+                tools:text="作者：ペンスキー"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tragedy_set"
-            app:layout_constraintTop_toBottomOf="@id/scenario_id"
+            app:layout_constraintTop_toBottomOf="@id/scenario_id_wrapper"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -108,15 +127,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/day" />
-
-        <TextView
-            android:id="@+id/writer"
-            app:layout_constraintBaseline_toBaselineOf="@id/scenario_id"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            tools:text="作者：ペンスキー"/>
 
         <TextView
             android:id="@+id/scenario_title"
