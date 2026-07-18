@@ -315,7 +315,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                     rv.writer.text = String.format(getString(R.string.writer_introduction), item.writer)
 
                     rv.root.setOnClickListener {
-                        activity.startFragment(ScenarioDetailFragment::class.qualifiedName, item.id)
+                        activity.startFragment(ScenarioDetailFragment::class.qualifiedName, item)
                     }
                 }
             }

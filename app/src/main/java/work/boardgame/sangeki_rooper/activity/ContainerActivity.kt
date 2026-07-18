@@ -6,6 +6,7 @@ import android.os.Handler
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.ActivityContainerBinding
 import work.boardgame.sangeki_rooper.fragment.*
+import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 import java.lang.IllegalArgumentException
@@ -78,7 +79,11 @@ class ContainerActivity : BaseActivity() {
             return when (fragmentName) {
                 TopFragment::class.qualifiedName -> TopFragment.newInstance()
                 ScenarioListFragment::class.qualifiedName -> ScenarioListFragment.newInstance()
-                ScenarioDetailFragment::class.qualifiedName -> ScenarioDetailFragment.newInstance(data as String)
+                ScenarioDetailFragment::class.qualifiedName -> when(data) {
+                    is String -> ScenarioDetailFragment.newInstance(data)
+                    is TragedyScenarioModel -> ScenarioDetailFragment.newInstance(data)
+                    else -> throw IllegalArgumentException("invalid data: $data")
+                }
                 AboutFragment::class.qualifiedName -> AboutFragment.newInstance()
                 KifuListFragment::class.qualifiedName -> KifuListFragment.newInstance()
                 KifuStandbyFragment::class.qualifiedName -> KifuStandbyFragment.newInstance()

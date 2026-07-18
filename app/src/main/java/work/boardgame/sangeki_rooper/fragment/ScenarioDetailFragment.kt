@@ -16,9 +16,11 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.*
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
+import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.toJson
@@ -33,7 +35,14 @@ class ScenarioDetailFragment : BaseFragment() {
             }
         }
 
+        fun newInstance(scenario: TragedyScenarioModel) = ScenarioDetailFragment().apply {
+            arguments = Bundle().apply {
+                putString(BUNDLE_KEY_SCENARIO_MODEL, scenario.toJson(false))
+            }
+        }
+
         private const val BUNDLE_KEY_SCENARIO_ID = "SCENARIO_ID"
+        private const val BUNDLE_KEY_SCENARIO_MODEL = "SCENARIO_MODEL"
     }
 
     private lateinit var viewModel: ScenarioDetailViewModel
@@ -319,11 +328,12 @@ class ScenarioDetailFragment : BaseFragment() {
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(ScenarioDetailViewModel::class.java)
         arguments?.let { a ->
-            val id = a.getString(BUNDLE_KEY_SCENARIO_ID)
-            val scenarioList = Util.getScenarioList(context)
-            viewModel.scenario = scenarioList.find { it.id == id } ?: run {
-                Logger.w(TAG, "脚本データ取得失敗！ id = $id")
-                null
+            viewModel.scenario = a.getString(BUNDLE_KEY_SCENARIO_MODEL)?.let {
+                Gson().fromJson(it, TragedyScenarioModel::class.java)
+            } ?: run {
+                val id = a.getString(BUNDLE_KEY_SCENARIO_ID)
+                val scenarioList = Util.getScenarioList(context)
+                scenarioList.find { it.id == id }
             }
         }
     }
