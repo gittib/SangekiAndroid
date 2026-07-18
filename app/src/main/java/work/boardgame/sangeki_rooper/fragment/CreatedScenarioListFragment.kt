@@ -1,15 +1,14 @@
 package work.boardgame.sangeki_rooper.fragment
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +22,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import retrofit2.HttpException
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.CreatedScenarioListFragmentBinding
+import work.boardgame.sangeki_rooper.fragment.viewmodel.CreatedScenarioListViewModel
 import work.boardgame.sangeki_rooper.model.CreatedScenarioCacheModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
@@ -30,7 +30,12 @@ import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.toJson
 import java.io.File
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlin.coroutines.resume
+import kotlin.time.Duration.Companion.milliseconds
 
 class CreatedScenarioListFragment : BaseFragment() {
 
@@ -39,7 +44,6 @@ class CreatedScenarioListFragment : BaseFragment() {
 
         private const val TAG = "CreatedScenarioListFragment"
         private const val CREATED_SCENARIO_LIST_CACHE_NAME = "created_scenario_list_cache.json"
-        private const val CACHE_TIME_LIMIT = 1000L * 60L * 60L * 24L // 24h
     }
 
     private lateinit var viewModel: CreatedScenarioListViewModel
@@ -100,8 +104,11 @@ class CreatedScenarioListFragment : BaseFragment() {
                         it.cachedAt
                     } ?: -1L
 
+                    val cachedYmd = millisToYmd(cachedAt)
+                    val todayYmd = millisToYmd(System.currentTimeMillis())
+
                     // キャッシュが無い、またはキャッシュ取得してから一定期間経過していたらAPIリクエストする
-                    if (cachedAt < System.currentTimeMillis() - CACHE_TIME_LIMIT) {
+                    if (todayYmd != cachedYmd) {
                         val scenarios = fetchScenarios(context)
                         Logger.d(TAG, scenarios.toJson())
                         viewModel.scenarioList.clear()
@@ -172,7 +179,7 @@ class CreatedScenarioListFragment : BaseFragment() {
         val fetchedScenarios = mutableListOf<TragedyScenarioModel>()
         val apiClient = Util.getRxRestInterface(context)
         while (true) {
-            val scenarios = withTimeoutOrNull(Define.API_TIMEOUT) {
+            val scenarios = withTimeoutOrNull(Define.API_TIMEOUT.milliseconds) {
                 suspendCancellableCoroutine { court ->
                     apiClient.getCreatedScenarioList(pageNo)
                         .subscribe(object: SingleObserver<CreatedScenarioCacheModel> {
@@ -195,11 +202,26 @@ class CreatedScenarioListFragment : BaseFragment() {
             if (scenarios.isEmpty()) break
             fetchedScenarios.addAll(scenarios)
 
-            delay(Define.API_INTERVAL)
+            delay(Define.API_INTERVAL.milliseconds)
             pageNo++
         }
 
+        // TODO: fetchedScenariosの並び替え
+
         return fetchedScenarios
+    }
+
+    /**
+     * Long型のタイムスタンプからyyyyMMddの文字列を得る
+     */
+    private fun millisToYmd(millis: Long): String = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        Instant.ofEpochMilli(millis)
+            .atZone(ZoneId.systemDefault())
+            .format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+    } else {
+        val date = java.util.Date(millis)
+        val sdf = java.text.SimpleDateFormat("yyyyMMdd", Locale.JAPANESE)
+        sdf.format(date)
     }
 
     private suspend fun showProgress() {
