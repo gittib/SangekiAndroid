@@ -352,8 +352,16 @@ class CreatedScenarioListFragment : BaseFragment() {
                     rv.day.text = item.day.toString()
                     rv.scenarioTitle.text = item.title
                     rv.writer.text = String.format(getString(R.string.writer_introduction), item.writer)
+                    rv.publicMessage.let { v ->
+                        v.text = item.publicMessage
+                        v.visibility = when (item.publicMessage) {
+                            null, "" -> View.GONE
+                            else -> View.VISIBLE
+                        }
+                    }
 
                     rv.root.setOnClickListener {
+                        val item = viewModel.scenarioList[absoluteAdapterPosition-1]
                         activity.startFragment(ScenarioDetailFragment::class.qualifiedName, item)
                     }
                 }
