@@ -87,13 +87,26 @@ class CreatedScenarioListFragment : BaseFragment() {
             rv.createdScenarioListNav.setNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.show_title -> {
-                        TODO("脚本タイトルの表示非表示切り替え")
+                        // 脚本タイトルの表示非表示切り替え
+                        if (viewModel.showTitle) {
+                            viewModel.showTitle = false
+                            binding?.scenarioList?.adapter?.notifyDataSetChanged()
+                        } else {
+                            AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                                .setMessage("脚本タイトルを表示するとネタバレになるかも知れませんが、よろしいですか？")
+                                .setPositiveButton(android.R.string.ok) { _, _ ->
+                                    viewModel.showTitle = true
+                                    binding?.scenarioList?.adapter?.notifyDataSetChanged()
+                                }
+                                .setNegativeButton(android.R.string.cancel, null)
+                                .show()
+                        }
+                        rv.createdScenarioListLayout.closeDrawer(GravityCompat.END)
                     }
                     R.id.update_list -> {
                         AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                             .setMessage("脚本リストを最新の状態に更新します。よろしいですか？")
                             .setPositiveButton(android.R.string.ok) { _, _ ->
-                                // TODO: 連打されまくるのの防止いれる？
                                 viewModel.viewModelScope.launch(Dispatchers.Main.immediate) {
                                     showProgress()
                                     try {
