@@ -339,6 +339,9 @@ class ScenarioDetailFragment : BaseFragment() {
                 val scenarioList = Util.getScenarioList(context)
                 scenarioList.find { it.id == id }
             }
+            if (viewModel.scenario == null) {
+                TODO("対象の脚本が取得できなかった場合の対応")
+            }
         }
     }
 
