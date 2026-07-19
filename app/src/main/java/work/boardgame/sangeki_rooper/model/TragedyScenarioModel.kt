@@ -23,6 +23,7 @@ class TragedyScenarioModel (
     @SerializedName("characterList") val characterList: List<CharacterData>,
     @SerializedName("incidentList") val incidentList: List<IncidentData>,
     @SerializedName("advice") val advice: AdviceInfo,
+    @SerializedName("invalidConditions") val invalidConditions: List<String?>?,
     @SerializedName("templateInfo") val templateInfo: List<TemplateInfo>?
 ) {
     fun tragedySetIndex() = Util.tragedySetIndex(set)

@@ -103,9 +103,41 @@
                 android:visibility="gone"
                 tools:visibility="visible">
 
+                <LinearLayout
+                    android:id="@+id/invalid_condition_frame"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:padding="8dp"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/bg_stroke_black"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red"
+                        android:text="配役がおかしいようです。\n特殊ルールによっては問題ない場合もあるため、確認したうえでご利用ください。"
+                        />
+
+                    <TextView
+                        android:id="@+id/invalid_condition"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Css.ScenarioDetail.Text.Private"
+                        android:layout_marginTop="8sp"
+                        tools:text="・キーパーソンが1人足りません。\n・イレギュラーにパーソンが配役されています。"
+                        />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/private_sheet_title"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/invalid_condition_frame"
                     app:layout_constraintLeft_toLeftOf="parent"
                     style="@style/Css.ScenarioDetail.Title"
                     android:textSize="24sp"

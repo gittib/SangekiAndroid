@@ -96,7 +96,19 @@ class ScenarioDetailFragment : BaseFragment() {
                 }.root)
             }
 
-            // TODO: 脚本の不備について表示
+            // 脚本の不備について表示
+            val invalidConditions = item.invalidConditions?.filterNotNull() ?: listOf()
+            when (invalidConditions.isEmpty()) {
+                true -> rv.invalidConditionFrame.visibility = View.GONE
+                else -> {
+                    rv.invalidConditionFrame.visibility = View.VISIBLE
+                    var invalidConditionsText = ""
+                    invalidConditions.forEach {
+                        invalidConditionsText += "・$it\n"
+                    }
+                    rv.invalidCondition.text = invalidConditionsText
+                }
+            }
 
             rv.scenarioTitle.text = item.title
             rv.incDifficultyRow.detailDifficultyName.text = item.difficultyName()
