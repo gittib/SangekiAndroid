@@ -10,6 +10,7 @@ import java.util.Locale
 class TragedyScenarioModel (
     @SerializedName("id") val id: String,
     @SerializedName("title") val title: String?,
+    @SerializedName("publicMessage") val publicMessage: String?,
     @SerializedName("recommended") val recommended: Boolean?,
     @SerializedName("secret") val secret: Boolean?,
     @SerializedName("writer") val writer: String?,
@@ -195,6 +196,7 @@ class TragedyScenarioModel (
 
     class IncidentData (
         @SerializedName("name") val name: String,
+        @SerializedName("publicName") val publicName: String,
         @SerializedName("day") val day: Int,
         @SerializedName("criminal") val criminal: String,
         @SerializedName("note") val note: String?
