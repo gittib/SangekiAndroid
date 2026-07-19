@@ -102,4 +102,5 @@
     <string name="show_scenario_title">脚本タイトルの表示/非表示</string>
     <string name="update_scenario_list">脚本リストを最新化</string>
     <string name="go_to_old_list">旧い脚本リストへ</string>
+    <string name="story_title">ストーリー</string>
 </resources>

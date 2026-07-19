@@ -219,7 +219,6 @@ class ScenarioDetailFragment : BaseFragment() {
                         if (row % 2 == 0) {
                             context?.let { v.root.setBackgroundColor(ContextCompat.getColor(it, R.color.background_alt_row)) }
                         }
-                        // TODO: 群像事件の犯人を出せてない
                         v.longText.text = ch.criminal
                     }.root)
                     lv.addView(TextView(context).also { v ->
@@ -249,7 +248,17 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
             rv.scenarioSummaryText.text = item.advice.summary
-            // TODO: ストーリーの表示
+            when (item.advice.story) {
+                null, "" -> {
+                    rv.storyTitle.visibility = View.GONE
+                    rv.storyText.visibility = View.GONE
+                }
+                else -> {
+                    rv.storyTitle.visibility = View.VISIBLE
+                    rv.storyText.visibility = View.VISIBLE
+                    rv.storyText.text = item.advice.story
+                }
+            }
             rv.guideForWriterText.text = item.advice.detail
 
             // 置き方テンプレの表示

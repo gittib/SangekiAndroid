@@ -305,8 +305,22 @@
                     tools:text="初心者向けの脚本です。" />
 
                 <TextView
-                    android:id="@+id/guide_for_writer_title"
+                    android:id="@+id/story_title"
                     app:layout_constraintTop_toBottomOf="@id/scenario_summary_text"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    style="@style/Css.ScenarioDetail.Title"
+                    android:text="@string/story_title" />
+
+                <TextView
+                    android:id="@+id/story_text"
+                    app:layout_constraintTop_toBottomOf="@id/story_title"
+                    style="@style/Css.ScenarioDetail.Text.Private"
+                    android:layout_width="match_parent"
+                    tools:text="ストーリーが表示されます。" />
+
+                <TextView
+                    android:id="@+id/guide_for_writer_title"
+                    app:layout_constraintTop_toBottomOf="@id/story_text"
                     app:layout_constraintLeft_toLeftOf="parent"
                     style="@style/Css.ScenarioDetail.Title"
                     android:text="@string/guide_for_writer" />
