@@ -196,13 +196,14 @@ class TragedyScenarioModel (
 
     class IncidentData (
         @SerializedName("name") val name: String,
-        @SerializedName("publicName") val publicName: String,
+        @SerializedName("publicName") val publicName: String? = null,
         @SerializedName("day") val day: Int,
         @SerializedName("criminal") val criminal: String,
         @SerializedName("note") val note: String?
     ) {
-        fun publicName() = when (name) {
-            "偽装事件" -> if (note?.isNotEmpty() == true) note else name
+        fun publicName() = when {
+            publicName?.isNotEmpty() == true -> publicName
+            name == "偽装事件" -> if (note?.isNotEmpty() == true) note else name
             else -> name
         }
     }
