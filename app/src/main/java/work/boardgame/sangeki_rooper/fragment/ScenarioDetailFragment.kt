@@ -123,6 +123,17 @@ class ScenarioDetailFragment : BaseFragment() {
                 rv.ruleX2.visibility = View.GONE
             }
 
+            // 狂った真実のルールY表示
+            rv.crazyRuleY.let { v ->
+                when(item.crazyRuleY) {
+                    null, "" -> v.visibility = View.GONE
+                    else -> {
+                        v.visibility = View.VISIBLE
+                        v.text = "(狂った真実：${item.crazyRuleY})"
+                    }
+                }
+            }
+
             // 登場人物一覧の表示
             rv.characterCount.text = String.format("(%d人)", item.characterList.size)
             rv.characterRoleList.let { v ->

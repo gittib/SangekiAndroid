@@ -18,6 +18,7 @@ class TragedyScenarioModel (
     @SerializedName("isPlus") val isPlus: Boolean = false,
     @SerializedName("difficulty") val difficulty: Int,
     @SerializedName("rule") private val rule: List<String>,
+    @SerializedName("crazyRuleY") val crazyRuleY: String?,
     @SerializedName("special_rule") private val special_rule: String?,
     @SerializedName("loop") private val loop: Any,
     @SerializedName("day") val day: Int,
