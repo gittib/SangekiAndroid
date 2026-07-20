@@ -114,7 +114,7 @@
                     android:padding="8dp"
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
-                    android:background="@drawable/bg_stroke_black"
+                    android:background="@drawable/bg_stroke_red"
                     android:visibility="gone"
                     tools:visibility="visible">
 
