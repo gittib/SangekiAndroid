@@ -19,10 +19,9 @@ import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 
 class AboutFragment : BaseFragment() {
-    private val TAG = AboutFragment::class.simpleName
-
     companion object {
         fun newInstance() = AboutFragment()
+        const val TAG = "AboutFragment"
     }
 
     private lateinit var viewModel: AboutViewModel

@@ -30,10 +30,10 @@ import work.boardgame.sangeki_rooper.util.format
 class KifuListFragment : BaseFragment(),
     ContainerActivity.ForegroundFragmentListener
 {
-    private val TAG = KifuListFragment::class.simpleName
-
     companion object {
         fun newInstance() = KifuListFragment()
+
+        const val TAG = "KifuListFragment"
     }
 
     private lateinit var viewModel: KifuListViewModel

@@ -14,10 +14,10 @@ import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 
 class TopFragment : BaseFragment() {
-    private val TAG = TopFragment::class.simpleName
-
     companion object {
         fun newInstance() = TopFragment()
+
+        const val TAG = "TopFragment"
     }
 
     private lateinit var viewModel: TopViewModel

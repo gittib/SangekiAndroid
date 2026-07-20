@@ -24,10 +24,10 @@ import work.boardgame.sangeki_rooper.util.Util
 import java.util.*
 
 class KifuStandbyFragment : BaseFragment() {
-    private val TAG = KifuStandbyFragment::class.simpleName
-
     companion object {
         fun newInstance() = KifuStandbyFragment()
+
+        const val TAG = "KifuStandbyFragment"
 
         private const val SS_VIEW_MODEL = "SS_VIEW_MODEL"
         private const val NO_INCIDENTS = "--------"

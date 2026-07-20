@@ -35,10 +35,9 @@ import work.boardgame.sangeki_rooper.util.Util
 import java.util.*
 
 class ScenarioListFragment : BaseFragment() {
-    private val TAG = ScenarioListFragment::class.simpleName
-
     companion object {
         fun newInstance() = ScenarioListFragment()
+        const val TAG = "ScenarioListFragment"
     }
 
     private lateinit var viewModel: ScenarioListViewModel

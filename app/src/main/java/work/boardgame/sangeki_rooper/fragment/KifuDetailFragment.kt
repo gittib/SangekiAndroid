@@ -39,7 +39,7 @@ class KifuDetailFragment : BaseFragment() {
             }
         }
 
-        private val TAG = KifuDetailFragment::class.simpleName
+        const val TAG = "KifuDetailFragment"
     }
 
     private object BundleKey {

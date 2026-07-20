@@ -25,7 +25,7 @@ class KifuPreviewFragment : BaseFragment() {
             }
         }
 
-        private val TAG = KifuPreviewFragment::class.simpleName
+        const val TAG = "KifuPreviewFragment"
     }
 
     private object BundleKey {

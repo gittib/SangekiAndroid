@@ -1,5 +1,6 @@
 package work.boardgame.sangeki_rooper.util
 
+import work.boardgame.sangeki_rooper.activity.ContainerActivity
 import work.boardgame.sangeki_rooper.fragment.AboutFragment
 import work.boardgame.sangeki_rooper.fragment.CreatedScenarioListFragment
 import work.boardgame.sangeki_rooper.fragment.KifuListFragment
@@ -9,6 +10,10 @@ import work.boardgame.sangeki_rooper.fragment.SummaryDetailFragment
 import work.boardgame.sangeki_rooper.fragment.TopFragment
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 
+/**
+ * [ContainerActivity]のgetFragment()で、フラグメント用引数の型をAny?で受け付けていたため、
+ * このsealed interfaceで各フラグメントごとに適切しか指定できないよう制限する
+ */
 sealed interface FragmentData {
     object Top : FragmentData
     object ScenarioList: FragmentData
@@ -31,6 +36,9 @@ sealed interface FragmentData {
             KifuStandbyFragment::class.qualifiedName -> KifuStandby
             SummaryDetailFragment::class.qualifiedName -> SummaryDetail(data as String?)
             CreatedScenarioListFragment::class.qualifiedName -> CreatedScenarioList
+
+            // 一部のフラグメントは直接このsealed interfaceをインスタンス化する想定であり、
+            // 文字列からの生成には対応させないため、この関数では引数違反とする
             else -> throw IllegalArgumentException("invalid fragmentName: $fragmentName")
         }
     }

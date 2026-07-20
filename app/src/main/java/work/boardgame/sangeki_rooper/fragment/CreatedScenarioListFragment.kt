@@ -53,7 +53,7 @@ class CreatedScenarioListFragment : BaseFragment() {
     companion object {
         fun newInstance() = CreatedScenarioListFragment()
 
-        private const val TAG = "CreatedScenarioListFragment"
+        const val TAG = "CreatedScenarioListFragment"
         private const val CREATED_SCENARIO_LIST_CACHE_NAME = "created_scenario_list_cache.json"
     }
 

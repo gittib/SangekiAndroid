@@ -26,8 +26,6 @@ import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.toJson
 
 class ScenarioDetailFragment : BaseFragment() {
-    private val TAG = ScenarioDetailFragment::class.simpleName
-
     companion object {
         fun newInstance(scenarioId: String) = ScenarioDetailFragment().apply {
             arguments = Bundle().apply {
@@ -41,6 +39,7 @@ class ScenarioDetailFragment : BaseFragment() {
             }
         }
 
+        const val TAG = "ScenarioDetailFragment"
         private const val BUNDLE_KEY_SCENARIO_ID = "SCENARIO_ID"
         private const val BUNDLE_KEY_SCENARIO_MODEL = "SCENARIO_MODEL"
     }
