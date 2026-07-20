@@ -8,6 +8,7 @@ import work.boardgame.sangeki_rooper.databinding.ActivityContainerBinding
 import work.boardgame.sangeki_rooper.fragment.*
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
+import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 import java.lang.IllegalArgumentException
 
@@ -40,12 +41,10 @@ class ContainerActivity : BaseActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().let { ft ->
-                val fragmentName = intent.getStringExtra(ExtraKey.FRAGMENT_NAME)
-                val fragmentData:Any? = when (fragmentName) {
-                    SummaryDetailFragment::class.qualifiedName -> intent.getStringExtra(ExtraKey.FRAGMENT_DATA)
-                    else -> null
-                }
-                val f = getFragment(fragmentName, fragmentData)
+                val fragmentName = intent.getStringExtra(ExtraKey.FRAGMENT_NAME)!!
+                val data = intent.getStringExtra(ExtraKey.FRAGMENT_DATA)
+                val fragmentData = FragmentData.getFragmentData(fragmentName, data)
+                val f = getFragment(fragmentData)
                 ft.add(R.id.container, f)
                 ft.commit()
             }
@@ -59,42 +58,34 @@ class ContainerActivity : BaseActivity() {
         fragmentOnResume()
     }
 
-    fun startFragment(fragmentName: String?, data:Any? = null) {
+    fun startFragment(fragmentData: FragmentData) {
         Logger.methodStart(TAG)
         if (isFragmentCreating) return
         isFragmentCreating = true
         Handler(mainLooper).postDelayed({ isFragmentCreating = false }, Define.CHATTERING_WAIT)
         supportFragmentManager.beginTransaction().let { ft ->
             ft.addToBackStack(null)
-            val f = getFragment(fragmentName, data)
+            val f = getFragment(fragmentData)
             ft.add(R.id.container, f)
             ft.commit()
         }
         fragmentOnResume()
     }
 
-    private fun getFragment(fragmentName: String?, data: Any? = null): BaseFragment {
+    private fun getFragment(fragmentData: FragmentData): BaseFragment {
         Logger.methodStart(TAG)
-        try {
-            return when (fragmentName) {
-                TopFragment::class.qualifiedName -> TopFragment.newInstance()
-                ScenarioListFragment::class.qualifiedName -> ScenarioListFragment.newInstance()
-                ScenarioDetailFragment::class.qualifiedName -> when(data) {
-                    is String -> ScenarioDetailFragment.newInstance(data)
-                    is TragedyScenarioModel -> ScenarioDetailFragment.newInstance(data)
-                    else -> throw IllegalArgumentException("invalid data: $data")
-                }
-                AboutFragment::class.qualifiedName -> AboutFragment.newInstance()
-                KifuListFragment::class.qualifiedName -> KifuListFragment.newInstance()
-                KifuStandbyFragment::class.qualifiedName -> KifuStandbyFragment.newInstance()
-                SummaryDetailFragment::class.qualifiedName -> SummaryDetailFragment.newInstance(data as String?)
-                KifuDetailFragment::class.qualifiedName -> KifuDetailFragment.newInstance(data as Long)
-                KifuPreviewFragment::class.qualifiedName -> KifuPreviewFragment.newInstance(data as Long)
-                CreatedScenarioListFragment::class.qualifiedName -> CreatedScenarioListFragment.newInstance()
-                else -> throw IllegalArgumentException("invalid fragment name: $fragmentName")
-            }
-        } catch (e: ClassCastException) {
-            throw IllegalArgumentException("invalid data type", e)
+        return when (fragmentData) {
+            is FragmentData.Top -> TopFragment.newInstance()
+            is FragmentData.ScenarioList -> ScenarioListFragment.newInstance()
+            is FragmentData.ScenarioDetailString -> ScenarioDetailFragment.newInstance(fragmentData.data)
+            is FragmentData.ScenarioDetailModel -> ScenarioDetailFragment.newInstance(fragmentData.data)
+            is FragmentData.About -> AboutFragment.newInstance()
+            is FragmentData.KifuList -> KifuListFragment.newInstance()
+            is FragmentData.KifuStandby -> KifuStandbyFragment.newInstance()
+            is FragmentData.SummaryDetail -> SummaryDetailFragment.newInstance(fragmentData.data)
+            is FragmentData.KifuDetail -> KifuDetailFragment.newInstance(fragmentData.data)
+            is FragmentData.KifuPreview -> KifuPreviewFragment.newInstance(fragmentData.data)
+            is FragmentData.CreatedScenarioList -> CreatedScenarioListFragment.newInstance()
         }
     }
 

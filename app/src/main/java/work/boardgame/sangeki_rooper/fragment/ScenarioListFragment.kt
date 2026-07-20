@@ -29,6 +29,7 @@ import work.boardgame.sangeki_rooper.databinding.ScenarioListFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioListViewModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
+import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import java.util.*
@@ -219,7 +220,7 @@ class ScenarioListFragment : BaseFragment() {
                     rv.writer.text = String.format(getString(R.string.writer_introduction), item.writer)
 
                     rv.root.setOnClickListener {
-                        activity.startFragment(ScenarioDetailFragment::class.qualifiedName, item.id)
+                        activity.startFragment(FragmentData.ScenarioDetailString(item.id))
                     }
                 }
             }

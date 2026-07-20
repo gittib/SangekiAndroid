@@ -18,6 +18,7 @@ import work.boardgame.sangeki_rooper.database.dao.GameDao
 import work.boardgame.sangeki_rooper.databinding.KifuStandbyFragmentBinding
 import work.boardgame.sangeki_rooper.databinding.LinearItemKifuStandbyIncidentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuStandbyViewModel
+import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import java.util.*
@@ -132,7 +133,7 @@ class KifuStandbyFragment : BaseFragment() {
                         withContext(Dispatchers.Main) {
                             activity.onBackPressed()
                             gameId?.let {
-                                activity.startFragment(KifuDetailFragment::class.qualifiedName, it)
+                                activity.startFragment(FragmentData.KifuDetail(it))
                             } ?: run {
                                 Logger.e(TAG, "game初期化失敗")
                             }

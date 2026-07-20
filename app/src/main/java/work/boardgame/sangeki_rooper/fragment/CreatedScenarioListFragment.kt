@@ -36,6 +36,7 @@ import work.boardgame.sangeki_rooper.fragment.viewmodel.CreatedScenarioListViewM
 import work.boardgame.sangeki_rooper.model.CreatedScenarioCacheModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
+import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.toJson
@@ -125,7 +126,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                         rv.createdScenarioListLayout.closeDrawer(GravityCompat.END)
                     }
                     R.id.go_to_old_list -> {
-                        activity.startFragment(ScenarioListFragment::class.qualifiedName)
+                        activity.startFragment(FragmentData.ScenarioList)
                         rv.createdScenarioListLayout.closeDrawer(GravityCompat.END)
                     }
                 }
@@ -362,7 +363,7 @@ class CreatedScenarioListFragment : BaseFragment() {
 
                     rv.root.setOnClickListener {
                         val item = viewModel.scenarioList[absoluteAdapterPosition-1]
-                        activity.startFragment(ScenarioDetailFragment::class.qualifiedName, item)
+                        activity.startFragment(FragmentData.ScenarioDetailModel(item))
                     }
                 }
             }

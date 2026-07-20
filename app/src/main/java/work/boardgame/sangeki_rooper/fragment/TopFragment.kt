@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import work.boardgame.sangeki_rooper.activity.ContainerActivity
 import work.boardgame.sangeki_rooper.databinding.TopFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.TopViewModel
+import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 
 class TopFragment : BaseFragment() {
@@ -30,7 +31,7 @@ class TopFragment : BaseFragment() {
         Logger.methodStart(TAG)
         _binding = TopFragmentBinding.inflate(inflater, container, false).also { rv ->
             rv.kifuTitle.setOnClickListener {
-                activity.startFragment(KifuListFragment::class.qualifiedName)
+                activity.startFragment(FragmentData.KifuList)
             }
             rv.kifuImage.setOnClickListener { rv.kifuTitle.performClick() }
             rv.kifuNote.setOnClickListener { rv.kifuTitle.performClick() }
@@ -44,13 +45,13 @@ class TopFragment : BaseFragment() {
             rv.summaryNote.setOnClickListener { rv.summaryTitle.performClick() }
 
             rv.scenarioListTitle.setOnClickListener {
-                activity.startFragment(CreatedScenarioListFragment::class.qualifiedName)
+                activity.startFragment(FragmentData.CreatedScenarioList)
             }
             rv.scenarioListImage.setOnClickListener { rv.scenarioListTitle.performClick() }
             rv.scenarioListNote.setOnClickListener { rv.scenarioListTitle.performClick() }
 
             rv.footerText.setOnClickListener {
-                activity.startFragment(AboutFragment::class.qualifiedName)
+                activity.startFragment(FragmentData.About)
             }
         }
         fitToEdgeToEdge(binding.contentsFrame, binding.footerText)
