@@ -276,7 +276,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                 d = a.difficulty - b.difficulty
                 if (d != 0) return@sortWith d
 
-                (a.id.toIntOrNull() ?: 99999) - (b.id.toIntOrNull() ?: 99999)
+                (b.id.toIntOrNull() ?: 99999) - (a.id.toIntOrNull() ?: 99999)
             }
 
             fetchedScenarios
