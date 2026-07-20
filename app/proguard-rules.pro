@@ -26,4 +26,3 @@
 -dontwarn com.google.android.gms.**
 -keep class android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }
--keep class work.boardgame.sangeki_rooper.model.**
