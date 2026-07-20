@@ -279,6 +279,8 @@ class CreatedScenarioListFragment : BaseFragment() {
                 (b.id.toIntOrNull() ?: 99999) - (a.id.toIntOrNull() ?: 99999)
             }
 
+            Logger.d(TAG, "fetchedScenarios = " + fetchedScenarios.toJson())
+
             fetchedScenarios
         }
     }

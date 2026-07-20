@@ -5,7 +5,7 @@ import work.boardgame.sangeki_rooper.BuildConfig
 
 @Suppress("ConstantConditionIf", "unused")
 object Logger {
-    private val ENABLE_LOG: Boolean = BuildConfig.DEBUG
+    private val ENABLE_LOG: Boolean = true//BuildConfig.DEBUG
 
     @JvmStatic
     fun v(tag: String?, text: String?) {
