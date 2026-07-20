@@ -53,7 +53,7 @@ class ScenarioDetailFragment : BaseFragment() {
                               savedInstanceState: Bundle?): View? {
         Logger.methodStart(TAG)
         val item = viewModel.scenario ?: run {
-            fragmentManager?.popBackStack()
+            parentFragmentManager.popBackStack()
             return null
         }
         Logger.d(TAG, "scenario = " + item.toJson())
@@ -370,7 +370,7 @@ class ScenarioDetailFragment : BaseFragment() {
 
     override fun onDetach() {
         Logger.methodStart(TAG)
-        fragmentManager?.fragments?.find { it is ScenarioListFragment }?.let {
+        parentFragmentManager.fragments.find { it is ScenarioListFragment }?.let {
             (it as ScenarioListFragment).reloadScenarioList()
         }
         super.onDetach()

@@ -32,7 +32,6 @@ import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import java.util.*
-import kotlin.Comparator
 
 class ScenarioListFragment : BaseFragment() {
     private val TAG = ScenarioListFragment::class.simpleName
