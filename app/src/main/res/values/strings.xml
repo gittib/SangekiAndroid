@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">惨劇RoopeR</string>
-    <string name="api_url">http://www.boardgame.work/sangeki/</string>
+    <string name="old_api_url">http://www.boardgame.work/sangeki/</string>
+    <string name="api_url">https://sangeki.boardgame.work/</string>
 
     <!-- ルール名 -->
     <string name="summary_name_fs">First Steps</string>
