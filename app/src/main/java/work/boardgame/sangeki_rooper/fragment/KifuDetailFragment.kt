@@ -79,7 +79,7 @@ class KifuDetailFragment : BaseFragment() {
                 when (item.itemId) {
                     R.id.show_summary -> {
                         startActivity(Intent(activity, ContainerActivity::class.java).also {
-                            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment::class.qualifiedName)
+                            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment.TAG)
                             val abbr = Util.tragedySetNameAbbr(activity, viewModel.gameRelation?.game?.setName)
                             Logger.d(TAG, "abbr = $abbr")
                             it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_DATA, abbr)
@@ -100,7 +100,7 @@ class KifuDetailFragment : BaseFragment() {
 //                        Toast.makeText(activity, "工事中です…", Toast.LENGTH_LONG).show()
 //                        rootView?.let { updateDetectiveInfo(it) }
 //                        Handler(Looper.getMainLooper()).postDelayed({
-//                            viewModel.gameId?.let { activity.startFragment(KifuPreviewFragment::class.qualifiedName, it) }
+//                            viewModel.gameId?.let { activity.startFragment(KifuPreviewFragment.TAG, it) }
 //                        }, Define.CHATTERING_WAIT)
 //                        rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
 //                    }

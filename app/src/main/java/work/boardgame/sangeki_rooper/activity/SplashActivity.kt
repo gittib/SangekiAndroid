@@ -19,7 +19,7 @@ class SplashActivity : BaseActivity() {
         Util.getWebViewUA(this)
 
         startActivity(Intent(this@SplashActivity, ContainerActivity::class.java).also {
-            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
+            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment.TAG)
         })
         finish()
     }

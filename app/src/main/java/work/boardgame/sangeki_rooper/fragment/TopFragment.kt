@@ -38,7 +38,7 @@ class TopFragment : BaseFragment() {
 
             rv.summaryTitle.setOnClickListener {
                 activity.startActivity(Intent(activity, ContainerActivity::class.java).also {
-                    it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment::class.qualifiedName)
+                    it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment.TAG)
                 })
             }
             rv.summaryImage.setOnClickListener { rv.summaryTitle.performClick() }

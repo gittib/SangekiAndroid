@@ -19,7 +19,7 @@ class LaunchActivity : BaseActivity() {
         Logger.methodStart(TAG)
 
         startActivity(Intent(this, ContainerActivity::class.java).also {
-            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment::class.qualifiedName)
+            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, TopFragment.TAG)
         })
     }
 }

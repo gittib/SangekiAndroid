@@ -29,13 +29,13 @@ sealed interface FragmentData {
 
     companion object {
         fun getFragmentData(fragmentName: String, data: Any?) = when(fragmentName) {
-            TopFragment::class.qualifiedName -> Top
-            ScenarioListFragment::class.qualifiedName -> ScenarioList
-            AboutFragment::class.qualifiedName -> About
-            KifuListFragment::class.qualifiedName -> KifuList
-            KifuStandbyFragment::class.qualifiedName -> KifuStandby
-            SummaryDetailFragment::class.qualifiedName -> SummaryDetail(data as String?)
-            CreatedScenarioListFragment::class.qualifiedName -> CreatedScenarioList
+            TopFragment.TAG -> Top
+            ScenarioListFragment.TAG -> ScenarioList
+            AboutFragment.TAG -> About
+            KifuListFragment.TAG -> KifuList
+            KifuStandbyFragment.TAG -> KifuStandby
+            SummaryDetailFragment.TAG -> SummaryDetail(data as String?)
+            CreatedScenarioListFragment.TAG -> CreatedScenarioList
 
             // 一部のフラグメントは直接このsealed interfaceをインスタンス化する想定であり、
             // 文字列からの生成には対応させないため、この関数では引数違反とする
