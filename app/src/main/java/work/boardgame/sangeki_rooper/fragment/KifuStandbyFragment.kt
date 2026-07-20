@@ -112,17 +112,17 @@ class KifuStandbyFragment : BaseFragment() {
                                 Logger.d(TAG, "index = $index, incidentName = $incidentName")
                                 when (incidentName) {
                                     "", NO_INCIDENTS -> Logger.d(TAG, "事件無し")
-                                    else -> gameId?.let {
+                                    else -> gameId.let {
                                         val day = index + 1
                                         dao.createIncident(GameDao.CreateIncidentModel(it, day, incidentName))
                                     }
                                 }
                             }
-                            gameId?.let { id ->
+                            gameId.let { id ->
                                 for (i in 1..viewModel.loopCount) {
                                     for (j in 1..viewModel.dayCount) {
                                         val dayId = dao.createDay(GameDao.CreateDayModel(id, i, j))
-                                        for (k in 1..3) {
+                                        repeat(3) {
                                             dao.createKifu(GameDao.CreateKifuModel(id, dayId, true, "", ""))
                                             dao.createKifu(GameDao.CreateKifuModel(id, dayId, false, "", ""))
                                         }
@@ -155,7 +155,7 @@ class KifuStandbyFragment : BaseFragment() {
     override fun onAttach(context: Context) {
         Logger.methodStart(TAG)
         super.onAttach(context)
-        viewModel = ViewModelProvider(this).get(KifuStandbyViewModel::class.java)
+        viewModel = ViewModelProvider(this)[KifuStandbyViewModel::class.java]
         viewModel.tragedySetSpinnerList = listOf(
             "惨劇セットを設定して下さい",
             getString(R.string.summary_name_fs),
