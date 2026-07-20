@@ -14,8 +14,8 @@ android {
         applicationId = "work.boardgame.sangeki_rooper"
         minSdk = 24
         targetSdk = 35
-        versionCode = 31
-        versionName = "1.6.0"
+        versionCode = 32
+        versionName = "1.6.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
