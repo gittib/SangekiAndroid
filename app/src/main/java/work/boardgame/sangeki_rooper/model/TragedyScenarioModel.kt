@@ -15,6 +15,7 @@ class TragedyScenarioModel (
     @SerializedName("secret") val secret: Boolean?,
     @SerializedName("writer") val writer: String?,
     @SerializedName("set") val set: String,
+    @SerializedName("isPlus") val isPlus: Boolean = false,
     @SerializedName("difficulty") val difficulty: Int,
     @SerializedName("rule") private val rule: List<String>,
     @SerializedName("special_rule") private val special_rule: String?,
@@ -27,7 +28,10 @@ class TragedyScenarioModel (
     @SerializedName("templateInfo") val templateInfo: List<TemplateInfo>?
 ) {
     fun tragedySetIndex() = Util.tragedySetIndex(set)
-    fun tragedySetName(context: Context?) = Util.tragedySetName(context, set)
+    fun tragedySetName(context: Context?): String {
+        return Util.tragedySetName(context, set) + if (isPlus) "＋" else ""
+    }
+
     fun tragedySetColor() = when (set) {
         "FS" -> Color.parseColor("#00DDDD")
         "BTX" -> Color.parseColor("#0000FF")
@@ -35,7 +39,7 @@ class TragedyScenarioModel (
         "MC", "MCX" -> Color.parseColor("#FF0000")
         "HSA" -> Color.parseColor("#000088")
         "WM" -> Color.parseColor("#008800")
-        //"UM" -> Color.parseColor("#")
+        "UM" -> Color.parseColor("#000000")
         "LL" -> Color.parseColor("#B2B8B8")
         "AH", "AHR" -> Color.parseColor("#DAB300")
         else -> Color.parseColor("#AAAAAA")

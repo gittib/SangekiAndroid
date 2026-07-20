@@ -124,6 +124,7 @@ class ScenarioDetailFragment : BaseFragment() {
                 rv.ruleX2.visibility = View.GONE
             }
 
+            // 登場人物一覧の表示
             rv.characterCount.text = String.format("(%d人)", item.characterList.size)
             rv.characterRoleList.let { v ->
                 var row = 1
@@ -180,6 +181,7 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
 
+            // 事件の犯人の表示
             rv.incidentCriminalList.let { lv ->
                 var row = 1
                 item.incidentList.forEach { ch ->

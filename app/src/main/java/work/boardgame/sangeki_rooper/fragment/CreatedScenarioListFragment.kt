@@ -330,7 +330,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                         else -> View.GONE
                     }
                     rv.tragedySet.let { v ->
-                        v.text = item.set
+                        v.text = item.set + if(item.isPlus) "＋" else ""
                         val d = v.background
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             d?.colorFilter = BlendModeColorFilter(item.tragedySetColor(), BlendMode.SRC_IN)
