@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "work.boardgame.sangeki_rooper"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "work.boardgame.sangeki_rooper"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 32
         versionName = "1.6.1"
 
