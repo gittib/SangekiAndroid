@@ -15,15 +15,18 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.*
+import work.boardgame.sangeki_rooper.enums.PosBoard
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.toJson
+import java.util.Locale
 
 class ScenarioDetailFragment : BaseFragment() {
     companion object {
@@ -64,7 +67,7 @@ class ScenarioDetailFragment : BaseFragment() {
 
             rv.publicSheetValueSet.text = item.tragedySetName(context)
             rv.publicSheetValueLoop.text = String.format("%sループ", item.loop())
-            rv.publicSheetValueDay.text = String.format("%d日", item.day)
+            rv.publicSheetValueDay.text = String.format(Locale.getDefault(), "%d日", item.day)
             rv.publicSheetSpecialValue.text = item.specialRule()
 
             for (i in 1..item.day) {
@@ -73,7 +76,7 @@ class ScenarioDetailFragment : BaseFragment() {
                         lp.columnSpec = GridLayout.spec(0)
                         lp.rowSpec = GridLayout.spec(i)
                     }
-                    v.dayCount.text = String.format("%d", i)
+                    v.dayCount.text = String.format(Locale.getDefault(), "%d", i)
                 }.root)
 
                 rv.incidentList.addView(GridItemIncidentNameBinding.inflate(inflater, rv.incidentList, false).also { v ->
@@ -129,16 +132,20 @@ class ScenarioDetailFragment : BaseFragment() {
                     null, "" -> v.visibility = View.GONE
                     else -> {
                         v.visibility = View.VISIBLE
-                        v.text = "(狂った真実：${item.crazyRuleY})"
+                        v.text = String.format("(狂った真実：%s)", item.crazyRuleY)
                     }
                 }
             }
 
             // 登場人物一覧の表示
-            rv.characterCount.text = String.format("(%d人)", item.characterList.size)
+            rv.characterCount.text = String.format(Locale.getDefault(), "(%d人)", item.characterList.size)
             rv.characterRoleList.let { v ->
                 var row = 1
+                val charactersByPos = mutableMapOf<PosBoard, MutableList<String>>()
                 item.characterList.forEach { ch ->
+                    charactersByPos[ch.initPos()] = charactersByPos[ch.initPos()] ?: mutableListOf()
+                    charactersByPos[ch.initPos()]!!.add(ch.name)
+
                     v.addView(GridItemLongTextRowBinding.inflate(inflater, v, false).also { tv ->
                         tv.root.layoutParams = GridLayout.LayoutParams().also { lp ->
                             val weight = TypedValue().also {
@@ -334,7 +341,7 @@ class ScenarioDetailFragment : BaseFragment() {
 
             rv.showPrivate.setOnClickListener {
                 rv.privateWrapper.let { w ->
-                    if (w.visibility == View.VISIBLE) {
+                    if (w.isVisible) {
                         w.visibility = View.GONE
                         rv.showPrivate.text = getString(R.string.show_private_sheet)
                     } else {

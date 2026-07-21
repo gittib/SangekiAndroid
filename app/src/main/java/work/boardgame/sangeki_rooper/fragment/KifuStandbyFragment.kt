@@ -203,7 +203,7 @@ class KifuStandbyFragment : BaseFragment() {
             }
             repeat(viewModel.dayCount) { day ->
                 val row = LinearItemKifuStandbyIncidentBinding.inflate(inflater, binding.incidentList, false).also { lv ->
-                    lv.incidentDay.text = String.format("%d日目", day+1)
+                    lv.incidentDay.text = String.format(Locale.getDefault(), "%d日目", day+1)
                     lv.incidentName.let { v ->
                         v.onItemSelectedListener = object: AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
                             override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {}

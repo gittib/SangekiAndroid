@@ -238,7 +238,7 @@ class TragedyScenarioModel (
             @SerializedName("day") val day: Int,
             @SerializedName("pattern") val pattern:List<SetCard>
         ) {
-            fun dayStr():String = if (day == 1) "初日" else String.format(Locale.JAPANESE, "%d日", day)
+            fun dayStr():String = if (day == 1) "初日" else String.format(Locale.getDefault(), "%d日", day)
 
             class SetCard (
                 @SerializedName("target") val target: String,
