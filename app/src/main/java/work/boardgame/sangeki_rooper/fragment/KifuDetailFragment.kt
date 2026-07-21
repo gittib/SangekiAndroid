@@ -111,7 +111,9 @@ class KifuDetailFragment : BaseFragment() {
                             .setPositiveButton(R.string.ok) { _, _ ->
                                 daoScope.launch {
                                     viewModel.gameRelation?.game?.let { MyApplication.db.gameDao().deleteGame(it) }
-                                    withContext(Dispatchers.Main) { activity.onBackPressed() }
+                                    withContext(Dispatchers.Main) {
+                                        activity.onBackPressedDispatcher.onBackPressed()
+                                    }
                                 }
                             }
                             .setNegativeButton(R.string.cancel, null)
@@ -160,7 +162,7 @@ class KifuDetailFragment : BaseFragment() {
             loadGameData()
         } catch (e: RuntimeException) {
             Logger.w(TAG, Throwable(e))
-            activity.onBackPressed()
+            activity.onBackPressedDispatcher.onBackPressed()
         }
     }
 
@@ -190,7 +192,7 @@ class KifuDetailFragment : BaseFragment() {
             }
             if (viewModel.gameRelation == null) {
                 Logger.w(TAG, "game is null")
-                activity.onBackPressed()
+                activity.onBackPressedDispatcher.onBackPressed()
             }
             applyViewData()
         }

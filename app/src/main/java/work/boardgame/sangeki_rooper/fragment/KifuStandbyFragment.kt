@@ -131,7 +131,7 @@ class KifuStandbyFragment : BaseFragment() {
                             }
                         }
                         withContext(Dispatchers.Main) {
-                            activity.onBackPressed()
+                            activity.onBackPressedDispatcher.onBackPressed()
                             gameId?.let {
                                 activity.startFragment(FragmentData.KifuDetail(it))
                             } ?: run {
