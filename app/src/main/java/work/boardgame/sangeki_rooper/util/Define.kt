@@ -13,14 +13,6 @@ object Define {
         const val USER_AGENT = "USER_AGENT"
     }
 
-    object SangekiBoard {
-        const val SHRINE = 1
-        const val HOSPITAL = 2
-        const val CITY = 3
-        const val SCHOOL = 4
-        const val OTHER = 5
-    }
-
     const val CHATTERING_WAIT = 300L
     const val POLLING_INTERVAL = 50L
     const val API_TIMEOUT = 10_000L

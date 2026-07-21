@@ -3,6 +3,7 @@ package work.boardgame.sangeki_rooper.model
 import android.content.Context
 import android.graphics.Color
 import com.google.gson.annotations.SerializedName
+import work.boardgame.sangeki_rooper.enums.PosBoard
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Util
 import java.util.Locale
@@ -140,9 +141,9 @@ class TragedyScenarioModel (
             else -> false
         }
 
-        fun initPos(): Int = initialPosition(initPos ?: name.replace(Regex("[A-E]$"), ""))
+        fun initPos(): PosBoard = initialPosition(initPos ?: name.replace(Regex("[A-E]$"), ""))
 
-        private fun initialPosition(character: String): Int {
+        private fun initialPosition(character: String): PosBoard {
             return when(character) {
                 "神社", "shrine",
                 "巫女",
@@ -153,7 +154,7 @@ class TragedyScenarioModel (
                 "教祖",
                 "ご神木", "御神木",
                 "上位存在"
-                -> Define.SangekiBoard.SHRINE
+                -> PosBoard.SHRINE
 
                 "病院", "hospital",
                 "入院患者", "患者",
@@ -161,7 +162,7 @@ class TragedyScenarioModel (
                 "ナース",
                 "軍人",
                 "学者"
-                -> Define.SangekiBoard.HOSPITAL
+                -> PosBoard.HOSPITAL
 
                 "都市", "city",
                 "アイドル",
@@ -174,7 +175,7 @@ class TragedyScenarioModel (
                 "鑑識官",
                 "コピーキャット",
                 "アルバイト", "アルバイト？", "アルバイト?"
-                -> Define.SangekiBoard.CITY
+                -> PosBoard.CITY
 
                 "学校", "school",
                 "男子学生",
@@ -184,18 +185,19 @@ class TragedyScenarioModel (
                 "イレギュラー",
                 "委員長",
                 "女の子"
-                -> Define.SangekiBoard.SCHOOL
+                -> PosBoard.SCHOOL
 
-                "神格" -> {
-                    if (note?.contains("1ループ") == true) Define.SangekiBoard.SHRINE
-                    else Define.SangekiBoard.OTHER
+                "神格" -> when {
+                    (note?.contains("1ループ") == true) -> PosBoard.SHRINE
+                    (note?.contains("1L") == true) -> PosBoard.SHRINE
+                    else -> PosBoard.OTHER
                 }
                 "転校生",
                 "手先",
                 "従者"
-                -> Define.SangekiBoard.OTHER
+                -> PosBoard.OTHER
 
-                else -> Define.SangekiBoard.OTHER
+                else -> PosBoard.OTHER
             }
         }
     }
