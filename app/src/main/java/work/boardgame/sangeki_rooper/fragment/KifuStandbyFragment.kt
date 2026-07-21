@@ -18,15 +18,16 @@ import work.boardgame.sangeki_rooper.database.dao.GameDao
 import work.boardgame.sangeki_rooper.databinding.KifuStandbyFragmentBinding
 import work.boardgame.sangeki_rooper.databinding.LinearItemKifuStandbyIncidentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuStandbyViewModel
+import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import java.util.*
 
 class KifuStandbyFragment : BaseFragment() {
-    private val TAG = KifuStandbyFragment::class.simpleName
-
     companion object {
         fun newInstance() = KifuStandbyFragment()
+
+        const val TAG = "KifuStandbyFragment"
 
         private const val SS_VIEW_MODEL = "SS_VIEW_MODEL"
         private const val NO_INCIDENTS = "--------"
@@ -111,17 +112,17 @@ class KifuStandbyFragment : BaseFragment() {
                                 Logger.d(TAG, "index = $index, incidentName = $incidentName")
                                 when (incidentName) {
                                     "", NO_INCIDENTS -> Logger.d(TAG, "事件無し")
-                                    else -> gameId?.let {
+                                    else -> gameId.let {
                                         val day = index + 1
                                         dao.createIncident(GameDao.CreateIncidentModel(it, day, incidentName))
                                     }
                                 }
                             }
-                            gameId?.let { id ->
+                            gameId.let { id ->
                                 for (i in 1..viewModel.loopCount) {
                                     for (j in 1..viewModel.dayCount) {
                                         val dayId = dao.createDay(GameDao.CreateDayModel(id, i, j))
-                                        for (k in 1..3) {
+                                        repeat(3) {
                                             dao.createKifu(GameDao.CreateKifuModel(id, dayId, true, "", ""))
                                             dao.createKifu(GameDao.CreateKifuModel(id, dayId, false, "", ""))
                                         }
@@ -132,7 +133,7 @@ class KifuStandbyFragment : BaseFragment() {
                         withContext(Dispatchers.Main) {
                             activity.onBackPressed()
                             gameId?.let {
-                                activity.startFragment(KifuDetailFragment::class.qualifiedName, it)
+                                activity.startFragment(FragmentData.KifuDetail(it))
                             } ?: run {
                                 Logger.e(TAG, "game初期化失敗")
                             }
@@ -154,7 +155,7 @@ class KifuStandbyFragment : BaseFragment() {
     override fun onAttach(context: Context) {
         Logger.methodStart(TAG)
         super.onAttach(context)
-        viewModel = ViewModelProvider(this).get(KifuStandbyViewModel::class.java)
+        viewModel = ViewModelProvider(this)[KifuStandbyViewModel::class.java]
         viewModel.tragedySetSpinnerList = listOf(
             "惨劇セットを設定して下さい",
             getString(R.string.summary_name_fs),

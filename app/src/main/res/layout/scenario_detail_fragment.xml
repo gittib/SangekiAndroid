@@ -103,9 +103,41 @@
                 android:visibility="gone"
                 tools:visibility="visible">
 
+                <LinearLayout
+                    android:id="@+id/invalid_condition_frame"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:padding="8dp"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/bg_stroke_red"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red"
+                        android:text="配役がおかしいようです。\n特殊ルールによっては問題ない場合もあるため、確認したうえでご利用ください。"
+                        />
+
+                    <TextView
+                        android:id="@+id/invalid_condition"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Css.ScenarioDetail.Text.Private"
+                        android:layout_marginTop="8sp"
+                        tools:text="・キーパーソンが1人足りません。\n・イレギュラーにパーソンが配役されています。"
+                        />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/private_sheet_title"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/invalid_condition_frame"
                     app:layout_constraintLeft_toLeftOf="parent"
                     style="@style/Css.ScenarioDetail.Title"
                     android:textSize="24sp"
@@ -177,6 +209,15 @@
                             android:layout_marginLeft="8dp"
                             tools:text="友情サークル"/>
                     </GridLayout>
+
+                    <TextView
+                        android:id="@+id/crazy_rule_y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        tools:text="(狂った真実ルールY：だごん様のお言葉)"
+                        />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -305,8 +346,22 @@
                     tools:text="初心者向けの脚本です。" />
 
                 <TextView
-                    android:id="@+id/guide_for_writer_title"
+                    android:id="@+id/story_title"
                     app:layout_constraintTop_toBottomOf="@id/scenario_summary_text"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    style="@style/Css.ScenarioDetail.Title"
+                    android:text="@string/story_title" />
+
+                <TextView
+                    android:id="@+id/story_text"
+                    app:layout_constraintTop_toBottomOf="@id/story_title"
+                    style="@style/Css.ScenarioDetail.Text.Private"
+                    android:layout_width="match_parent"
+                    tools:text="ストーリーが表示されます。" />
+
+                <TextView
+                    android:id="@+id/guide_for_writer_title"
+                    app:layout_constraintTop_toBottomOf="@id/story_text"
                     app:layout_constraintLeft_toLeftOf="parent"
                     style="@style/Css.ScenarioDetail.Title"
                     android:text="@string/guide_for_writer" />

@@ -12,7 +12,9 @@ import work.boardgame.sangeki_rooper.activity.ContainerActivity
 import work.boardgame.sangeki_rooper.util.Logger
 
 abstract class BaseFragment: Fragment() {
-    private val TAG = BaseFragment::class.simpleName
+    companion object {
+        private const val TAG = "BaseFragment"
+    }
 
     protected val prefs: SharedPreferences get() = activity.prefs
     protected lateinit var activity:ContainerActivity

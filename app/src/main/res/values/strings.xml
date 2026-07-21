@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">惨劇RoopeR</string>
-    <string name="api_url">http://www.boardgame.work/sangeki/</string>
+    <string name="old_api_url">http://www.boardgame.work/sangeki/</string>
+    <string name="api_url">https://sangeki.boardgame.work/</string>
 
     <!-- ルール名 -->
     <string name="summary_name_fs">First Steps</string>
@@ -21,6 +22,9 @@
 
     <string name="scenario_list">脚本リスト</string>
     <string name="scenario_note">主にペンスキーが考えた脚本のリストです。一部寄稿いただいた脚本もあります。\n主人公として惨劇RoopeRを遊ぶ場合はネタバレになるため、見ないほうが良いです。</string>
+
+    <string name="created_scenario_list">みんなの脚本リスト</string>
+    <string name="created_scenario_list_note">惨劇RoopeR 脚本データベースに投稿された脚本をアプリでも表示できるようにしました。\n見られるだけなので編集したい場合はWebサイトの方からお願いします。</string>
 
     <string name="retry">リトライ</string>
     <string name="loop">ループ</string>
@@ -60,7 +64,7 @@
     <string name="kifu_log">棋譜記録機能</string>
     <string name="kifu_log_note">いつ、どこに、何のカードが置かれたかは、推理を進める上で時に非常に重要な情報となります。\nアプリで記録したゲームの履歴を、後から見返すこともできます。</string>
     <string name="summary_sheets">惨劇セット サマリー</string>
-    <string name="summary_sheets_note">惨劇RoopeRを遊ぶ上で欠かせない、サマリーシートをご用意しました。\nサマリー画面のみ、画面回転に対応しています。</string>
+    <string name="summary_sheets_note">惨劇RoopeRを遊ぶ上で欠かせない、サマリーシートをご用意しました。\n脚本作成のお供にもどうぞ。</string>
     <string name="tragedy_set">惨劇セット</string>
     <string name="loop_count">ループ数</string>
     <string name="kifu_list">棋譜一覧</string>
@@ -98,4 +102,6 @@
     <string name="choose_criminal">犯人を選んで下さい</string>
     <string name="show_scenario_title">脚本タイトルの表示/非表示</string>
     <string name="update_scenario_list">脚本リストを最新化</string>
+    <string name="go_to_old_list">旧い脚本リストへ</string>
+    <string name="story_title">ストーリー</string>
 </resources>

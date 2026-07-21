@@ -17,8 +17,6 @@ import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 
 class CardSelectDialogFragment : BaseDialogFragment() {
-    private val TAG = CardSelectDialogFragment::class.simpleName
-
     companion object {
         /**
          *  キャラクターカード選択ダイアログを出力
@@ -45,6 +43,8 @@ class CardSelectDialogFragment : BaseDialogFragment() {
                 putBoolean(BundleKey.ACTION_CARD_IS_WRITER, isWriter)
             }
         }
+
+        private const val TAG = "CardSelectDialogFragment"
     }
 
     private object BundleKey {

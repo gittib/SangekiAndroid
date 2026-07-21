@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">[D]惨劇RoopeR</string>
-    <string name="api_url">http://www.boardgame.work/sdev/</string>
+    <string name="old_api_url">http://www.boardgame.work/sdev/</string>
+    <string name="api_url">https://laravel-dev.boardgame.work/</string>
 </resources>

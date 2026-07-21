@@ -9,11 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.UiThread
 import androidx.core.view.GravityCompat
 import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +39,7 @@ class KifuDetailFragment : BaseFragment() {
             }
         }
 
-        private val TAG = KifuDetailFragment::class.simpleName
+        const val TAG = "KifuDetailFragment"
     }
 
     private object BundleKey {
@@ -51,7 +51,7 @@ class KifuDetailFragment : BaseFragment() {
     private val ruleMaster by lazy { DetectiveInfoModel.getRuleMaster(activity) }
     private val inflater:LayoutInflater by lazy { LayoutInflater.from(activity) }
     private val picasso by lazy { Picasso.Builder(activity).build() }
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val daoScope = CoroutineScope(Dispatchers.IO)
 
 
     override fun onCreateView(
@@ -79,7 +79,7 @@ class KifuDetailFragment : BaseFragment() {
                 when (item.itemId) {
                     R.id.show_summary -> {
                         startActivity(Intent(activity, ContainerActivity::class.java).also {
-                            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment::class.qualifiedName)
+                            it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment.TAG)
                             val abbr = Util.tragedySetNameAbbr(activity, viewModel.gameRelation?.game?.setName)
                             Logger.d(TAG, "abbr = $abbr")
                             it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_DATA, abbr)
@@ -100,7 +100,7 @@ class KifuDetailFragment : BaseFragment() {
 //                        Toast.makeText(activity, "工事中です…", Toast.LENGTH_LONG).show()
 //                        rootView?.let { updateDetectiveInfo(it) }
 //                        Handler(Looper.getMainLooper()).postDelayed({
-//                            viewModel.gameId?.let { activity.startFragment(KifuPreviewFragment::class.qualifiedName, it) }
+//                            viewModel.gameId?.let { activity.startFragment(KifuPreviewFragment.TAG, it) }
 //                        }, Define.CHATTERING_WAIT)
 //                        rv.kifu_detail_layout.closeDrawer(GravityCompat.END)
 //                    }
@@ -109,7 +109,7 @@ class KifuDetailFragment : BaseFragment() {
                             .setTitle(R.string.kifu_delete_confirm_dialog_title)
                             .setMessage(R.string.kifu_delete_this_confirm_dialog_message)
                             .setPositiveButton(R.string.ok) { _, _ ->
-                                scope.launch {
+                                daoScope.launch {
                                     viewModel.gameRelation?.game?.let { MyApplication.db.gameDao().deleteGame(it) }
                                     withContext(Dispatchers.Main) { activity.onBackPressed() }
                                 }
@@ -145,7 +145,7 @@ class KifuDetailFragment : BaseFragment() {
                     .show(parentFragmentManager, null)
             }
         }
-        scope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             applyViewData()
         }
     }
@@ -179,7 +179,7 @@ class KifuDetailFragment : BaseFragment() {
     private fun loadGameData() {
         Logger.methodStart(TAG)
 
-        scope.launch(Dispatchers.Main) {
+        lifecycleScope.launch {
             activity.showProgress()
             try {
                 withContext(Dispatchers.IO) {
@@ -205,7 +205,7 @@ class KifuDetailFragment : BaseFragment() {
         val detectiveInfo = rel.game.detectiveInfo ?: DetectiveInfoModel(activity, rel.game.setName)
         rel.game.detectiveInfo = detectiveInfo
 
-        withContext(Dispatchers.Main) {
+        withContext(Dispatchers.Main.immediate) {
             rv.gameStartTime.text = String.format(getString(R.string.game_start_time), rel.game.createdAt.format())
 
             rv.setLoopDay.text = String.format(getString(R.string.set_loop_day_text), rel.game.setName, rel.game.loop, rel.game.day)
@@ -263,7 +263,7 @@ class KifuDetailFragment : BaseFragment() {
 
             activity.showProgress()
             try {
-                withContext(Dispatchers.IO) { delay((Define.POLLING_INTERVAL)) }
+                delay(Define.POLLING_INTERVAL)
 
                 val lv = rv.incidentList
                 rel.incidents.forEach { incident ->
@@ -315,13 +315,12 @@ class KifuDetailFragment : BaseFragment() {
         }
     }
 
-    @UiThread
-    private fun updateCharacterList() {
+    private suspend fun updateCharacterList() {
         val rel = viewModel.gameRelation ?: return
         val lv = binding?.characterList ?: return
         Logger.methodStart(TAG)
 
-        try {
+        withContext(Dispatchers.Main.immediate) {
             val abbr = Util.tragedySetNameAbbr(activity, rel.game.setName)
             val master = ruleMaster.first { it.setName == abbr }
 
@@ -371,95 +370,94 @@ class KifuDetailFragment : BaseFragment() {
 
             // 各キャラクターの行
             rel.npcs.forEachIndexed { index, npc -> inflateCharacterRow(npc, index+1) }
-        } catch (e: IllegalStateException) {
-            if (getActivity() != null) throw e
         }
     }
 
-    @UiThread
-    private fun inflateCharacterRow(chara: Npc, row: Int) {
+    private suspend fun inflateCharacterRow(chara: Npc, row: Int) {
         Logger.methodStart(TAG)
-        val lv = binding?.characterList
+        withContext(Dispatchers.Main.immediate) {
+            val lv = binding?.characterList
 
-        val roleList = arrayListOf<String>().also { l ->
-            l.add(getString(R.string.unknown_role))
-            l.add("パーソン")
-            viewModel.rolesOfRule.forEach { l.add(it) }
-        }
-        val maxLengthRoleAdapter =
-            ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item,
-                arrayListOf(roleList.maxBy { it.length }))
+            val roleList = arrayListOf<String>().also { l ->
+                l.add(getString(R.string.unknown_role))
+                l.add("パーソン")
+                viewModel.rolesOfRule.forEach { l.add(it) }
+            }
+            val maxLengthRoleAdapter =
+                ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item,
+                    arrayListOf(roleList.maxBy { it.length }))
 
-        val characterRoleTag = getCharacterRowTag(chara.name)
-        lv?.findViewWithTag<View>(characterRoleTag)?.let { return }
+            val characterRoleTag = getCharacterRowTag(chara.name)
+            lv?.findViewWithTag<View>(characterRoleTag)?.let { return@withContext }
 
-        lv?.addView(TextView(activity).also {
-            it.tag = characterRoleTag
-            it.text = chara.name
-            it.setBackgroundResource(R.drawable.bg_stroke_black)
-            it.gravity = Gravity.CENTER
-            it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(0)).also { lp ->
-                lp.width = resources.getDimensionPixelSize(R.dimen.role_list_chara_name_width)
-                lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
-                lp.topMargin = 0
-            }
-            it.setOnLongClickListener {
-                AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                    .setMessage(String.format(getString(R.string.confirm_to_delete_character), chara.name))
-                    .setPositiveButton(R.string.ok) { _, _ -> deleteNpc(chara) }
-                    .setNegativeButton(R.string.cancel, null)
-                    .show()
-                true
-            }
-        })
-        lv?.addView(GridItemCharacterRoleSelectBinding.inflate(inflater, lv, false).also { v ->
-            v.roleSelect.let {
-                val adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, roleList)
-                it.adapter = adapter
-                it.setSelection(adapter.getPosition(chara.role ?: getString(R.string.unknown_role)))
-                it.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-                    override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        chara.role = roleList[position]
-                    }
-                }
-            }
-            v.maxLengthRoleName.adapter = maxLengthRoleAdapter
-            v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(1)).also { lp ->
-                lp.width = ViewGroup.LayoutParams.WRAP_CONTENT
-                lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
-                lp.topMargin = 0
-            }
-        }.root)
-        viewModel.rolesOfRule.forEachIndexed { index, role ->
-            lv?.addView(GridItemCharaRoleDetectMarkBinding.inflate(inflater, lv, false).also { v ->
-                v.root.tag = characterRoleTag
-                v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+2)).also { lp ->
-                    lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
+            lv?.addView(TextView(activity).also {
+                it.tag = characterRoleTag
+                it.text = chara.name
+                it.setBackgroundResource(R.drawable.bg_stroke_black)
+                it.gravity = Gravity.CENTER
+                it.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(0)).also { lp ->
+                    lp.width = resources.getDimensionPixelSize(R.dimen.role_list_chara_name_width)
                     lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
+                    lp.topMargin = 0
                 }
-                picasso.load(Util.standDrawable(chara.name)).into(v.backgroundCharaImage)
-                v.roleMark.text = chara.roleDetectiveList[role]
-                v.root.setOnClickListener {
-                    v.roleMark.text = when (v.roleMark.text) {
-                        "", null -> "〇"
-                        "〇" -> "☓"
-                        "☓" -> "？"
-                        else -> ""
+                it.setOnLongClickListener {
+                    AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                        .setMessage(String.format(getString(R.string.confirm_to_delete_character), chara.name))
+                        .setPositiveButton(R.string.ok) { _, _ -> deleteNpc(chara) }
+                        .setNegativeButton(R.string.cancel, null)
+                        .show()
+                    true
+                }
+            })
+            lv?.addView(GridItemCharacterRoleSelectBinding.inflate(inflater, lv, false).also { v ->
+                v.roleSelect.let {
+                    val adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, roleList)
+                    it.adapter = adapter
+                    it.setSelection(adapter.getPosition(chara.role ?: getString(R.string.unknown_role)))
+                    it.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                        override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            chara.role = roleList[position]
+                        }
                     }
-                    chara.roleDetectiveList[role] = v.roleMark.text.toString()
+                }
+                v.maxLengthRoleName.adapter = maxLengthRoleAdapter
+                v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(1)).also { lp ->
+                    lp.width = ViewGroup.LayoutParams.WRAP_CONTENT
+                    lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
+                    lp.topMargin = 0
+                }
+            }.root)
+            viewModel.rolesOfRule.forEachIndexed { index, role ->
+                lv?.addView(GridItemCharaRoleDetectMarkBinding.inflate(inflater, lv, false).also { v ->
+                    v.root.tag = characterRoleTag
+                    v.root.layoutParams = GridLayout.LayoutParams(GridLayout.spec(row), GridLayout.spec(index+2)).also { lp ->
+                        lp.width = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
+                        lp.height = resources.getDimensionPixelSize(R.dimen.role_list_role_mark_size)
+                    }
+                    picasso.load(Util.standDrawable(chara.name)).into(v.backgroundCharaImage)
+                    v.roleMark.text = chara.roleDetectiveList[role]
+                    v.root.setOnClickListener {
+                        v.roleMark.text = when (v.roleMark.text) {
+                            "", null -> "〇"
+                            "〇" -> "☓"
+                            "☓" -> "？"
+                            else -> ""
+                        }
+                        chara.roleDetectiveList[role] = v.roleMark.text.toString()
+                    }
+                }.root)
+            }
+            lv?.addView(GridItemCharaDetectNoteBinding.inflate(inflater, lv, false).also {
+                it.root.tag = characterRoleTag
+                it.inputEdit.let { et ->
+                    et.hint = String.format(getString(R.string.memo_for_character), chara.name)
+                    et.setText(chara.note)
+                    et.doAfterTextChanged { chara.note = et.text.toString() }
                 }
             }.root)
         }
-        lv?.addView(GridItemCharaDetectNoteBinding.inflate(inflater, lv, false).also {
-            it.root.tag = characterRoleTag
-            it.inputEdit.let { et ->
-                et.hint = String.format(getString(R.string.memo_for_character), chara.name)
-                et.setText(chara.note)
-                et.doAfterTextChanged { chara.note = et.text.toString() }
-            }
-        }.root)
     }
     private fun getCharacterRowTag(charaName: String) = "character-role-$charaName"
 
@@ -468,22 +466,17 @@ class KifuDetailFragment : BaseFragment() {
         val lv = binding?.kifuList ?: return
         Logger.methodStart(TAG)
 
-        withContext(Dispatchers.Main) {
+        withContext(Dispatchers.Main.immediate) {
             for (loop in 1..rel.game.loop) {
-                withContext(Dispatchers.IO) { delay(Define.POLLING_INTERVAL) }
-                try {
-                    val loopTag = "kifu_per_day-$loop"
-                    lv.findViewWithTag<ViewGroup>(loopTag) ?: LinearItemKifuLoopTitleBinding.inflate(inflater, lv, false).also {
-                        it.root.tag = loopTag
-                        it.loopTitle.text = String.format(getString(R.string.loop_label), loop)
-                        lv.addView(it.root)
-                    }
-                } catch (e: IllegalStateException) {
-                    if (getActivity() != null) throw e
+                delay(Define.POLLING_INTERVAL)
+                val loopTag = "kifu_per_day-$loop"
+                lv.findViewWithTag<ViewGroup>(loopTag) ?: LinearItemKifuLoopTitleBinding.inflate(inflater, lv, false).also {
+                    it.root.tag = loopTag
+                    it.loopTitle.text = String.format(getString(R.string.loop_label), loop)
+                    lv.addView(it.root)
                 }
 
                 for (day in 1..rel.game.day) {
-                    withContext(Dispatchers.IO) { delay(Define.POLLING_INTERVAL) }
                     try {
                         val loopDayTag = "kifu_per_day-$loop-$day"
 
@@ -573,7 +566,7 @@ class KifuDetailFragment : BaseFragment() {
                                 it.card = card
                             } ?: run {
                                 // 棋譜レコードが無いので作成から
-                                scope.launch {
+                                daoScope.launch {
                                     val kifuId = MyApplication.db.gameDao().createKifu(GameDao.CreateKifuModel(
                                         viewModel.gameId!!, d!!.id, isWriter, target, card))
                                     val kifu = MyApplication.db.gameDao().loadKifu(kifuId)
@@ -598,7 +591,7 @@ class KifuDetailFragment : BaseFragment() {
                 .show()
             return
         }
-        scope.launch {
+        daoScope.launch {
             val dao = MyApplication.db.gameDao()
             val npc = dao.createNpc(GameDao.CreateNpcModel(viewModel.gameId!!, charaName)).let {
                 dao.loadNpc(it)
@@ -618,11 +611,13 @@ class KifuDetailFragment : BaseFragment() {
             }
 
             rel.npcs.remove(chara)
-            scope.launch {
+            daoScope.launch {
                 MyApplication.db.gameDao().deleteNpc(chara)
             }
         }
-        updateCharacterList()
+        viewLifecycleOwner.lifecycleScope.launch {
+            updateCharacterList()
+        }
     }
 
     private fun getLastDetectiveDay(): View? {
@@ -669,7 +664,7 @@ class KifuDetailFragment : BaseFragment() {
             detect.ruleX2.add(it.tag as String)
         }
         viewModel.gameRelation?.game?.specialRule = rv.kifuDetailSpecialRule.text.toString()
-        scope.launch {
+        daoScope.launch {
             viewModel.gameRelation?.let {
                 MyApplication.db.gameDao().saveGame(it)
                 Logger.d(TAG, "saved data = " + it.toJson(false))

@@ -23,16 +23,17 @@ import work.boardgame.sangeki_rooper.databinding.AdapterItemKifuBinding
 import work.boardgame.sangeki_rooper.databinding.AdapterItemKifuHeaderBinding
 import work.boardgame.sangeki_rooper.databinding.KifuListFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuListViewModel
+import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.format
 
 class KifuListFragment : BaseFragment(),
     ContainerActivity.ForegroundFragmentListener
 {
-    private val TAG = KifuListFragment::class.simpleName
-
     companion object {
         fun newInstance() = KifuListFragment()
+
+        const val TAG = "KifuListFragment"
     }
 
     private lateinit var viewModel: KifuListViewModel
@@ -50,7 +51,7 @@ class KifuListFragment : BaseFragment(),
                 it.adapter = KifuListAdapter()
             }
             rv.createNewKifu.setOnClickListener {
-                activity.startFragment(KifuStandbyFragment::class.qualifiedName)
+                activity.startFragment(FragmentData.KifuStandby)
             }
         }
         fitToEdgeToEdge(binding.root)
@@ -90,7 +91,7 @@ class KifuListFragment : BaseFragment(),
             fun onBind() {
                 AdapterItemKifuHeaderBinding.bind(itemView).let { rv ->
                     rv.startNewGameButton.setOnClickListener {
-                        activity.startFragment(KifuStandbyFragment::class.qualifiedName)
+                        activity.startFragment(FragmentData.KifuStandby)
                     }
                 }
             }
@@ -104,7 +105,7 @@ class KifuListFragment : BaseFragment(),
 
                     rv.root.setOnClickListener {
                         activity.showProgress()
-                        activity.startFragment(KifuDetailFragment::class.qualifiedName, game.id)
+                        activity.startFragment(FragmentData.KifuDetail(game.id))
                         Handler(Looper.getMainLooper()).postDelayed({
                             activity.dismissProgress()
                         }, 1000)

@@ -10,13 +10,14 @@ import androidx.lifecycle.ViewModelProvider
 import work.boardgame.sangeki_rooper.activity.ContainerActivity
 import work.boardgame.sangeki_rooper.databinding.TopFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.TopViewModel
+import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 
 class TopFragment : BaseFragment() {
-    private val TAG = TopFragment::class.simpleName
-
     companion object {
         fun newInstance() = TopFragment()
+
+        const val TAG = "TopFragment"
     }
 
     private lateinit var viewModel: TopViewModel
@@ -30,27 +31,27 @@ class TopFragment : BaseFragment() {
         Logger.methodStart(TAG)
         _binding = TopFragmentBinding.inflate(inflater, container, false).also { rv ->
             rv.kifuTitle.setOnClickListener {
-                activity.startFragment(KifuListFragment::class.qualifiedName)
+                activity.startFragment(FragmentData.KifuList)
             }
             rv.kifuImage.setOnClickListener { rv.kifuTitle.performClick() }
             rv.kifuNote.setOnClickListener { rv.kifuTitle.performClick() }
 
             rv.summaryTitle.setOnClickListener {
                 activity.startActivity(Intent(activity, ContainerActivity::class.java).also {
-                    it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment::class.qualifiedName)
+                    it.putExtra(ContainerActivity.ExtraKey.FRAGMENT_NAME, SummaryDetailFragment.TAG)
                 })
             }
             rv.summaryImage.setOnClickListener { rv.summaryTitle.performClick() }
             rv.summaryNote.setOnClickListener { rv.summaryTitle.performClick() }
 
             rv.scenarioListTitle.setOnClickListener {
-                activity.startFragment(ScenarioListFragment::class.qualifiedName)
+                activity.startFragment(FragmentData.CreatedScenarioList)
             }
             rv.scenarioListImage.setOnClickListener { rv.scenarioListTitle.performClick() }
             rv.scenarioListNote.setOnClickListener { rv.scenarioListTitle.performClick() }
 
             rv.footerText.setOnClickListener {
-                activity.startFragment(AboutFragment::class.qualifiedName)
+                activity.startFragment(FragmentData.About)
             }
         }
         fitToEdgeToEdge(binding.contentsFrame, binding.footerText)

@@ -9,7 +9,9 @@ import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.Logger
 
 abstract class BaseDialogFragment: DialogFragment() {
-    private val TAG = BaseDialogFragment::class.simpleName
+    companion object {
+        private const val TAG = "BaseDialogFragment"
+    }
 
     protected val prefs: SharedPreferences get() = activity.getSharedPreferences(Define.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
     protected lateinit var activity: BaseActivity

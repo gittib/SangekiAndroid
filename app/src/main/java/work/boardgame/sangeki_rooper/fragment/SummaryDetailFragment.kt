@@ -21,8 +21,6 @@ import java.io.File
 import java.io.FileOutputStream
 
 class SummaryDetailFragment : BaseFragment() {
-    private val TAG = SummaryDetailFragment::class.simpleName
-
     companion object {
         fun newInstance(defSetAbbr: String? = null) = SummaryDetailFragment().apply {
             Logger.d(TAG, "defSetAbbr = $defSetAbbr")
@@ -30,6 +28,8 @@ class SummaryDetailFragment : BaseFragment() {
                 putString(BundleKey.INITIAL_SET_ABBR, defSetAbbr)
             }
         }
+
+        const val TAG = "SummaryDetailFragment"
     }
 
     private object BundleKey {

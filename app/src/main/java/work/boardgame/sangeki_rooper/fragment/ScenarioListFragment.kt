@@ -29,16 +29,15 @@ import work.boardgame.sangeki_rooper.databinding.ScenarioListFragmentBinding
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioListViewModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Define
+import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import java.util.*
-import kotlin.Comparator
 
 class ScenarioListFragment : BaseFragment() {
-    private val TAG = ScenarioListFragment::class.simpleName
-
     companion object {
         fun newInstance() = ScenarioListFragment()
+        const val TAG = "ScenarioListFragment"
     }
 
     private lateinit var viewModel: ScenarioListViewModel
@@ -147,7 +146,7 @@ class ScenarioListFragment : BaseFragment() {
     private fun updateScenarioList() {
         Logger.methodStart(TAG)
         activity.showProgress()
-        Util.getRxRestInterface(activity)
+        Util.getRxRestInterface(activity, baseUrlResId = R.string.old_api_url)
             .getScenarioList()
             .doFinally { Handler(Looper.getMainLooper()).post { activity.dismissProgress() } }
             .subscribeOn(Schedulers.io())
@@ -220,7 +219,7 @@ class ScenarioListFragment : BaseFragment() {
                     rv.writer.text = String.format(getString(R.string.writer_introduction), item.writer)
 
                     rv.root.setOnClickListener {
-                        activity.startFragment(ScenarioDetailFragment::class.qualifiedName, item.id)
+                        activity.startFragment(FragmentData.ScenarioDetailString(item.id))
                     }
                 }
             }

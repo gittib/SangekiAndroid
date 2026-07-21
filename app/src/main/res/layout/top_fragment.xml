@@ -64,7 +64,7 @@
             <TextView
                 android:id="@+id/scenario_list_title"
                 style="@style/Css.TopFragment.Title"
-                android:text="@string/scenario_list"/>
+                android:text="@string/created_scenario_list"/>
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/scenario_list_image"
@@ -74,7 +74,7 @@
             <TextView
                 android:id="@+id/scenario_list_note"
                 style="@style/Css.TopFragment.Note"
-                android:text="@string/scenario_note"/>
+                android:text="@string/created_scenario_list_note"/>
         </LinearLayout>
     </ScrollView>
 

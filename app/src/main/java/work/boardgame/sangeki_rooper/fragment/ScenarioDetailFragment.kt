@@ -16,16 +16,16 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.*
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
+import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.toJson
 
 class ScenarioDetailFragment : BaseFragment() {
-    private val TAG = ScenarioDetailFragment::class.simpleName
-
     companion object {
         fun newInstance(scenarioId: String) = ScenarioDetailFragment().apply {
             arguments = Bundle().apply {
@@ -33,7 +33,15 @@ class ScenarioDetailFragment : BaseFragment() {
             }
         }
 
+        fun newInstance(scenario: TragedyScenarioModel) = ScenarioDetailFragment().apply {
+            arguments = Bundle().apply {
+                putString(BUNDLE_KEY_SCENARIO_MODEL, scenario.toJson(false))
+            }
+        }
+
+        const val TAG = "ScenarioDetailFragment"
         private const val BUNDLE_KEY_SCENARIO_ID = "SCENARIO_ID"
+        private const val BUNDLE_KEY_SCENARIO_MODEL = "SCENARIO_MODEL"
     }
 
     private lateinit var viewModel: ScenarioDetailViewModel
@@ -44,7 +52,7 @@ class ScenarioDetailFragment : BaseFragment() {
                               savedInstanceState: Bundle?): View? {
         Logger.methodStart(TAG)
         val item = viewModel.scenario ?: run {
-            fragmentManager?.popBackStack()
+            parentFragmentManager.popBackStack()
             return null
         }
         Logger.d(TAG, "scenario = " + item.toJson())
@@ -87,6 +95,20 @@ class ScenarioDetailFragment : BaseFragment() {
                 }.root)
             }
 
+            // 脚本の不備について表示
+            val invalidConditions = item.invalidConditions?.filterNotNull() ?: listOf()
+            when (invalidConditions.isEmpty()) {
+                true -> rv.invalidConditionFrame.visibility = View.GONE
+                else -> {
+                    rv.invalidConditionFrame.visibility = View.VISIBLE
+                    var invalidConditionsText = ""
+                    invalidConditions.forEach {
+                        invalidConditionsText += "・$it\n"
+                    }
+                    rv.invalidCondition.text = invalidConditionsText
+                }
+            }
+
             rv.scenarioTitle.text = item.title
             rv.incDifficultyRow.detailDifficultyName.text = item.difficultyName()
             rv.incDifficultyRow.detailDifficultyStar.text = item.difficultyStar()
@@ -101,6 +123,18 @@ class ScenarioDetailFragment : BaseFragment() {
                 rv.ruleX2.visibility = View.GONE
             }
 
+            // 狂った真実のルールY表示
+            rv.crazyRuleY.let { v ->
+                when(item.crazyRuleY) {
+                    null, "" -> v.visibility = View.GONE
+                    else -> {
+                        v.visibility = View.VISIBLE
+                        v.text = "(狂った真実：${item.crazyRuleY})"
+                    }
+                }
+            }
+
+            // 登場人物一覧の表示
             rv.characterCount.text = String.format("(%d人)", item.characterList.size)
             rv.characterRoleList.let { v ->
                 var row = 1
@@ -157,6 +191,7 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
 
+            // 事件の犯人の表示
             rv.incidentCriminalList.let { lv ->
                 var row = 1
                 item.incidentList.forEach { ch ->
@@ -237,6 +272,17 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
             rv.scenarioSummaryText.text = item.advice.summary
+            when (item.advice.story) {
+                null, "" -> {
+                    rv.storyTitle.visibility = View.GONE
+                    rv.storyText.visibility = View.GONE
+                }
+                else -> {
+                    rv.storyTitle.visibility = View.VISIBLE
+                    rv.storyText.visibility = View.VISIBLE
+                    rv.storyText.text = item.advice.story
+                }
+            }
             rv.guideForWriterText.text = item.advice.detail
 
             // 置き方テンプレの表示
@@ -319,18 +365,22 @@ class ScenarioDetailFragment : BaseFragment() {
         super.onAttach(context)
         viewModel = ViewModelProvider(this).get(ScenarioDetailViewModel::class.java)
         arguments?.let { a ->
-            val id = a.getString(BUNDLE_KEY_SCENARIO_ID)
-            val scenarioList = Util.getScenarioList(context)
-            viewModel.scenario = scenarioList.find { it.id == id } ?: run {
-                Logger.w(TAG, "脚本データ取得失敗！ id = $id")
-                null
+            viewModel.scenario = a.getString(BUNDLE_KEY_SCENARIO_MODEL)?.let {
+                Gson().fromJson(it, TragedyScenarioModel::class.java)
+            } ?: run {
+                val id = a.getString(BUNDLE_KEY_SCENARIO_ID)
+                val scenarioList = Util.getScenarioList(context)
+                scenarioList.find { it.id == id }
+            }
+            if (viewModel.scenario == null) {
+                TODO("対象の脚本が取得できなかった場合の対応")
             }
         }
     }
 
     override fun onDetach() {
         Logger.methodStart(TAG)
-        fragmentManager?.fragments?.find { it is ScenarioListFragment }?.let {
+        parentFragmentManager.fragments.find { it is ScenarioListFragment }?.let {
             (it as ScenarioListFragment).reloadScenarioList()
         }
         super.onDetach()

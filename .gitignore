@@ -4,6 +4,7 @@
 .idea/libraries
 .idea/workspace.xml
 .idea/gradle.xml
+.idea/misc.xml
 .idea/vcs.xml
 .idea/navEditor.xml
 .idea/assetWizardSettings.xml
@@ -13,6 +14,7 @@
 !.idea/inspectionProfiles/
 !.idea/modules.xml
 
+.artifacts/
 .kotlin/
 
 .DS_Store

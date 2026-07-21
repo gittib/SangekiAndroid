@@ -23,6 +23,8 @@ object Define {
 
     const val CHATTERING_WAIT = 300L
     const val POLLING_INTERVAL = 50L
+    const val API_TIMEOUT = 10_000L
+    const val API_INTERVAL = 1_000L
     const val APP_USER_AGENT = "SangekiRooperAndroid"
     const val SHARED_PREFERENCES_NAME = "NAME"
 }
