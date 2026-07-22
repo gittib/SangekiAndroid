@@ -91,13 +91,13 @@ class CreatedScenarioListFragment : BaseFragment() {
                         // 脚本タイトルの表示非表示切り替え
                         if (viewModel.showTitle) {
                             viewModel.showTitle = false
-                            binding?.scenarioList?.adapter?.notifyDataSetChanged()
+                            binding?.scenarioList?.adapter?.notifyItemRangeChanged(1, viewModel.scenarioList.size+1)
                         } else {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                 .setMessage("脚本タイトルを表示するとネタバレになるかも知れませんが、よろしいですか？")
                                 .setPositiveButton(android.R.string.ok) { _, _ ->
                                     viewModel.showTitle = true
-                                    binding?.scenarioList?.adapter?.notifyDataSetChanged()
+                                    binding?.scenarioList?.adapter?.notifyItemRangeChanged(1, viewModel.scenarioList.size+1)
                                 }
                                 .setNegativeButton(android.R.string.cancel, null)
                                 .show()
@@ -112,9 +112,10 @@ class CreatedScenarioListFragment : BaseFragment() {
                                     showProgress()
                                     try {
                                         val scenarios = fetchScenarios(activity)
+                                        binding?.scenarioList?.adapter?.notifyItemRangeRemoved(1, viewModel.scenarioList.size + 1)
                                         viewModel.scenarioList.clear()
                                         viewModel.scenarioList.addAll(scenarios)
-                                        binding?.scenarioList?.adapter?.notifyDataSetChanged()
+                                        binding?.scenarioList?.adapter?.notifyItemRangeInserted(1, scenarios.size + 1)
                                         saveToCache(activity, scenarios)
                                     } finally {
                                         dismissProgress()
@@ -153,31 +154,42 @@ class CreatedScenarioListFragment : BaseFragment() {
             withContext(Dispatchers.IO) {
                 try {
                     // キャッシュがあるならキャッシュから読む
-                    val cachedAt = loadFromCache(context)?.let {
+                    val cachedAt = loadFromCache(context)?.let { cache ->
+                        val prevSize = viewModel.scenarioList.size
                         viewModel.scenarioList.clear()
-                        viewModel.scenarioList.addAll(it.scenarios)
+                        viewModel.scenarioList.addAll(cache.scenarios)
                         viewModel.viewModelScope.launch {
-                            binding?.scenarioList?.adapter?.notifyDataSetChanged()
+                            binding?.scenarioList?.adapter?.let {
+                                it.notifyItemRangeRemoved(1, prevSize + 1)
+                                it.notifyItemRangeInserted(1, viewModel.scenarioList.size + 1)
+                            }
                         }
-                        it.cachedAt
+                        cache.cachedAt
                     } ?: -1L
 
                     val cachedYmd = millisToYmd(cachedAt)
                     val todayYmd = millisToYmd(System.currentTimeMillis())
 
-                    // キャッシュが無い、またはキャッシュ取得してから一定期間経過していたらAPIリクエストする
-                    if (todayYmd != cachedYmd) {
-                        val scenarios = fetchScenarios(context)
+                    // キャッシュ取得してから一定期間以内ならAPIリクエストせず終了
+                    if (todayYmd == cachedYmd) {
+                        Logger.d(TAG, "キャッシュ有効期限内なので再取得は行わない")
+                        return@withContext
+                    }
+
+                    fetchScenarios(context).let { scenarios ->
                         Logger.d(TAG, scenarios.toJson())
+                        val prevSize = viewModel.scenarioList.size
                         viewModel.scenarioList.clear()
                         viewModel.scenarioList.addAll(scenarios)
                         viewModel.viewModelScope.launch {
-                            binding?.scenarioList?.adapter?.notifyDataSetChanged()
+                            binding?.scenarioList?.adapter?.let {
+                                it.notifyItemRangeRemoved(1, prevSize + 1)
+                                it.notifyItemRangeInserted(1, viewModel.scenarioList.size + 1)
+                            }
                         }
                         saveToCache(context, scenarios)
-                    } else {
-                        Logger.d(TAG, "キャッシュ有効期限内なので再取得は行わない")
                     }
+
                 } catch (e: Exception) {
                     Logger.w(TAG, Throwable(e))
                 }
@@ -333,7 +345,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                         else -> View.GONE
                     }
                     rv.tragedySet.let { v ->
-                        v.text = item.set + if(item.isPlus) "＋" else ""
+                        v.text = String.format("%s%s", item.set, if(item.isPlus) "＋" else "")
                         val d = v.background
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                             d?.colorFilter = BlendModeColorFilter(item.tragedySetColor(), BlendMode.SRC_IN)
