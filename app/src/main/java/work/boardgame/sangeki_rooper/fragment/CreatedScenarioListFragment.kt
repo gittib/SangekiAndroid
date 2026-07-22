@@ -155,20 +155,10 @@ class CreatedScenarioListFragment : BaseFragment() {
             withContext(Dispatchers.IO) {
                 try {
                     // キャッシュがあるならキャッシュから読む
-                    val cachedAt = loadFromCache(context)?.let { cache ->
-                        val prevSize = viewModel.scenarioList.size
-                        viewModel.scenarioList.clear()
-                        viewModel.scenarioList.addAll(cache.scenarios)
-                        viewModel.viewModelScope.launch {
-                            binding?.scenarioList?.adapter?.let {
-                                it.notifyItemRangeRemoved(1, prevSize)
-                                it.notifyItemRangeInserted(1, viewModel.scenarioList.size)
-                            }
-                        }
-                        cache.cachedAt
-                    } ?: -1L
+                    val cache = loadFromCache(context)
+                    cache?.scenarios?.let { updateScenarioList(it) }
 
-                    val cachedYmd = millisToYmd(cachedAt)
+                    val cachedYmd = millisToYmd(cache?.cachedAt ?: -1L)
                     val todayYmd = millisToYmd(System.currentTimeMillis())
 
                     // キャッシュ取得してから一定期間以内ならAPIリクエストせず終了
@@ -177,17 +167,10 @@ class CreatedScenarioListFragment : BaseFragment() {
                         return@withContext
                     }
 
+                    // APIリクエストして脚本リストを最新化
                     val scenarios = fetchScenarios(context) ?: return@withContext
                     Logger.d(TAG, scenarios.toJson())
-                    val prevSize = viewModel.scenarioList.size
-                    viewModel.scenarioList.clear()
-                    viewModel.scenarioList.addAll(scenarios)
-                    viewModel.viewModelScope.launch {
-                        binding?.scenarioList?.adapter?.let {
-                            it.notifyItemRangeRemoved(1, prevSize)
-                            it.notifyItemRangeInserted(1, viewModel.scenarioList.size)
-                        }
-                    }
+                    updateScenarioList(scenarios)
                     saveToCache(context, scenarios)
                 } catch (e: Exception) {
                     Logger.w(TAG, Throwable(e))
@@ -195,6 +178,26 @@ class CreatedScenarioListFragment : BaseFragment() {
             }
         } finally {
             dismissProgress()
+        }
+    }
+
+    /**
+     * 脚本リストのRecyclerViewを更新する
+     */
+    private suspend fun updateScenarioList(scenarios: List<TragedyScenarioModel>) {
+        Logger.methodStart(TAG)
+        withContext(Dispatchers.Main) {
+            val prevItemCount = viewModel.scenarioList.size
+            viewModel.scenarioList.clear()
+            viewModel.scenarioList.addAll(scenarios)
+            binding?.scenarioList?.adapter?.let {
+                if (prevItemCount > 0) {
+                    it.notifyItemRangeRemoved(1, prevItemCount)
+                }
+                if (viewModel.scenarioList.isNotEmpty()) {
+                    it.notifyItemRangeInserted(1, viewModel.scenarioList.size)
+                }
+            }
         }
     }
 
