@@ -111,10 +111,11 @@ class CreatedScenarioListFragment : BaseFragment() {
                                 viewModel.viewModelScope.launch(Dispatchers.Main.immediate) {
                                     showProgress()
                                     try {
-                                        val scenarios = fetchScenarios(activity)
-                                        binding?.scenarioList?.adapter?.notifyItemRangeRemoved(1, viewModel.scenarioList.size + 1)
+                                        val scenarios = fetchScenarios(activity) ?: return@launch
+                                        val prevSize = viewModel.scenarioList.size
                                         viewModel.scenarioList.clear()
                                         viewModel.scenarioList.addAll(scenarios)
+                                        binding?.scenarioList?.adapter?.notifyItemRangeRemoved(1, prevSize + 1)
                                         binding?.scenarioList?.adapter?.notifyItemRangeInserted(1, scenarios.size + 1)
                                         saveToCache(activity, scenarios)
                                     } finally {
@@ -176,20 +177,18 @@ class CreatedScenarioListFragment : BaseFragment() {
                         return@withContext
                     }
 
-                    fetchScenarios(context).let { scenarios ->
-                        Logger.d(TAG, scenarios.toJson())
-                        val prevSize = viewModel.scenarioList.size
-                        viewModel.scenarioList.clear()
-                        viewModel.scenarioList.addAll(scenarios)
-                        viewModel.viewModelScope.launch {
-                            binding?.scenarioList?.adapter?.let {
-                                it.notifyItemRangeRemoved(1, prevSize + 1)
-                                it.notifyItemRangeInserted(1, viewModel.scenarioList.size + 1)
-                            }
+                    val scenarios = fetchScenarios(context) ?: return@withContext
+                    Logger.d(TAG, scenarios.toJson())
+                    val prevSize = viewModel.scenarioList.size
+                    viewModel.scenarioList.clear()
+                    viewModel.scenarioList.addAll(scenarios)
+                    viewModel.viewModelScope.launch {
+                        binding?.scenarioList?.adapter?.let {
+                            it.notifyItemRangeRemoved(1, prevSize + 1)
+                            it.notifyItemRangeInserted(1, viewModel.scenarioList.size + 1)
                         }
-                        saveToCache(context, scenarios)
                     }
-
+                    saveToCache(context, scenarios)
                 } catch (e: Exception) {
                     Logger.w(TAG, Throwable(e))
                 }
@@ -245,10 +244,11 @@ class CreatedScenarioListFragment : BaseFragment() {
     /**
      * サーバーから脚本データを取得する
      */
-    private suspend fun fetchScenarios(context: Context): List<TragedyScenarioModel> {
+    private suspend fun fetchScenarios(context: Context): List<TragedyScenarioModel>? {
         Logger.methodStart(TAG)
 
         return withContext(Dispatchers.IO) {
+            var itemsPerPage = 0
             var pageNo = 1
             val fetchedScenarios = mutableListOf<TragedyScenarioModel>()
             val apiClient = Util.getRxRestInterface(context)
@@ -272,8 +272,19 @@ class CreatedScenarioListFragment : BaseFragment() {
                                 }
                             })
                     }
-                } ?: listOf()
-                if (scenarios.isEmpty()) break
+                }
+
+                if (scenarios == null) {
+                    Logger.w(TAG, "脚本APIリクエスト失敗")
+                    return@withContext null
+                }
+
+                if (itemsPerPage < scenarios.size) {
+                    itemsPerPage = scenarios.size
+                } else if (scenarios.isEmpty() || itemsPerPage > scenarios.size) {
+                    Logger.d(TAG, "1ページ分の取得件数に満たなかったので取得完了と見なす")
+                    break
+                }
                 fetchedScenarios.addAll(scenarios)
 
                 delay(Define.API_INTERVAL.milliseconds)
