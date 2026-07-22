@@ -91,13 +91,13 @@ class CreatedScenarioListFragment : BaseFragment() {
                         // 脚本タイトルの表示非表示切り替え
                         if (viewModel.showTitle) {
                             viewModel.showTitle = false
-                            binding?.scenarioList?.adapter?.notifyItemRangeChanged(1, viewModel.scenarioList.size+1)
+                            binding?.scenarioList?.adapter?.notifyItemRangeChanged(1, viewModel.scenarioList.size)
                         } else {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                 .setMessage("脚本タイトルを表示するとネタバレになるかも知れませんが、よろしいですか？")
                                 .setPositiveButton(android.R.string.ok) { _, _ ->
                                     viewModel.showTitle = true
-                                    binding?.scenarioList?.adapter?.notifyItemRangeChanged(1, viewModel.scenarioList.size+1)
+                                    binding?.scenarioList?.adapter?.notifyItemRangeChanged(1, viewModel.scenarioList.size)
                                 }
                                 .setNegativeButton(android.R.string.cancel, null)
                                 .show()
@@ -115,8 +115,8 @@ class CreatedScenarioListFragment : BaseFragment() {
                                         val prevSize = viewModel.scenarioList.size
                                         viewModel.scenarioList.clear()
                                         viewModel.scenarioList.addAll(scenarios)
-                                        binding?.scenarioList?.adapter?.notifyItemRangeRemoved(1, prevSize + 1)
-                                        binding?.scenarioList?.adapter?.notifyItemRangeInserted(1, scenarios.size + 1)
+                                        binding?.scenarioList?.adapter?.notifyItemRangeRemoved(1, prevSize)
+                                        binding?.scenarioList?.adapter?.notifyItemRangeInserted(1, scenarios.size)
                                         saveToCache(activity, scenarios)
                                     } finally {
                                         dismissProgress()
@@ -161,8 +161,8 @@ class CreatedScenarioListFragment : BaseFragment() {
                         viewModel.scenarioList.addAll(cache.scenarios)
                         viewModel.viewModelScope.launch {
                             binding?.scenarioList?.adapter?.let {
-                                it.notifyItemRangeRemoved(1, prevSize + 1)
-                                it.notifyItemRangeInserted(1, viewModel.scenarioList.size + 1)
+                                it.notifyItemRangeRemoved(1, prevSize)
+                                it.notifyItemRangeInserted(1, viewModel.scenarioList.size)
                             }
                         }
                         cache.cachedAt
@@ -184,8 +184,8 @@ class CreatedScenarioListFragment : BaseFragment() {
                     viewModel.scenarioList.addAll(scenarios)
                     viewModel.viewModelScope.launch {
                         binding?.scenarioList?.adapter?.let {
-                            it.notifyItemRangeRemoved(1, prevSize + 1)
-                            it.notifyItemRangeInserted(1, viewModel.scenarioList.size + 1)
+                            it.notifyItemRangeRemoved(1, prevSize)
+                            it.notifyItemRangeInserted(1, viewModel.scenarioList.size)
                         }
                     }
                     saveToCache(context, scenarios)
