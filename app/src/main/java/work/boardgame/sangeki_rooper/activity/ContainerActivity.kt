@@ -61,7 +61,14 @@ class ContainerActivity : BaseActivity() {
         fragmentOnResume()
 
         onBackPressedDispatcher.addCallback {
-            fragmentOnResume()
+            if (supportFragmentManager.backStackEntryCount == 0) {
+                // 最初のFragmentしかないのでActivity終了
+                finish()
+            } else {
+                // バックスタックにFragmentが残ってるので１つ戻す
+                supportFragmentManager.popBackStack()
+                fragmentOnResume()
+            }
         }
     }
 
