@@ -108,11 +108,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                                     showProgress()
                                     try {
                                         val scenarios = fetchScenarios(activity).getOrNull() ?: return@launch
-                                        val prevSize = viewModel.scenarioList.size
-                                        viewModel.scenarioList.clear()
-                                        viewModel.scenarioList.addAll(scenarios)
-                                        binding?.scenarioList?.adapter?.notifyItemRangeRemoved(1, prevSize)
-                                        binding?.scenarioList?.adapter?.notifyItemRangeInserted(1, scenarios.size)
+                                        updateScenarioList(scenarios)
                                         saveToCache(activity, scenarios)
                                     } finally {
                                         dismissProgress()
