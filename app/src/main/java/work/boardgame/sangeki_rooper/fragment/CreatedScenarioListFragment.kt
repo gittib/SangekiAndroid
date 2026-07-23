@@ -145,29 +145,27 @@ class CreatedScenarioListFragment : BaseFragment() {
         showProgress()
         try {
             withContext(Dispatchers.IO) {
-                try {
-                    // キャッシュがあるならキャッシュから読む
-                    val cache = loadFromCache(context)
-                    cache?.scenarios?.let { updateScenarioList(it) }
+                // キャッシュがあるならキャッシュから読む
+                val cache = loadFromCache(context)
+                cache?.scenarios?.let { updateScenarioList(it) }
 
-                    val cachedYmd = millisToYmd(cache?.cachedAt ?: -1L)
-                    val todayYmd = millisToYmd(System.currentTimeMillis())
+                val cachedYmd = millisToYmd(cache?.cachedAt ?: -1L)
+                val todayYmd = millisToYmd(System.currentTimeMillis())
 
-                    // キャッシュ取得してから一定期間以内ならAPIリクエストせず終了
-                    if (todayYmd == cachedYmd) {
-                        Logger.d(TAG, "キャッシュ有効期限内なので再取得は行わない")
-                        return@withContext
-                    }
-
-                    // APIリクエストして脚本リストを最新化
-                    val scenarios = fetchScenarios(context).getOrNull() ?: return@withContext
-                    Logger.d(TAG, scenarios.toJson())
-                    updateScenarioList(scenarios)
-                    saveToCache(context, scenarios)
-                } catch (e: Exception) {
-                    Logger.w(TAG, Throwable(e))
+                // キャッシュ取得してから一定期間以内ならAPIリクエストせず終了
+                if (todayYmd == cachedYmd) {
+                    Logger.d(TAG, "キャッシュ有効期限内なので再取得は行わない")
+                    return@withContext
                 }
+
+                // APIリクエストして脚本リストを最新化
+                val scenarios = fetchScenarios(context).getOrNull() ?: return@withContext
+                Logger.d(TAG, scenarios.toJson())
+                updateScenarioList(scenarios)
+                saveToCache(context, scenarios)
             }
+        } catch (e: Exception) {
+            Logger.w(TAG, Throwable(e))
         } finally {
             dismissProgress()
         }
@@ -254,11 +252,9 @@ class CreatedScenarioListFragment : BaseFragment() {
             while (true) {
                 val scenarios = withTimeoutOrNull(Define.API_TIMEOUT.milliseconds) {
                     apiClient.getCreatedScenarioList(pageNo).await().scenarios
-                }
+                } ?: return@withContext Result.failure(Exception("脚本APIリクエスト失敗"))
 
-                if (scenarios == null) {
-                    return@withContext Result.failure(Exception("脚本APIリクエスト失敗"))
-                }
+                fetchedScenarios.addAll(scenarios)
 
                 if (itemsPerPage == 0 && scenarios.isNotEmpty()) {
                     // 1ページ分の取得件数が未初期化だったら初期化する
@@ -267,7 +263,6 @@ class CreatedScenarioListFragment : BaseFragment() {
                     Logger.d(TAG, "1ページ分の取得件数に満たなかったので取得完了と見なす")
                     break
                 }
-                fetchedScenarios.addAll(scenarios)
 
                 delay(Define.API_INTERVAL.milliseconds)
                 pageNo++
