@@ -16,17 +16,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.rx2.await
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-import retrofit2.HttpException
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.AdapterItemFooterBinding
 import work.boardgame.sangeki_rooper.databinding.AdapterItemScenarioBinding
@@ -45,7 +42,6 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.coroutines.resume
 import kotlin.time.Duration.Companion.milliseconds
 
 class CreatedScenarioListFragment : BaseFragment() {
@@ -111,7 +107,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                                 viewModel.viewModelScope.launch(Dispatchers.Main.immediate) {
                                     showProgress()
                                     try {
-                                        val scenarios = fetchScenarios(activity) ?: return@launch
+                                        val scenarios = fetchScenarios(activity).getOrNull() ?: return@launch
                                         val prevSize = viewModel.scenarioList.size
                                         viewModel.scenarioList.clear()
                                         viewModel.scenarioList.addAll(scenarios)
@@ -168,7 +164,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                     }
 
                     // APIリクエストして脚本リストを最新化
-                    val scenarios = fetchScenarios(context) ?: return@withContext
+                    val scenarios = fetchScenarios(context).getOrNull() ?: return@withContext
                     Logger.d(TAG, scenarios.toJson())
                     updateScenarioList(scenarios)
                     saveToCache(context, scenarios)
@@ -228,6 +224,10 @@ class CreatedScenarioListFragment : BaseFragment() {
      */
     private suspend fun saveToCache(context: Context, scenarioList: List<TragedyScenarioModel>) {
         Logger.methodStart(TAG)
+        if (scenarioList.isEmpty()) {
+            Logger.d(TAG, "脚本リストを取得できていなかった場合はキャッシュの更新も行わない")
+            return
+        }
         withContext(Dispatchers.IO) {
             cacheMutex.withLock {
                 try {
@@ -247,7 +247,7 @@ class CreatedScenarioListFragment : BaseFragment() {
     /**
      * サーバーから脚本データを取得する
      */
-    private suspend fun fetchScenarios(context: Context): List<TragedyScenarioModel>? {
+    private suspend fun fetchScenarios(context: Context): Result<List<TragedyScenarioModel>> {
         Logger.methodStart(TAG)
 
         return withContext(Dispatchers.IO) {
@@ -257,32 +257,15 @@ class CreatedScenarioListFragment : BaseFragment() {
             val apiClient = Util.getRxRestInterface(context)
             while (true) {
                 val scenarios = withTimeoutOrNull(Define.API_TIMEOUT.milliseconds) {
-                    suspendCancellableCoroutine { court ->
-                        apiClient.getCreatedScenarioList(pageNo)
-                            .subscribe(object: SingleObserver<CreatedScenarioCacheModel> {
-                                override fun onSubscribe(d: Disposable) {}
-
-                                override fun onError(e: Throwable) {
-                                    Logger.w(TAG, Throwable(e))
-                                    (e as? HttpException)?.let {
-                                        Logger.w(TAG, "code:" + e.code() + ", message:" + e.message())
-                                    }
-                                    if (court.isActive) court.resume(null)
-                                }
-
-                                override fun onSuccess(t: CreatedScenarioCacheModel) {
-                                    if (court.isActive) court.resume(t.scenarios)
-                                }
-                            })
-                    }
+                    apiClient.getCreatedScenarioList(pageNo).await().scenarios
                 }
 
                 if (scenarios == null) {
-                    Logger.w(TAG, "脚本APIリクエスト失敗")
-                    return@withContext null
+                    return@withContext Result.failure(Exception("脚本APIリクエスト失敗"))
                 }
 
-                if (itemsPerPage < scenarios.size) {
+                if (itemsPerPage == 0 && scenarios.isNotEmpty()) {
+                    // 1ページ分の取得件数が未初期化だったら初期化する
                     itemsPerPage = scenarios.size
                 } else if (scenarios.isEmpty() || itemsPerPage > scenarios.size) {
                     Logger.d(TAG, "1ページ分の取得件数に満たなかったので取得完了と見なす")
@@ -296,18 +279,21 @@ class CreatedScenarioListFragment : BaseFragment() {
 
             // fetchedScenariosの並び替え
             fetchedScenarios.sortWith { a, b ->
+                // 惨劇セット順
                 var d = a.tragedySetIndex() - b.tragedySetIndex()
                 if (d != 0) return@sortWith d
 
+                // 難易度昇順
                 d = a.difficulty - b.difficulty
                 if (d != 0) return@sortWith d
 
+                // 脚本ID降順
                 (b.id.toIntOrNull() ?: 99999) - (a.id.toIntOrNull() ?: 99999)
             }
 
             Logger.d(TAG, "fetchedScenarios = " + fetchedScenarios.toJson())
 
-            fetchedScenarios
+            Result.success(fetchedScenarios)
         }
     }
 
