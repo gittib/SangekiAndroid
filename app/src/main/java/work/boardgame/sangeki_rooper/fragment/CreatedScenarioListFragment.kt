@@ -16,14 +16,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx2.await
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.withTimeout
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.AdapterItemFooterBinding
 import work.boardgame.sangeki_rooper.databinding.AdapterItemScenarioBinding
@@ -146,13 +148,13 @@ class CreatedScenarioListFragment : BaseFragment() {
         try {
             withContext(Dispatchers.IO) {
                 // キャッシュがあるならキャッシュから読む
-                val cache = loadFromCache(context)
+                val cache = loadFromCache(context).getOrNull()
                 cache?.scenarios?.let { updateScenarioList(it) }
 
                 val cachedYmd = millisToYmd(cache?.cachedAt ?: -1L)
                 val todayYmd = millisToYmd(System.currentTimeMillis())
 
-                // キャッシュ取得してから一定期間以内ならAPIリクエストせず終了
+                // キャッシュ取得してから日付が変わってないならAPIリクエストせず終了
                 if (todayYmd == cachedYmd) {
                     Logger.d(TAG, "キャッシュ有効期限内なので再取得は行わない")
                     return@withContext
@@ -165,6 +167,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                 saveToCache(context, scenarios)
             }
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Logger.w(TAG, Throwable(e))
         } finally {
             dismissProgress()
@@ -194,20 +197,22 @@ class CreatedScenarioListFragment : BaseFragment() {
     /**
      * すでに脚本リストをキャッシュできていれば、そこからロードする
      */
-    private suspend fun loadFromCache(context: Context): CreatedScenarioCacheModel? {
+    private suspend fun loadFromCache(context: Context): Result<CreatedScenarioCacheModel?> {
         Logger.methodStart(TAG)
         return withContext(Dispatchers.IO) {
             cacheMutex.withLock {
                 try {
                     val file = File(context.cacheDir, CREATED_SCENARIO_LIST_CACHE_NAME)
-                    if (!file.exists()) return@withContext null
+                    if (!file.exists()) return@withContext Result.success(null)
                     Logger.d(TAG, "キャッシュがあったのでそっちから読み込む")
-                    file.bufferedReader().use { reader ->
+                    val model = file.bufferedReader().use { reader ->
                         Gson().fromJson(reader, CreatedScenarioCacheModel::class.java)
                     }
+                    Result.success(model)
                 } catch (e: Exception) {
+                    if (e is CancellationException) throw e
                     Logger.w(TAG, Throwable(e))
-                    null
+                    Result.failure(e)
                 }
             }
         }
@@ -217,7 +222,7 @@ class CreatedScenarioListFragment : BaseFragment() {
      * 脚本リストをキャッシュにセーブする
      */
     private suspend fun saveToCache(context: Context, scenarioList: List<TragedyScenarioModel>) {
-        Logger.methodStart(TAG)
+        Logger.methodStart(TAG, "saving scenarioList.size = ${scenarioList.size}")
         if (scenarioList.isEmpty()) {
             Logger.d(TAG, "脚本リストを取得できていなかった場合はキャッシュの更新も行わない")
             return
@@ -232,6 +237,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                     }
                     Logger.d(TAG, "Write success. File size: ${file.length()} bytes")
                 } catch (e: Exception) {
+                    if (e is CancellationException) throw e
                     Logger.w(TAG, Throwable(e))
                 }
             }
@@ -245,46 +251,44 @@ class CreatedScenarioListFragment : BaseFragment() {
         Logger.methodStart(TAG)
 
         return withContext(Dispatchers.IO) {
-            var itemsPerPage = 0
-            var pageNo = 1
-            val fetchedScenarios = mutableListOf<TragedyScenarioModel>()
-            val apiClient = Util.getRxRestInterface(context)
-            while (true) {
-                val scenarios = withTimeoutOrNull(Define.API_TIMEOUT.milliseconds) {
-                    apiClient.getCreatedScenarioList(pageNo).await().scenarios
-                } ?: return@withContext Result.failure(Exception("脚本APIリクエスト失敗"))
+            try {
+                var itemsPerPage = 0
+                var pageNo = 1
+                val fetchedScenarios = mutableListOf<TragedyScenarioModel>()
+                val apiClient = Util.getRxRestInterface(context)
+                while (true) {
+                    val scenarios = withTimeout(Define.API_TIMEOUT.milliseconds) {
+                        apiClient.getCreatedScenarioList(pageNo).await().scenarios
+                    }
 
-                fetchedScenarios.addAll(scenarios)
+                    fetchedScenarios.addAll(scenarios)
 
-                if (itemsPerPage == 0 && scenarios.isNotEmpty()) {
-                    // 1ページ分の取得件数が未初期化だったら初期化する
-                    itemsPerPage = scenarios.size
-                } else if (scenarios.isEmpty() || itemsPerPage > scenarios.size) {
-                    Logger.d(TAG, "1ページ分の取得件数に満たなかったので取得完了と見なす")
-                    break
+                    if (itemsPerPage == 0 && scenarios.isNotEmpty()) {
+                        // 1ページ分の取得件数が未初期化だったら初期化する
+                        itemsPerPage = scenarios.size
+                    } else if (scenarios.isEmpty() || itemsPerPage > scenarios.size) {
+                        Logger.d(TAG, "1ページ分の取得件数に満たなかったので取得完了と見なす")
+                        break
+                    }
+
+                    delay(Define.API_INTERVAL.milliseconds)
+                    pageNo++
                 }
 
-                delay(Define.API_INTERVAL.milliseconds)
-                pageNo++
+                fetchedScenarios.sortWith(
+                    compareBy<TragedyScenarioModel> { it.tragedySetIndex() }
+                        .thenBy { it.difficulty }
+                        .thenByDescending { it.id.toIntOrNull() ?: Int.MIN_VALUE }
+                )
+
+                Result.success(fetchedScenarios)
+            } catch (e: Exception) {
+                when (e) {
+                    is TimeoutCancellationException -> Result.failure(e)
+                    is CancellationException -> throw e
+                    else -> Result.failure(e)
+                }
             }
-
-            // fetchedScenariosの並び替え
-            fetchedScenarios.sortWith { a, b ->
-                // 惨劇セット順
-                var d = a.tragedySetIndex() - b.tragedySetIndex()
-                if (d != 0) return@sortWith d
-
-                // 難易度昇順
-                d = a.difficulty - b.difficulty
-                if (d != 0) return@sortWith d
-
-                // 脚本ID降順
-                (b.id.toIntOrNull() ?: 99999) - (a.id.toIntOrNull() ?: 99999)
-            }
-
-            Logger.d(TAG, "fetchedScenarios = " + fetchedScenarios.toJson())
-
-            Result.success(fetchedScenarios)
         }
     }
 
