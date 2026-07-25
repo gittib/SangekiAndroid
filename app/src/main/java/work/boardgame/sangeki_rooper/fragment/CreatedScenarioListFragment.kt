@@ -330,10 +330,10 @@ class CreatedScenarioListFragment : BaseFragment() {
         const val FOOTER = 99
     }
     private inner class ScenarioListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        inner class ScenarioViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        inner class ScenarioViewHolder(val binding: AdapterItemScenarioBinding): RecyclerView.ViewHolder(binding.root) {
             fun onBind(position: Int) {
                 val item = viewModel.scenarioList[position-1]
-                AdapterItemScenarioBinding.bind(itemView).let { rv ->
+                binding.let { rv ->
                     rv.scenarioId.text = String.format("[%s]", item.id)
                     rv.recommendedScenario.visibility = when (item.recommended) {
                         true -> View.VISIBLE
@@ -387,7 +387,7 @@ class CreatedScenarioListFragment : BaseFragment() {
                 }
                 ViewType.SCENARIO -> {
                     val v = AdapterItemScenarioBinding.inflate(inflater, parent, false)
-                    ScenarioViewHolder(v.root)
+                    ScenarioViewHolder(v)
                 }
                 ViewType.FOOTER -> {
                     val v = AdapterItemFooterBinding.inflate(inflater, parent, false)
