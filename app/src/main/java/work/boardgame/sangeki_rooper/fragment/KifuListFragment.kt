@@ -26,6 +26,7 @@ import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuListViewModel
 import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.format
+import java.util.Locale
 
 class KifuListFragment : BaseFragment(),
     ContainerActivity.ForegroundFragmentListener
@@ -100,7 +101,7 @@ class KifuListFragment : BaseFragment(),
             fun onBind(position: Int) {
                 val game = viewModel.games[position-1]
                 AdapterItemKifuBinding.bind(itemView).let { rv ->
-                    rv.kifuSummary.text = String.format("%s\n%sループ %d日", game.setName, game.loop, game.day)
+                    rv.kifuSummary.text = String.format(Locale.getDefault(), "%s\n%sループ %d日", game.setName, game.loop, game.day)
                     rv.createDate.text = game.createdAt.format()
 
                     rv.root.setOnClickListener {

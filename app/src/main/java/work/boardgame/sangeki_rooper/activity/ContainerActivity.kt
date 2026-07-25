@@ -1,16 +1,24 @@
 package work.boardgame.sangeki_rooper.activity
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
+import androidx.activity.addCallback
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.ActivityContainerBinding
-import work.boardgame.sangeki_rooper.fragment.*
-import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
+import work.boardgame.sangeki_rooper.fragment.AboutFragment
+import work.boardgame.sangeki_rooper.fragment.BaseFragment
+import work.boardgame.sangeki_rooper.fragment.CreatedScenarioListFragment
+import work.boardgame.sangeki_rooper.fragment.KifuDetailFragment
+import work.boardgame.sangeki_rooper.fragment.KifuListFragment
+import work.boardgame.sangeki_rooper.fragment.KifuPreviewFragment
+import work.boardgame.sangeki_rooper.fragment.KifuStandbyFragment
+import work.boardgame.sangeki_rooper.fragment.ScenarioDetailFragment
+import work.boardgame.sangeki_rooper.fragment.ScenarioListFragment
+import work.boardgame.sangeki_rooper.fragment.SummaryDetailFragment
+import work.boardgame.sangeki_rooper.fragment.TopFragment
 import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
-import java.lang.IllegalArgumentException
 
 class ContainerActivity : BaseActivity() {
     private val TAG = ContainerActivity::class.simpleName
@@ -50,12 +58,17 @@ class ContainerActivity : BaseActivity() {
             }
         }
         fragmentOnResume()
-    }
 
-    override fun onBackPressed() {
-        Logger.methodStart(TAG)
-        super.onBackPressed()
-        fragmentOnResume()
+        onBackPressedDispatcher.addCallback {
+            if (supportFragmentManager.backStackEntryCount == 0) {
+                // 最初のFragmentしかないのでActivity終了
+                finish()
+            } else {
+                // バックスタックにFragmentが残ってるので１つ戻す
+                supportFragmentManager.popBackStack()
+                fragmentOnResume()
+            }
+        }
     }
 
     fun startFragment(fragmentData: FragmentData) {
@@ -98,12 +111,6 @@ class ContainerActivity : BaseActivity() {
         Handler(mainLooper).post {
             val foregroundFragment = supportFragmentManager.fragments.lastOrNull()
             Logger.d(TAG, "foregroundFragment = " + foregroundFragment?.javaClass?.simpleName)
-
-            requestedOrientation = when (foregroundFragment) {
-                is SummaryDetailFragment -> ActivityInfo.SCREEN_ORIENTATION_USER
-                else -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }
-
             (foregroundFragment as? ForegroundFragmentListener)?.onForeground()
         }
     }

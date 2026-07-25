@@ -68,7 +68,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:textColor="@color/white"
-            tools:text="BTX"/>
+            tools:text="BTX＋"/>
 
         <TextView
             android:id="@+id/difficulty"
@@ -76,7 +76,7 @@
             app:layout_constraintLeft_toLeftOf="@id/tragedy_set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="44dp"
+            android:layout_marginLeft="52sp"
             android:textColor="@color/text_color_strong"
             tools:text="★★★★☆☆☆☆"/>
 

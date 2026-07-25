@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "work.boardgame.sangeki_rooper"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "work.boardgame.sangeki_rooper"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 32
-        versionName = "1.6.1"
+        targetSdk = 36
+        versionCode = 33
+        versionName = "1.6.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -96,50 +96,68 @@ android {
 }
 
 dependencies {
+    // -------------------------------------------------------------------------
+    // AndroidX / Compose / Lifecycle BOM
+    //    ※ Lifecycle や Fragment などの AndroidX 関連を一括管理
+    // -------------------------------------------------------------------------
+    implementation(platform("androidx.compose:compose-bom:2024.10.01"))
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx")
+
+    // 単体で管理する AndroidX / UI 関連
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.4")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.fragment:fragment-ktx:1.8.9")
+
+    // テスト関連
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 
-    // Retrofit ////////////////////////////////////////////////////////////////////////////////////
-    // picasso
-    implementation("com.squareup.picasso:picasso:2.71828")
-    // gson
-    implementation("com.google.code.gson:gson:2.13.2")
-    // OkHttp
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    // retrofit2
+    // -------------------------------------------------------------------------
+    // Kotlin Coroutines BOM
+    // -------------------------------------------------------------------------
+    implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.8.1"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2")
+
+    // -------------------------------------------------------------------------
+    // OkHttp BOM
+    //    ※ OkHttp や MockWebServer などのバージョンを一括管理
+    // -------------------------------------------------------------------------
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+
+    // Retrofit 関連（※Retrofit自体は公式BOM非対応のため個別指定）
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
-    // CallAdapter for RxJava
     implementation("com.squareup.retrofit2:adapter-rxjava2:3.0.0")
-    // Explicitly install RxJava
+
+    // その他のネットワーク・非同期関連
+    implementation("com.squareup.picasso:picasso:2.71828")
+    implementation("com.google.code.gson:gson:2.13.2")
     implementation("io.reactivex.rxjava2:rxjava:2.2.21")
-    // for Android
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
-    // Retrofit ここまで /////////////////////////////////////////////////////////////////////////////
 
-
-    // inline-block的な、よしなに折り返すレイアウト
-    implementation("com.google.android.flexbox:flexbox:3.0.0")
-    // 円形のImageView
-    implementation("de.hdodenhof:circleimageview:3.1.0")
-    // 角丸のImageView
-    implementation("com.makeramen:roundedimageview:2.3.0")
-
-    // RoomDatabase ////////////////////////////////////////////////////////////////////////////////
-
+    // -------------------------------------------------------------------------
+    // Room Database
+    // -------------------------------------------------------------------------
     implementation("androidx.room:room-runtime:2.8.2")
     ksp("androidx.room:room-compiler:2.8.2")
-    // RoomDatabase ここまで ////////////////////////////////////////////////////////////////////////
 
-    // PDFビューワ
+    // -------------------------------------------------------------------------
+    // サードパーティ UI ライブラリ
+    // -------------------------------------------------------------------------
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.makeramen:roundedimageview:2.3.0")
+
+    // -------------------------------------------------------------------------
+    // PDF Viewer
+    // -------------------------------------------------------------------------
     implementation("io.github.afreakyelf:Pdf-Viewer:2.4.0")
 }

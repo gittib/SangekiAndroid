@@ -7,20 +7,22 @@ import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.await
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.AdapterItemFooterBinding
 import work.boardgame.sangeki_rooper.databinding.AdapterItemScenarioBinding
@@ -32,7 +34,8 @@ import work.boardgame.sangeki_rooper.util.Define
 import work.boardgame.sangeki_rooper.util.FragmentData
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
-import java.util.*
+import java.util.Calendar
+import kotlin.time.Duration.Companion.milliseconds
 
 class ScenarioListFragment : BaseFragment() {
     companion object {
@@ -65,32 +68,33 @@ class ScenarioListFragment : BaseFragment() {
                     R.id.show_title -> {
                         if (viewModel.showTitle) {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                                    .setMessage("脚本タイトルを非表示にしますか？")
-                                    .setPositiveButton(R.string.ok) { _, _ ->
-                                        viewModel.showTitle = false
-                                        rv.scenarioList.adapter?.let {
-                                            it.notifyItemRangeChanged(0, it.itemCount)
-                                        }
+                                .setMessage("脚本タイトルを非表示にしますか？")
+                                .setPositiveButton(R.string.ok) { _, _ ->
+                                    viewModel.showTitle = false
+                                    rv.scenarioList.adapter?.let {
+                                        it.notifyItemRangeChanged(0, it.itemCount)
                                     }
-                                    .setNegativeButton(R.string.cancel, null)
-                                    .show()
+                                }
+                                .setNegativeButton(R.string.cancel, null)
+                                .show()
                         } else {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                                    .setMessage("脚本タイトルを表示してもよろしいですか？\n（※ネタバレになる可能性があります）")
-                                    .setPositiveButton(R.string.ok) { _, _ ->
-                                        viewModel.showTitle = true
-                                        rv.scenarioList.adapter?.let {
-                                            it.notifyItemRangeChanged(0, it.itemCount)
-                                        }
+                                .setMessage("脚本タイトルを表示してもよろしいですか？\n（※ネタバレになる可能性があります）")
+                                .setPositiveButton(R.string.ok) { _, _ ->
+                                    viewModel.showTitle = true
+                                    rv.scenarioList.adapter?.let {
+                                        it.notifyItemRangeChanged(0, it.itemCount)
                                     }
-                                    .setNegativeButton(R.string.cancel, null)
-                                    .show()
+                                }
+                                .setNegativeButton(R.string.cancel, null)
+                                .show()
                         }
                     }
                     R.id.update_list -> {
                         val lastUpdated = prefs.getLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, -1)
                         val now = Calendar.getInstance().timeInMillis
-                        if (now - lastUpdated < 3600 * 1000) {
+                        val cacheLimitMs = 3600 * 1000
+                        if (now - lastUpdated < cacheLimitMs) {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                 .setMessage("脚本リストはすでに最新です。")
                                 .setPositiveButton(android.R.string.ok, null)
@@ -99,7 +103,10 @@ class ScenarioListFragment : BaseFragment() {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                 .setMessage("脚本リストを最新化しますか？")
                                 .setPositiveButton(R.string.ok) { _, _ ->
-                                    updateScenarioList()
+                                    viewLifecycleOwner.lifecycleScope.launch {
+                                        updateScenarioList()
+                                        reloadScenarioList()
+                                    }
                                 }
                                 .setNegativeButton(R.string.cancel, null)
                                 .show()
@@ -126,57 +133,94 @@ class ScenarioListFragment : BaseFragment() {
     override fun onAttach(context: Context) {
         Logger.methodStart(TAG)
         super.onAttach(context)
-        viewModel = ViewModelProvider(this).get(ScenarioListViewModel::class.java)
+        viewModel = ViewModelProvider(this)[ScenarioListViewModel::class.java]
         reloadScenarioList()
     }
 
-    fun reloadScenarioList() {
+    /**
+     * アプリ内データまたはアセットから旧サイトの脚本リストを取得し表示更新する
+     */
+    private fun reloadScenarioList() {
         Logger.methodStart(TAG)
+        val prevItemCount = viewModel.scenarioList.size
         viewModel.scenarioList = Util.getScenarioList(activity).filter { it.secret != true }
-            .sortedWith { o1, o2 ->
-                var d: Int = o1.tragedySetIndex() - o2.tragedySetIndex()
-                if (d == 0) d = o1.id[1] - o2.id[1]
-                if (d == 0) d = o1.difficulty - o2.difficulty
-                if (d == 0) d = if (o1.id < o2.id) -1 else 1
-                d
+            .sortedWith(
+                compareBy<TragedyScenarioModel> { it.tragedySetIndex() }
+                    .thenBy { it.id[1] }
+                    .thenBy { it.difficulty }
+                    .thenByDescending { it.id }
+            )
+        _binding?.scenarioList?.adapter?.let {
+            if (prevItemCount > 0) {
+                it.notifyItemRangeRemoved(1, prevItemCount)
             }
-        _binding?.scenarioList?.adapter?.notifyDataSetChanged()
+            if (viewModel.scenarioList.isNotEmpty()) {
+                it.notifyItemRangeInserted(1, viewModel.scenarioList.size)
+            }
+        }
     }
 
-    private fun updateScenarioList() {
+    /**
+     * プログレス表示して旧サイトから脚本リストを更新する
+     */
+    private suspend fun updateScenarioList() {
         Logger.methodStart(TAG)
-        activity.showProgress()
-        Util.getRxRestInterface(activity, baseUrlResId = R.string.old_api_url)
-            .getScenarioList()
-            .doFinally { Handler(Looper.getMainLooper()).post { activity.dismissProgress() } }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object: SingleObserver<List<TragedyScenarioModel>> {
-                override fun onSuccess(t: List<TragedyScenarioModel>) {
-                    prefs.edit()
-                        .putString(Define.SharedPreferencesKey.SCENARIOS, Gson().toJson(t))
-                        .putLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, Calendar.getInstance().timeInMillis)
-                        .apply()
-
-                    AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                        .setMessage("脚本リストを最新化しました。")
-                        .setPositiveButton(android.R.string.ok, null)
-                        .setOnDismissListener {
-                            reloadScenarioList()
-                        }
-                        .show()
-                }
-
-                override fun onSubscribe(d: Disposable) {
-                }
-
-                override fun onError(e: Throwable) {
-                    Logger.w(TAG, Throwable(e))
+        withContext(Dispatchers.Main.immediate) {
+            activity.showProgress()
+        }
+        try {
+            fetchScenarioList(activity).getOrNull() ?: run {
+                withContext(Dispatchers.Main.immediate) {
                     AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                         .setMessage("脚本リストの最新化に失敗しました。\n少し時間をあけて、再度お試しください。")
                         .show()
                 }
-            })
+                return
+            }
+
+            withContext(Dispatchers.Main.immediate) {
+                AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                    .setMessage("脚本リストを最新化しました。")
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+            }
+        } finally {
+            withContext(Dispatchers.Main.immediate) {
+                activity.dismissProgress()
+            }
+        }
+    }
+
+    /**
+     * 旧サイトのサーバから脚本リストを取得する
+     */
+    private suspend fun fetchScenarioList(context: Context): Result<List<TragedyScenarioModel>> {
+        Logger.methodStart(TAG)
+        return withContext(Dispatchers.IO) {
+            try {
+                val scenarioList = withTimeout(Define.API_TIMEOUT.milliseconds) {
+                    Util.getRxRestInterface(context, baseUrlResId = R.string.old_api_url)
+                        .getScenarioList()
+                        .await()
+                }
+
+                prefs.edit()
+                    .putString(Define.SharedPreferencesKey.SCENARIOS, Gson().toJson(scenarioList))
+                    .putLong(
+                        Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO,
+                        Calendar.getInstance().timeInMillis
+                    )
+                    .apply()
+
+                Result.success(scenarioList)
+            } catch (e: Exception) {
+                when(e) {
+                    is TimeoutCancellationException -> Result.failure(e)
+                    is CancellationException -> throw e
+                    else -> Result.failure(e)
+                }
+            }
+        }
     }
 
     private object ViewType {
@@ -185,10 +229,10 @@ class ScenarioListFragment : BaseFragment() {
         const val FOOTER = 99
     }
     private inner class ScenarioListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        inner class ScenarioViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        inner class ScenarioViewHolder(val binding: AdapterItemScenarioBinding): RecyclerView.ViewHolder(binding.root) {
             fun onBind(position: Int) {
                 val item = viewModel.scenarioList[position-1]
-                AdapterItemScenarioBinding.bind(itemView).let { rv ->
+                binding.let { rv ->
                     rv.scenarioId.text = String.format("[%s]", item.id)
                     rv.recommendedScenario.visibility = when (item.recommended) {
                         true -> View.VISIBLE
@@ -234,7 +278,7 @@ class ScenarioListFragment : BaseFragment() {
                 }
                 ViewType.SCENARIO -> {
                     val v = AdapterItemScenarioBinding.inflate(inflater, parent, false)
-                    ScenarioViewHolder(v.root)
+                    ScenarioViewHolder(v)
                 }
                 ViewType.FOOTER -> {
                     val v = AdapterItemFooterBinding.inflate(inflater, parent, false)

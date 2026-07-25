@@ -15,15 +15,18 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import work.boardgame.sangeki_rooper.R
 import work.boardgame.sangeki_rooper.databinding.*
+import work.boardgame.sangeki_rooper.enums.PosBoard
 import work.boardgame.sangeki_rooper.fragment.viewmodel.ScenarioDetailViewModel
 import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 import work.boardgame.sangeki_rooper.util.Logger
 import work.boardgame.sangeki_rooper.util.Util
 import work.boardgame.sangeki_rooper.util.toJson
+import java.util.Locale
 
 class ScenarioDetailFragment : BaseFragment() {
     companion object {
@@ -64,7 +67,7 @@ class ScenarioDetailFragment : BaseFragment() {
 
             rv.publicSheetValueSet.text = item.tragedySetName(context)
             rv.publicSheetValueLoop.text = String.format("%sループ", item.loop())
-            rv.publicSheetValueDay.text = String.format("%d日", item.day)
+            rv.publicSheetValueDay.text = String.format(Locale.getDefault(), "%d日", item.day)
             rv.publicSheetSpecialValue.text = item.specialRule()
 
             for (i in 1..item.day) {
@@ -73,7 +76,7 @@ class ScenarioDetailFragment : BaseFragment() {
                         lp.columnSpec = GridLayout.spec(0)
                         lp.rowSpec = GridLayout.spec(i)
                     }
-                    v.dayCount.text = String.format("%d", i)
+                    v.dayCount.text = String.format(Locale.getDefault(), "%d", i)
                 }.root)
 
                 rv.incidentList.addView(GridItemIncidentNameBinding.inflate(inflater, rv.incidentList, false).also { v ->
@@ -109,6 +112,23 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
 
+            // 非公開シートの横幅上限を設定
+            rv.privateSheetFrame.let { v ->
+                // 横長画面だと間延びするので、画面サイズの縦横のうち短い方までで幅を制限する
+
+                // 画面サイズの縦横のうち短い方を取得 (px単位)
+                val displayMetrics = v.context.resources.displayMetrics
+                val minScreenSizePx = minOf(displayMetrics.widthPixels, displayMetrics.heightPixels)
+
+                // 左右16dpずつマージンを設けるため、32dp を px に変換
+                val horizontalPaddingInPx = (32 * displayMetrics.density).toInt()
+
+                v.layoutParams = v.layoutParams.also {
+                    // vの横幅を(画面サイズの短い方-32dp)に設定
+                    it.width = minScreenSizePx - horizontalPaddingInPx
+                }
+            }
+
             rv.scenarioTitle.text = item.title
             rv.incDifficultyRow.detailDifficultyName.text = item.difficultyName()
             rv.incDifficultyRow.detailDifficultyStar.text = item.difficultyStar()
@@ -129,16 +149,20 @@ class ScenarioDetailFragment : BaseFragment() {
                     null, "" -> v.visibility = View.GONE
                     else -> {
                         v.visibility = View.VISIBLE
-                        v.text = "(狂った真実：${item.crazyRuleY})"
+                        v.text = String.format("(狂った真実：%s)", item.crazyRuleY)
                     }
                 }
             }
 
             // 登場人物一覧の表示
-            rv.characterCount.text = String.format("(%d人)", item.characterList.size)
+            rv.characterCount.text = String.format(Locale.getDefault(), "(%d人)", item.characterList.size)
             rv.characterRoleList.let { v ->
                 var row = 1
+                val charactersByPos = mutableMapOf<PosBoard, MutableList<String>>()
                 item.characterList.forEach { ch ->
+                    charactersByPos[ch.initPos()] = charactersByPos[ch.initPos()] ?: mutableListOf()
+                    charactersByPos[ch.initPos()]!!.add(ch.name)
+
                     v.addView(GridItemLongTextRowBinding.inflate(inflater, v, false).also { tv ->
                         tv.root.layoutParams = GridLayout.LayoutParams().also { lp ->
                             val weight = TypedValue().also {
@@ -333,16 +357,13 @@ class ScenarioDetailFragment : BaseFragment() {
             }
 
             rv.showPrivate.setOnClickListener {
-                rv.privateWrapper.let { w ->
-                    if (w.visibility == View.VISIBLE) {
-                        w.visibility = View.GONE
-                        rv.showPrivate.text = getString(R.string.show_private_sheet)
-                    } else {
+                when (viewModel.isShowPrivate) {
+                    true -> switchShowingPrivateSheet(!viewModel.isShowPrivate)
+                    else -> {
                         AlertDialog.Builder(context, R.style.Theme_SangekiAndroid_DialogBase)
                             .setMessage(R.string.confirm_to_show_private)
                             .setPositiveButton(R.string.ok) { _, _ ->
-                                w.visibility = View.VISIBLE
-                                rv.showPrivate.text = getString(R.string.hide_private_sheet)
+                                switchShowingPrivateSheet(!viewModel.isShowPrivate)
                             }
                             .setNegativeButton(R.string.cancel, null)
                             .show()
@@ -350,8 +371,24 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
         }
+        switchShowingPrivateSheet()
         fitToEdgeToEdge(binding.contentsFrame)
         return binding.root
+    }
+
+    private fun switchShowingPrivateSheet(setTo: Boolean = viewModel.isShowPrivate) {
+        Logger.methodStart(TAG)
+        viewModel.isShowPrivate = setTo
+        when (viewModel.isShowPrivate) {
+            true -> {
+                binding.privateWrapper.visibility = View.VISIBLE
+                binding.showPrivate.text = getString(R.string.hide_private_sheet)
+            }
+            else -> {
+                binding.privateWrapper.visibility = View.GONE
+                binding.showPrivate.text = getString(R.string.show_private_sheet)
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -376,13 +413,5 @@ class ScenarioDetailFragment : BaseFragment() {
                 TODO("対象の脚本が取得できなかった場合の対応")
             }
         }
-    }
-
-    override fun onDetach() {
-        Logger.methodStart(TAG)
-        parentFragmentManager.fragments.find { it is ScenarioListFragment }?.let {
-            (it as ScenarioListFragment).reloadScenarioList()
-        }
-        super.onDetach()
     }
 }
