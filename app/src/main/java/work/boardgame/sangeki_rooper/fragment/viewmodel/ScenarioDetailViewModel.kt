@@ -5,4 +5,5 @@ import work.boardgame.sangeki_rooper.model.TragedyScenarioModel
 
 class ScenarioDetailViewModel : ViewModel() {
     var scenario: TragedyScenarioModel? = null
+    var isShowPrivate: Boolean = false
 }

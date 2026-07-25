@@ -112,6 +112,23 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
 
+            // 非公開シートの横幅上限を設定
+            rv.privateSheetFrame.let { v ->
+                // 横長画面だと間延びするので、画面サイズの縦横のうち短い方までで幅を制限する
+
+                // 画面サイズの縦横のうち短い方を取得 (px単位)
+                val displayMetrics = v.context.resources.displayMetrics
+                val minScreenSizePx = minOf(displayMetrics.widthPixels, displayMetrics.heightPixels)
+
+                // 左右16dpずつマージンを設けるため、32dp を px に変換
+                val horizontalPaddingInPx = (32 * displayMetrics.density).toInt()
+
+                v.layoutParams = v.layoutParams.also {
+                    // vの横幅を(画面サイズの短い方-32dp)に設定
+                    it.width = minScreenSizePx - horizontalPaddingInPx
+                }
+            }
+
             rv.scenarioTitle.text = item.title
             rv.incDifficultyRow.detailDifficultyName.text = item.difficultyName()
             rv.incDifficultyRow.detailDifficultyStar.text = item.difficultyStar()
@@ -340,16 +357,13 @@ class ScenarioDetailFragment : BaseFragment() {
             }
 
             rv.showPrivate.setOnClickListener {
-                rv.privateWrapper.let { w ->
-                    if (w.isVisible) {
-                        w.visibility = View.GONE
-                        rv.showPrivate.text = getString(R.string.show_private_sheet)
-                    } else {
+                when (viewModel.isShowPrivate) {
+                    true -> switchShowingPrivateSheet(!viewModel.isShowPrivate)
+                    else -> {
                         AlertDialog.Builder(context, R.style.Theme_SangekiAndroid_DialogBase)
                             .setMessage(R.string.confirm_to_show_private)
                             .setPositiveButton(R.string.ok) { _, _ ->
-                                w.visibility = View.VISIBLE
-                                rv.showPrivate.text = getString(R.string.hide_private_sheet)
+                                switchShowingPrivateSheet(!viewModel.isShowPrivate)
                             }
                             .setNegativeButton(R.string.cancel, null)
                             .show()
@@ -357,8 +371,24 @@ class ScenarioDetailFragment : BaseFragment() {
                 }
             }
         }
+        switchShowingPrivateSheet()
         fitToEdgeToEdge(binding.contentsFrame)
         return binding.root
+    }
+
+    private fun switchShowingPrivateSheet(setTo: Boolean = viewModel.isShowPrivate) {
+        Logger.methodStart(TAG)
+        viewModel.isShowPrivate = setTo
+        when (viewModel.isShowPrivate) {
+            true -> {
+                binding.privateWrapper.visibility = View.VISIBLE
+                binding.showPrivate.text = getString(R.string.hide_private_sheet)
+            }
+            else -> {
+                binding.privateWrapper.visibility = View.GONE
+                binding.showPrivate.text = getString(R.string.show_private_sheet)
+            }
+        }
     }
 
     override fun onDestroyView() {
