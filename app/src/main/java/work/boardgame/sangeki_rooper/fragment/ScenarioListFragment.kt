@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx2.await
 import kotlinx.coroutines.withContext
@@ -67,32 +68,33 @@ class ScenarioListFragment : BaseFragment() {
                     R.id.show_title -> {
                         if (viewModel.showTitle) {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                                    .setMessage("脚本タイトルを非表示にしますか？")
-                                    .setPositiveButton(R.string.ok) { _, _ ->
-                                        viewModel.showTitle = false
-                                        rv.scenarioList.adapter?.let {
-                                            it.notifyItemRangeChanged(0, it.itemCount)
-                                        }
+                                .setMessage("脚本タイトルを非表示にしますか？")
+                                .setPositiveButton(R.string.ok) { _, _ ->
+                                    viewModel.showTitle = false
+                                    rv.scenarioList.adapter?.let {
+                                        it.notifyItemRangeChanged(0, it.itemCount)
                                     }
-                                    .setNegativeButton(R.string.cancel, null)
-                                    .show()
+                                }
+                                .setNegativeButton(R.string.cancel, null)
+                                .show()
                         } else {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                                    .setMessage("脚本タイトルを表示してもよろしいですか？\n（※ネタバレになる可能性があります）")
-                                    .setPositiveButton(R.string.ok) { _, _ ->
-                                        viewModel.showTitle = true
-                                        rv.scenarioList.adapter?.let {
-                                            it.notifyItemRangeChanged(0, it.itemCount)
-                                        }
+                                .setMessage("脚本タイトルを表示してもよろしいですか？\n（※ネタバレになる可能性があります）")
+                                .setPositiveButton(R.string.ok) { _, _ ->
+                                    viewModel.showTitle = true
+                                    rv.scenarioList.adapter?.let {
+                                        it.notifyItemRangeChanged(0, it.itemCount)
                                     }
-                                    .setNegativeButton(R.string.cancel, null)
-                                    .show()
+                                }
+                                .setNegativeButton(R.string.cancel, null)
+                                .show()
                         }
                     }
                     R.id.update_list -> {
                         val lastUpdated = prefs.getLong(Define.SharedPreferencesKey.LAST_UPDATED_SCENARIO, -1)
                         val now = Calendar.getInstance().timeInMillis
-                        if (now - lastUpdated < 3600 * 1000) {
+                        val cacheLimitMs = 3600 * 1000
+                        if (now - lastUpdated < cacheLimitMs) {
                             AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
                                 .setMessage("脚本リストはすでに最新です。")
                                 .setPositiveButton(android.R.string.ok, null)
@@ -103,6 +105,7 @@ class ScenarioListFragment : BaseFragment() {
                                 .setPositiveButton(R.string.ok) { _, _ ->
                                     viewLifecycleOwner.lifecycleScope.launch {
                                         updateScenarioList()
+                                        reloadScenarioList()
                                     }
                                 }
                                 .setNegativeButton(R.string.cancel, null)
@@ -134,7 +137,10 @@ class ScenarioListFragment : BaseFragment() {
         reloadScenarioList()
     }
 
-    fun reloadScenarioList() {
+    /**
+     * アプリ内データまたはアセットから旧サイトの脚本リストを取得し表示更新する
+     */
+    private fun reloadScenarioList() {
         Logger.methodStart(TAG)
         val prevItemCount = viewModel.scenarioList.size
         viewModel.scenarioList = Util.getScenarioList(activity).filter { it.secret != true }
@@ -145,20 +151,55 @@ class ScenarioListFragment : BaseFragment() {
                     .thenByDescending { it.id }
             )
         _binding?.scenarioList?.adapter?.let {
-            it.notifyItemRangeRemoved(1, prevItemCount)
-            it.notifyItemRangeInserted(1, viewModel.scenarioList.size)
+            if (prevItemCount > 0) {
+                it.notifyItemRangeRemoved(1, prevItemCount)
+            }
+            if (viewModel.scenarioList.isNotEmpty()) {
+                it.notifyItemRangeInserted(1, viewModel.scenarioList.size)
+            }
         }
     }
 
+    /**
+     * プログレス表示して旧サイトから脚本リストを更新する
+     */
     private suspend fun updateScenarioList() {
         Logger.methodStart(TAG)
         withContext(Dispatchers.Main.immediate) {
             activity.showProgress()
         }
         try {
-            withContext(Dispatchers.IO) {
+            fetchScenarioList(activity).getOrNull() ?: run {
+                withContext(Dispatchers.Main.immediate) {
+                    AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                        .setMessage("脚本リストの最新化に失敗しました。\n少し時間をあけて、再度お試しください。")
+                        .show()
+                }
+                return
+            }
+
+            withContext(Dispatchers.Main.immediate) {
+                AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
+                    .setMessage("脚本リストを最新化しました。")
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show()
+            }
+        } finally {
+            withContext(Dispatchers.Main.immediate) {
+                activity.dismissProgress()
+            }
+        }
+    }
+
+    /**
+     * 旧サイトのサーバから脚本リストを取得する
+     */
+    private suspend fun fetchScenarioList(context: Context): Result<List<TragedyScenarioModel>> {
+        Logger.methodStart(TAG)
+        return withContext(Dispatchers.IO) {
+            try {
                 val scenarioList = withTimeout(Define.API_TIMEOUT.milliseconds) {
-                    Util.getRxRestInterface(activity, baseUrlResId = R.string.old_api_url)
+                    Util.getRxRestInterface(context, baseUrlResId = R.string.old_api_url)
                         .getScenarioList()
                         .await()
                 }
@@ -170,28 +211,14 @@ class ScenarioListFragment : BaseFragment() {
                         Calendar.getInstance().timeInMillis
                     )
                     .apply()
-            }
 
-            withContext(Dispatchers.Main.immediate) {
-                AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                    .setMessage("脚本リストを最新化しました。")
-                    .setPositiveButton(android.R.string.ok, null)
-                    .setOnDismissListener {
-                        reloadScenarioList()
-                    }
-                    .show()
-            }
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            Logger.w(TAG, Throwable(e))
-            withContext(Dispatchers.Main.immediate) {
-                AlertDialog.Builder(activity, R.style.Theme_SangekiAndroid_DialogBase)
-                    .setMessage("脚本リストの最新化に失敗しました。\n少し時間をあけて、再度お試しください。")
-                    .show()
-            }
-        } finally {
-            withContext(Dispatchers.Main.immediate) {
-                activity.dismissProgress()
+                Result.success(scenarioList)
+            } catch (e: Exception) {
+                when(e) {
+                    is TimeoutCancellationException -> Result.failure(e)
+                    is CancellationException -> throw e
+                    else -> Result.failure(e)
+                }
             }
         }
     }
