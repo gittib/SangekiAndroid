@@ -1,6 +1,5 @@
 package work.boardgame.sangeki_rooper.activity
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import androidx.activity.addCallback
@@ -112,12 +111,6 @@ class ContainerActivity : BaseActivity() {
         Handler(mainLooper).post {
             val foregroundFragment = supportFragmentManager.fragments.lastOrNull()
             Logger.d(TAG, "foregroundFragment = " + foregroundFragment?.javaClass?.simpleName)
-
-            requestedOrientation = when (foregroundFragment) {
-                is SummaryDetailFragment -> ActivityInfo.SCREEN_ORIENTATION_USER
-                else -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            }
-
             (foregroundFragment as? ForegroundFragmentListener)?.onForeground()
         }
     }

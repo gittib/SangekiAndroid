@@ -31,8 +31,6 @@ abstract class BaseActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Logger.methodStart(TAG)
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = !isDarkMode
     }
 
