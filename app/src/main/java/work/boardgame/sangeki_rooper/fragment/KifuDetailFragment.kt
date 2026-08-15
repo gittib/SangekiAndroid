@@ -3,6 +3,7 @@ package work.boardgame.sangeki_rooper.fragment
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -30,6 +31,7 @@ import work.boardgame.sangeki_rooper.databinding.*
 import work.boardgame.sangeki_rooper.fragment.viewmodel.KifuDetailViewModel
 import work.boardgame.sangeki_rooper.model.DetectiveInfoModel
 import work.boardgame.sangeki_rooper.util.*
+import kotlin.time.Duration.Companion.milliseconds
 
 class KifuDetailFragment : BaseFragment() {
     companion object {
@@ -265,7 +267,7 @@ class KifuDetailFragment : BaseFragment() {
 
             activity.showProgress()
             try {
-                delay(Define.POLLING_INTERVAL)
+                delay(Define.POLLING_INTERVAL.milliseconds)
 
                 val lv = rv.incidentList
                 rel.incidents.forEach { incident ->
@@ -470,7 +472,7 @@ class KifuDetailFragment : BaseFragment() {
 
         withContext(Dispatchers.Main.immediate) {
             for (loop in 1..rel.game.loop) {
-                delay(Define.POLLING_INTERVAL)
+                delay(Define.POLLING_INTERVAL.milliseconds)
                 val loopTag = "kifu_per_day-$loop"
                 lv.findViewWithTag<ViewGroup>(loopTag) ?: LinearItemKifuLoopTitleBinding.inflate(inflater, lv, false).also {
                     it.root.tag = loopTag
@@ -502,6 +504,16 @@ class KifuDetailFragment : BaseFragment() {
                             setActionCardClickEvent(loop, day, false, 0, v.hero1)
                             setActionCardClickEvent(loop, day, false, 1, v.hero2)
                             setActionCardClickEvent(loop, day, false, 2, v.hero3)
+
+                            // 横向きの場合、v.loopDayNoteの幅を画面横幅の40%に設定する
+                            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                                v.loopDayNote.layoutParams = v.loopDayNote.layoutParams.also {
+                                    val displayMetrics = resources.displayMetrics
+                                    val targetWidth = (displayMetrics.widthPixels * 0.4).toInt()
+                                    it.width = targetWidth
+                                }
+                            }
+
                             lv.addView(v.root)
                         }
 
