@@ -51,6 +51,17 @@ class ScenarioDetailFragment : BaseFragment() {
     private var _binding: ScenarioDetailFragmentBinding? = null
     private val binding get() = _binding!!
 
+    private val privateSheetWidthPx by lazy {
+        // 画面サイズの縦横のうち短い方を取得 (px単位)
+        val displayMetrics = requireContext().resources.displayMetrics
+        val minScreenSizePx = minOf(displayMetrics.widthPixels, displayMetrics.heightPixels)
+
+        // 左右16dpずつマージンを設けるため、32dp を px に変換
+        val horizontalPaddingInPx = (32 * displayMetrics.density).toInt()
+
+        minScreenSizePx - horizontalPaddingInPx
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         Logger.methodStart(TAG)
@@ -113,19 +124,15 @@ class ScenarioDetailFragment : BaseFragment() {
             }
 
             // 非公開シートの横幅上限を設定
-            rv.privateSheetFrame.let { v ->
-                // 横長画面だと間延びするので、画面サイズの縦横のうち短い方までで幅を制限する
-
-                // 画面サイズの縦横のうち短い方を取得 (px単位)
-                val displayMetrics = v.context.resources.displayMetrics
-                val minScreenSizePx = minOf(displayMetrics.widthPixels, displayMetrics.heightPixels)
-
-                // 左右16dpずつマージンを設けるため、32dp を px に変換
-                val horizontalPaddingInPx = (32 * displayMetrics.density).toInt()
-
+            // 横長画面だと間延びするので、画面サイズの縦横のうち短い方までで幅を制限する
+            rv.privateSheetTitle.let { v ->
                 v.layoutParams = v.layoutParams.also {
-                    // vの横幅を(画面サイズの短い方-32dp)に設定
-                    it.width = minScreenSizePx - horizontalPaddingInPx
+                    it.width = privateSheetWidthPx
+                }
+            }
+            rv.privateSheetFrame.let { v ->
+                v.layoutParams = v.layoutParams.also {
+                    it.width = privateSheetWidthPx
                 }
             }
 

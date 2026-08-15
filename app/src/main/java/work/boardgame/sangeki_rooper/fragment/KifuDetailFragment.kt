@@ -53,6 +53,11 @@ class KifuDetailFragment : BaseFragment() {
     private val ruleMaster by lazy { DetectiveInfoModel.getRuleMaster(activity) }
     private val inflater:LayoutInflater by lazy { LayoutInflater.from(activity) }
     private val picasso by lazy { Picasso.Builder(activity).build() }
+    private val landscapeDayNoteWidth by lazy {
+        // 画面幅の40%の幅を保持して日ごとの備考欄の幅に設定する
+        val displayMetrics = resources.displayMetrics
+        (displayMetrics.widthPixels * 0.4).toInt()
+    }
     private val daoScope = CoroutineScope(Dispatchers.IO)
 
 
@@ -508,9 +513,7 @@ class KifuDetailFragment : BaseFragment() {
                             // 横向きの場合、v.loopDayNoteの幅を画面横幅の40%に設定する
                             if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                                 v.loopDayNote.layoutParams = v.loopDayNote.layoutParams.also {
-                                    val displayMetrics = resources.displayMetrics
-                                    val targetWidth = (displayMetrics.widthPixels * 0.4).toInt()
-                                    it.width = targetWidth
+                                    it.width = landscapeDayNoteWidth
                                 }
                             }
 
