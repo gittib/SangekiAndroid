@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.ApplicationExtension
 import java.util.Properties
 
 plugins {
@@ -6,7 +7,7 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-android {
+extensions.configure<ApplicationExtension> {
     namespace = "work.boardgame.sangeki_rooper"
     compileSdk = 37
 
@@ -69,7 +70,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            ndk.debugSymbolLevel = "FULL"
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
     flavorDimensions.add("appli")
