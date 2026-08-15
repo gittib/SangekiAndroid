@@ -66,5 +66,8 @@
         <item>1.6.0\n
             惨劇RoopeR脚本データベースの公開脚本をアプリでも表示できるようにしました。
         </item>
+        <item>1.7.0\n
+            横長画面のレイアウトを調整しました。
+        </item>
     </string-array>
 </resources>
