@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "work.boardgame.sangeki_rooper"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "work.boardgame.sangeki_rooper"
@@ -103,7 +103,7 @@ dependencies {
     // AndroidX / Compose / Lifecycle BOM
     //    ※ Lifecycle や Fragment などの AndroidX 関連を一括管理
     // -------------------------------------------------------------------------
-    implementation(platform("androidx.compose:compose-bom:2024.10.01"))
+    implementation(platform("androidx.compose:compose-bom:2026.08.00"))
     implementation("androidx.lifecycle:lifecycle-livedata-ktx")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx")
 
@@ -113,7 +113,7 @@ dependencies {
     implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.9")
+    implementation("androidx.fragment:fragment-ktx:1.9.0")
 
     // テスト関連
     testImplementation("junit:junit:4.13.2")
@@ -132,7 +132,7 @@ dependencies {
     // OkHttp BOM
     //    ※ OkHttp や MockWebServer などのバージョンを一括管理
     // -------------------------------------------------------------------------
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:5.4.0"))
     implementation("com.squareup.okhttp3:okhttp")
 
     // Retrofit 関連（※Retrofit自体は公式BOM非対応のため個別指定）
@@ -142,7 +142,7 @@ dependencies {
 
     // その他のネットワーク・非同期関連
     implementation("com.squareup.picasso:picasso:2.71828")
-    implementation("com.google.code.gson:gson:2.13.2")
+    implementation("com.google.code.gson:gson:2.14.0")
     implementation("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
 
