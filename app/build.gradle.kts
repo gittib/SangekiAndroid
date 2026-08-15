@@ -14,7 +14,7 @@ extensions.configure<ApplicationExtension> {
     defaultConfig {
         applicationId = "work.boardgame.sangeki_rooper"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 34
         versionName = "1.7.0"
 
