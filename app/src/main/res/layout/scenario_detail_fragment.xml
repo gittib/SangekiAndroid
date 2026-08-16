@@ -62,19 +62,23 @@
                 android:id="@+id/public_sheet_special_label"
                 app:layout_constraintTop_toBottomOf="@id/scenario_summary"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 style="@style/Css.ScenarioDetail.Title"
                 android:text="@string/special_rule" />
             <TextView
                 android:id="@+id/public_sheet_special_value"
                 app:layout_constraintTop_toBottomOf="@id/public_sheet_special_label"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 style="@style/Css.ScenarioDetail.Text"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 tools:text="脚本家は「友好禁止」を使用できない。" />
 
             <TextView
                 android:id="@+id/public_sheet_incident_label"
                 app:layout_constraintTop_toBottomOf="@id/public_sheet_special_value"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 style="@style/Css.ScenarioDetail.Title"
                 android:text="@string/incident_list" />
 
@@ -139,6 +143,7 @@
                     android:id="@+id/private_sheet_title"
                     app:layout_constraintTop_toBottomOf="@id/invalid_condition_frame"
                     app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
                     style="@style/Css.ScenarioDetail.Title"
                     android:textSize="24sp"
                     android:text="@string/private_sheet" />

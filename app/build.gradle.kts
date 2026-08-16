@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.ApplicationExtension
 import java.util.Properties
 
 plugins {
@@ -6,16 +7,16 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-android {
+extensions.configure<ApplicationExtension> {
     namespace = "work.boardgame.sangeki_rooper"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "work.boardgame.sangeki_rooper"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 33
-        versionName = "1.6.2"
+        targetSdk = 37
+        versionCode = 34
+        versionName = "1.7.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -69,7 +70,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            ndk.debugSymbolLevel = "FULL"
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
     flavorDimensions.add("appli")
@@ -82,9 +85,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     packaging {
         jniLibs {
             useLegacyPackaging = false
@@ -95,22 +95,28 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
+}
+
 dependencies {
     // -------------------------------------------------------------------------
     // AndroidX / Compose / Lifecycle BOM
     //    ※ Lifecycle や Fragment などの AndroidX 関連を一括管理
     // -------------------------------------------------------------------------
-    implementation(platform("androidx.compose:compose-bom:2024.10.01"))
+    implementation(platform("androidx.compose:compose-bom:2026.08.00"))
     implementation("androidx.lifecycle:lifecycle-livedata-ktx")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx")
 
     // 単体で管理する AndroidX / UI 関連
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("com.google.android.material:material:1.13.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation("androidx.core:core-ktx:1.19.0")
+    implementation("androidx.appcompat:appcompat:1.8.0")
+    implementation("com.google.android.material:material:1.14.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.2")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.9")
+    implementation("androidx.fragment:fragment-ktx:1.9.0")
 
     // テスト関連
     testImplementation("junit:junit:4.13.2")
@@ -120,7 +126,7 @@ dependencies {
     // -------------------------------------------------------------------------
     // Kotlin Coroutines BOM
     // -------------------------------------------------------------------------
-    implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.8.1"))
+    implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.11.0"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-rx2")
@@ -129,7 +135,7 @@ dependencies {
     // OkHttp BOM
     //    ※ OkHttp や MockWebServer などのバージョンを一括管理
     // -------------------------------------------------------------------------
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:5.4.0"))
     implementation("com.squareup.okhttp3:okhttp")
 
     // Retrofit 関連（※Retrofit自体は公式BOM非対応のため個別指定）
@@ -139,15 +145,15 @@ dependencies {
 
     // その他のネットワーク・非同期関連
     implementation("com.squareup.picasso:picasso:2.71828")
-    implementation("com.google.code.gson:gson:2.13.2")
+    implementation("com.google.code.gson:gson:2.14.0")
     implementation("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
 
     // -------------------------------------------------------------------------
     // Room Database
     // -------------------------------------------------------------------------
-    implementation("androidx.room:room-runtime:2.8.2")
-    ksp("androidx.room:room-compiler:2.8.2")
+    implementation("androidx.room:room-runtime:2.8.4")
+    ksp("androidx.room:room-compiler:2.8.4")
 
     // -------------------------------------------------------------------------
     // サードパーティ UI ライブラリ

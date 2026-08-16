@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -53,9 +54,26 @@ class ScenarioListFragment : BaseFragment() {
     ): View {
         Logger.methodStart(TAG)
         _binding = ScenarioListFragmentBinding.inflate(inflater, container, false).also { rv ->
-            rv.scenarioList.let {
-                it.layoutManager = LinearLayoutManager(activity)
-                it.adapter = ScenarioListAdapter()
+            rv.scenarioList.let { v ->
+                // 1列あたりの希望幅(dp単位)
+                val columnWidthDp = Define.SCENARIO_LIST_COLUMN_WIDTH_DP
+
+                // 画面幅から列数を自動計算
+                val displayMetrics = resources.displayMetrics
+                val screenWidthDp = displayMetrics.widthPixels / displayMetrics.density
+                val spanCount = (screenWidthDp / columnWidthDp).toInt().coerceAtLeast(1)
+
+                v.layoutManager = GridLayoutManager(activity, spanCount).also {
+                    it.spanSizeLookup = object: GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            return when (v.adapter?.getItemViewType(position)) {
+                                ViewType.HEADER, ViewType.FOOTER -> spanCount
+                                else -> 1
+                            }
+                        }
+                    }
+                }
+                v.adapter = ScenarioListAdapter()
             }
             rv.showScenarioNav.setOnClickListener {
                 rv.scenarioListLayout.let { v ->

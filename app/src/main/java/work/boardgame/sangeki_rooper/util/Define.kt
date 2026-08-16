@@ -13,6 +13,7 @@ object Define {
         const val USER_AGENT = "USER_AGENT"
     }
 
+    const val SCENARIO_LIST_COLUMN_WIDTH_DP = 400
     const val CHATTERING_WAIT = 300L
     const val POLLING_INTERVAL = 50L
     const val API_TIMEOUT = 10_000L
